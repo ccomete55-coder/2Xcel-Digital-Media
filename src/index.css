@@ -1,0 +1,276 @@
+@import "tailwindcss";
+
+:root {
+  --card: #ffffff;
+  --ring: #e05d38;
+  --input: #f4f5f7;
+  --muted: #f9fafb;
+  --accent: #d6e4f0;
+  --border: #dcdfe2;
+  --radius: 0.75rem;
+  --chart-1: #86a7c8;
+  --chart-2: #eea591;
+  --chart-3: #5a7ca6;
+  --chart-4: #466494;
+  --chart-5: #334c82;
+  --popover: #ffffff;
+  --primary: #e05d38;
+  --sidebar: #dddfe2;
+  --font-mono: JetBrains Mono, monospace;
+  --font-sans: Inter, sans-serif;
+  --secondary: #f3f4f6;
+  --background: #e8ebed;
+  --font-serif: Source Serif 4, serif;
+  --foreground: #333333;
+  --destructive: #ef4444;
+  --shadow-blur: 3px;
+  --shadow-color: hsl(0 0% 0%);
+  --sidebar-ring: #e05d38;
+  --shadow-spread: 0px;
+  --shadow-opacity: 0.1;
+  --sidebar-accent: #d6e4f0;
+  --sidebar-border: #e5e7eb;
+  --card-foreground: #333333;
+  --shadow-offset-x: 0px;
+  --shadow-offset-y: 1px;
+  --sidebar-primary: #e05d38;
+  --muted-foreground: #6b7280;
+  --accent-foreground: #1e3a8a;
+  --popover-foreground: #333333;
+  --primary-foreground: #ffffff;
+  --sidebar-foreground: #333333;
+  --secondary-foreground: #4b5563;
+  --destructive-foreground: #ffffff;
+  --sidebar-accent-foreground: #1e3a8a;
+  --sidebar-primary-foreground: #ffffff;
+}
+
+.dark {
+  --card: #2a3040;
+  --ring: #e05d38;
+  --input: #3d4354;
+  --muted: #2a303e;
+  --accent: #2a3656;
+  --border: #3d4354;
+  --chart-1: #86a7c8;
+  --chart-2: #e6a08f;
+  --chart-3: #5a7ca6;
+  --chart-4: #466494;
+  --chart-5: #334c82;
+  --popover: #262b38;
+  --primary: #e05d38;
+  --sidebar: #2a303f;
+  --secondary: #2a303e;
+  --background: #1c2433;
+  --foreground: #e5e5e5;
+  --destructive: #ef4444;
+  --sidebar-ring: #e05d38;
+  --sidebar-accent: #2a3656;
+  --sidebar-border: #3d4354;
+  --card-foreground: #e5e5e5;
+  --sidebar-primary: #e05d38;
+  --muted-foreground: #a3a3a3;
+  --accent-foreground: #bfdbfe;
+  --popover-foreground: #e5e5e5;
+  --primary-foreground: #ffffff;
+  --sidebar-foreground: #e5e5e5;
+  --secondary-foreground: #e5e5e5;
+  --destructive-foreground: #ffffff;
+  --sidebar-accent-foreground: #bfdbfe;
+  --sidebar-primary-foreground: #ffffff;
+}
+
+@theme inline {
+  --color-card: var(--card);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-border: var(--border);
+  --color-radius: var(--radius);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-popover: var(--popover);
+  --color-primary: var(--primary);
+  --color-sidebar: var(--sidebar);
+  --color-font-mono: var(--font-mono);
+  --color-font-sans: var(--font-sans);
+  --color-secondary: var(--secondary);
+  --color-background: var(--background);
+  --color-font-serif: var(--font-serif);
+  --color-foreground: var(--foreground);
+  --color-destructive: var(--destructive);
+  --color-shadow-blur: var(--shadow-blur);
+  --color-shadow-color: var(--shadow-color);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-shadow-spread: var(--shadow-spread);
+  --color-shadow-opacity: var(--shadow-opacity);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-card-foreground: var(--card-foreground);
+  --color-shadow-offset-x: var(--shadow-offset-x);
+  --color-shadow-offset-y: var(--shadow-offset-y);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+
+  /* Preserve explicit brand design colors to prevent styled breakdowns */
+  --color-brand-obsidian: #0B0E14;
+  --color-brand-orange: #E65C2B;
+  --color-brand-blue: #2B8ED9;
+}
+
+* { 
+  font-family: var(--font-sans), 'Roboto Flex', 'Work Sans', "Helvetica Neue", Arial, sans-serif; 
+}
+
+/* Frosted Glass Class Styles */
+.glass {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-pill {
+  background: rgba(11, 14, 20, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Custom CSS Utilities for Synthetic Noise Layout Overlays */
+.noise-overlay {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+.bg-noise {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* Design-themed Radial Dot Noise */
+.radial-noise {
+  background-image: radial-gradient(circle at 2px 2px, rgba(255, 255, 255, 0.05) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+
+/* Atmospheric Glow Spotlights */
+.gradient-glow {
+  background: radial-gradient(circle at 50% 50%, rgba(43, 142, 217, 0.12) 0%, transparent 75%);
+}
+
+.gradient-glow-orange {
+  background: radial-gradient(circle at 50% 50%, rgba(230, 92, 43, 0.08) 0%, transparent 75%);
+}
+
+/* Hide default scrollbar tracks while preserving functionality */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #000000;
+}
+::-webkit-scrollbar-thumb {
+  background: #212121;
+  border-radius: 10px;
+}
+
+/* Body Text Uniform Colors Across the Site (Dark Mode Default) */
+p, .text-[#DEDBC8], .text-gray-400, .text-gray-300, .text-slate-300, .text-slate-400 {
+  color: #94a3b8 !important; /* Elegant slate bluish-gray for paragraphs and description blocks */
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #cbd5e1 !important; /* Soft, premium light bluish-gray for dark mode headings */
+}
+
+/* Apply beautiful soft bluish-gray to static text-white elements while preserving crisp white on solid-colored buttons, active pills, badges, or controls */
+.text-white:not(button):not(a):not([class*="bg-brand"]):not([class*="hover"]):not([class*="btn"]):not([class*="-pill"]):not(.font-mono) {
+  color: #cbd5e1 !important;
+}
+
+/* Beautiful Responsive Uniform Body Text Sizing Rule (Perfect Size matching the Christian Cométe block) */
+p:not(.text-xs):not(.text-\[10px\]):not(.text-\[9px\]):not(.text-\[11px\]):not(.font-mono):not(.text-2xl):not(.text-3xl) {
+  font-size: clamp(0.95rem, 0.4vw + 0.85rem, 1.125rem) !important;
+  line-height: 1.75 !important;
+}
+
+/* Premium Light Mode Colors & Styling Overrides */
+.light {
+  background-color: #f8fafc !important;
+  color: #475569 !important;
+}
+
+.light body {
+  background-color: #f8fafc !important;
+  color: #475569 !important;
+}
+
+.light .radial-noise {
+  background-image: radial-gradient(circle at 2px 2px, rgba(15, 23, 42, 0.04) 1px, transparent 0);
+}
+
+.light .glass {
+  background: rgba(255, 255, 255, 0.72) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(15, 23, 42, 0.08) !important;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02) !important;
+}
+
+.light .glass-pill {
+  background: rgba(255, 255, 255, 0.8) !important;
+  border-color: rgba(15, 23, 42, 0.06);
+}
+
+.light h1, .light h2, .light h3, .light h4, .light h5, .light h6, 
+.light .text-white:not(button):not(a):not([class*="bg-brand"]):not([class*="hover"]):not([class*="btn"]):not([class*="-pill"]):not(.font-mono) {
+  color: #334155 !important; /* Soft Slate-700: lighter, softer, and more readable in light mode */
+}
+
+.light p, .light .text-gray-400, .light .text-gray-300, .light .text-slate-300, .light .text-slate-400, .light .text-[#DEDBC8] {
+  color: #475569 !important; /* Uniform Slate-600 body text for light mode */
+}
+
+.light .text-gray-500 {
+  color: #64748b !important;
+}
+
+.light .bg-black, .light .bg-[#0B0E14], .light .bg-[#040609], .light .bg-[#080B10]/40, .light .bg-black/40 {
+  background-color: #f1f5f9 !important;
+}
+
+.light .bg-white/5, .light .bg-white/[0.04] {
+  background-color: rgba(15, 23, 42, 0.03) !important;
+}
+
+.light .border-white/5, .light .border-white/10 {
+  border-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+.light .gradient-glow {
+  background: radial-gradient(circle at 50% 50%, rgba(43, 142, 217, 0.05) 0%, transparent 75%);
+}
+
+.light .gradient-glow-orange {
+  background: radial-gradient(circle at 50% 50%, rgba(230, 92, 43, 0.04) 0%, transparent 75%);
+}
+
+.light ::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.light ::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+}
+
