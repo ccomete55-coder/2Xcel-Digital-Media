@@ -8,7 +8,9 @@ import {
   FaHeartbeat, 
   FaGraduationCap,
   FaLeaf,
-  FaUsers
+  FaUsers,
+  FaGlobe,
+  FaMusic
 } from 'react-icons/fa';
 
 export interface OptionItem {
@@ -37,26 +39,26 @@ const InteractiveSelector = () => {
     {
       title: "The Conscious Collective",
       description: "Strategic HR Consulting & Workplace Culture Advisory",
-      image: "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=800&q=80",
-      video: "https://assets.mixkit.co/videos/preview/mixkit-business-people-meeting-in-a-modern-office-room-42691-large.mp4",
+      image: "/conscious-collective-placeholder.svg",
+      video: "/videos/conscious-collective-bg.mp4",
       icon: <span className="text-white"><FaLeaf size={24} /></span>,
       url: "https://theconsciouscollective.ca/"
     },
     {
-      title: "H2 HR Consulting",
-      description: "Strategic HR Consulting & Workplace Culture Advisory",
-      image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80",
-      video: "https://assets.mixkit.co/videos/preview/mixkit-business-partners-meeting-in-a-corporate-office-42686-large.mp4",
-      icon: <span className="text-white"><FaUsers size={24} /></span>,
-      url: "https://h2hrconsultinggroup.com/"
+      title: "Atlas Key Co.",
+      description: "Exclusive Membership Discount Travel Club",
+      image: "/Atlas-Key-co.png",
+      video: "/videos/Atlas Key .mp4",
+      icon: <span className="text-white"><FaGlobe size={24} /></span>,
+      url: "https://www.atlaskey.ca/"
     },
     {
-      title: "Interactive LMS Portal",
-      description: "Video course delivery and boutique education frameworks",
-      image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80",
-      video: "https://assets.mixkit.co/videos/preview/mixkit-young-woman-working-at-office-with-laptop-34440-large.mp4",
-      icon: <span className="text-white"><FaGraduationCap size={24} /></span>,
-      url: "https://example.com/edtech-platform"
+      title: "Ampcrew",
+      description: "Music clipping site & marketplace for musicians and fans to connect",
+      image: "/ampcrew-placeholder.svg",
+      video: "https://assets.mixkit.co/videos/preview/mixkit-party-dj-playing-music-at-a-club-42408-large.mp4",
+      icon: <span className="text-white"><FaMusic size={24} /></span>,
+      url: "#"
     },
     {
       title: "Engineering Portfolio",
