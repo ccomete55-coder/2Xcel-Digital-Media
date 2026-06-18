@@ -6,6 +6,9 @@ export const CustomCursor: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isClicking, setIsClicking] = useState(false);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  );
   const [hoveredType, setHoveredType] = useState<'default' | 'orange' | 'blue' | 'white'>('default');
 
   // Motion values for the cursor physical location
@@ -22,15 +25,20 @@ export const CustomCursor: React.FC = () => {
     const touchQuery = window.matchMedia('(pointer: coarse)');
     setIsTouchDevice(touchQuery.matches);
 
-    const handleTouchChange = (e: MediaQueryListEvent) => {
-      setIsTouchDevice(e.matches);
-    };
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setPrefersReducedMotion(motionQuery.matches);
+
+    const handleTouchChange = (e: MediaQueryListEvent) => setIsTouchDevice(e.matches);
+    const handleMotionChange = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
 
     if (touchQuery.addEventListener) {
       touchQuery.addEventListener('change', handleTouchChange);
     }
+    if (motionQuery.addEventListener) {
+      motionQuery.addEventListener('change', handleMotionChange);
+    }
 
-    if (touchQuery.matches) return;
+    if (touchQuery.matches || motionQuery.matches) return;
 
     // Apply global style to mock the standard cursor
     const style = document.createElement('style');
@@ -100,10 +108,13 @@ export const CustomCursor: React.FC = () => {
       if (touchQuery.removeEventListener) {
         touchQuery.removeEventListener('change', handleTouchChange);
       }
+      if (motionQuery.removeEventListener) {
+        motionQuery.removeEventListener('change', handleMotionChange);
+      }
     };
   }, [cursorX, cursorY, isVisible]);
 
-  if (isTouchDevice || !isVisible) return null;
+  if (isTouchDevice || !isVisible || prefersReducedMotion) return null;
 
   // Visual state mappings for cursor outer halo
   let cursorColorClass = 'border-white/40 bg-white/5';

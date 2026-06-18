@@ -1,0 +1,20 @@
+{
+  "name": "hermes-server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Hermes — 2XceL voice agent orchestration service (runs on its own VPS). Holds all vendor API keys; the public website never sees them.",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^4.21.2"
+  }
+}

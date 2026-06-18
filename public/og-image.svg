@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0B0E14"/>
+      <stop offset="100%" stop-color="#10151F"/>
+    </linearGradient>
+    <radialGradient id="glow-o" cx="22%" cy="30%" r="40%">
+      <stop offset="0%" stop-color="#E55B2B" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#E55B2B" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow-b" cx="85%" cy="80%" r="45%">
+      <stop offset="0%" stop-color="#229AD6" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#229AD6" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow-o)"/>
+  <rect width="1200" height="630" fill="url(#glow-b)"/>
+
+  <text x="600" y="270"
+        font-family="'Space Grotesk', Arial, sans-serif"
+        font-size="150" font-weight="800" letter-spacing="-4"
+        text-anchor="middle">
+    <tspan fill="#E55B2B">2</tspan><tspan fill="#229AD6">X</tspan><tspan fill="#FFFFFF">ceL</tspan>
+  </text>
+
+  <text x="600" y="345"
+        font-family="'Space Grotesk', Arial, sans-serif"
+        font-size="34" font-weight="700" letter-spacing="14"
+        fill="#FFFFFF" text-anchor="middle">DIGITAL MEDIA</text>
+
+  <text x="600" y="430"
+        font-family="Arial, sans-serif"
+        font-size="30" font-weight="400"
+        fill="#9AA4B2" text-anchor="middle">AI Web Design · Sales Automation · Cinematic Ads</text>
+
+  <text x="600" y="500"
+        font-family="'JetBrains Mono', monospace"
+        font-size="20" font-weight="600" letter-spacing="8"
+        fill="#E55B2B" text-anchor="middle">STRATEGY · AUTOMATION · GROWTH</text>
+</svg>

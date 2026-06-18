@@ -134,9 +134,15 @@
   font-family: var(--font-sans), 'Roboto Flex', 'Work Sans', "Helvetica Neue", Arial, sans-serif; 
 }
 
+/* Glass surface tokens — override in .light below */
+:root {
+  --glass-surface: rgba(255, 255, 255, 0.03);
+  --glass-surface-raised: rgba(255, 255, 255, 0.06);
+}
+
 /* Frosted Glass Class Styles */
 .glass {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--glass-surface);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -205,72 +211,198 @@ p:not(.text-xs):not(.text-\[10px\]):not(.text-\[9px\]):not(.text-\[11px\]):not(.
   line-height: 1.75 !important;
 }
 
-/* Premium Light Mode Colors & Styling Overrides */
+/* =====================================================
+   BRANDED COLOR WASH — LIGHT MODE
+   Warm orange-cream → white → cool blue wash
+   ===================================================== */
+
+html.light {
+  background: linear-gradient(160deg, #fff3eb 0%, #ffffff 45%, #ebf4ff 100%) !important;
+  min-height: 100vh;
+}
+
 .light {
-  background-color: #f8fafc !important;
-  color: #475569 !important;
+  background: transparent !important;
+  color: #1e293b !important;
 }
 
 .light body {
-  background-color: #f8fafc !important;
-  color: #475569 !important;
+  background: transparent !important;
+  color: #1e293b !important;
+}
+
+/* Main page wrapper — use stable ID to override Tailwind arbitrary-value class */
+html.light #page-root {
+  background: linear-gradient(160deg, #fff3eb 0%, #ffffff 45%, #ebf4ff 100%) !important;
+}
+
+/* Section backgrounds that used the dark obsidian color */
+html.light #page-root .bg-\[#080B10\]\/40,
+html.light #page-root .bg-\[#080B10\]\/20 {
+  background-color: rgba(230, 92, 43, 0.04) !important;
 }
 
 .light .radial-noise {
-  background-image: radial-gradient(circle at 2px 2px, rgba(15, 23, 42, 0.04) 1px, transparent 0);
+  background-image: radial-gradient(circle at 2px 2px, rgba(230, 92, 43, 0.07) 1px, transparent 0);
 }
 
+/* Glass surface tokens */
+.light {
+  --glass-surface: rgba(255, 255, 255, 0.82);
+  --glass-surface-raised: rgba(255, 255, 255, 0.94);
+}
+
+/* Vibrant brand-tinted glass cards */
 .light .glass {
-  background: rgba(255, 255, 255, 0.72) !important;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(15, 23, 42, 0.08) !important;
-  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02) !important;
+  background: rgba(255, 255, 255, 0.82) !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(230, 92, 43, 0.14) !important;
+  box-shadow: 0 8px 40px -8px rgba(230, 92, 43, 0.1), 0 2px 8px rgba(43, 142, 217, 0.06) !important;
 }
 
+/* Nav pill with warm brand shadow */
 .light .glass-pill {
-  background: rgba(255, 255, 255, 0.8) !important;
-  border-color: rgba(15, 23, 42, 0.06);
+  background: rgba(255, 255, 255, 0.92) !important;
+  border: 1px solid rgba(230, 92, 43, 0.2) !important;
+  box-shadow: 0 4px 28px rgba(230, 92, 43, 0.13), 0 1px 4px rgba(43, 142, 217, 0.08) !important;
 }
 
-.light h1, .light h2, .light h3, .light h4, .light h5, .light h6, 
+/* Headings — deep slate on light wash */
+.light h1, .light h2, .light h3, .light h4, .light h5, .light h6,
 .light .text-white:not(button):not(a):not([class*="bg-brand"]):not([class*="hover"]):not([class*="btn"]):not([class*="-pill"]):not(.font-mono) {
-  color: #334155 !important; /* Soft Slate-700: lighter, softer, and more readable in light mode */
+  color: #0f172a !important;
 }
 
+/* Body text */
 .light p, .light .text-gray-400, .light .text-gray-300, .light .text-slate-300, .light .text-slate-400, .light .text-[#DEDBC8] {
-  color: #475569 !important; /* Uniform Slate-600 body text for light mode */
+  color: #475569 !important;
 }
 
 .light .text-gray-500 {
   color: #64748b !important;
 }
 
-.light .bg-black, .light .bg-[#0B0E14], .light .bg-[#040609], .light .bg-[#080B10]/40, .light .bg-black/40 {
-  background-color: #f1f5f9 !important;
+/* Section background alternates — warm orange tint / cool blue tint */
+.light .bg-black\/40 {
+  background: linear-gradient(135deg, rgba(255, 237, 225, 0.55), rgba(235, 245, 255, 0.45)) !important;
 }
 
-.light .bg-white/5, .light .bg-white/[0.04] {
-  background-color: rgba(15, 23, 42, 0.03) !important;
+.light .bg-black\/25, .light .bg-black\/35 {
+  background: rgba(255, 245, 240, 0.65) !important;
 }
 
-.light .border-white/5, .light .border-white/10 {
-  border-color: rgba(15, 23, 42, 0.08) !important;
+.light .bg-black {
+  background-color: rgba(255, 238, 228, 0.45) !important;
 }
 
+.light .bg-\[#080B10\]\/40, .light .bg-\[#080B10\]\/20 {
+  background: rgba(230, 92, 43, 0.05) !important;
+}
+
+/* Subtle tint on interactive hover surfaces */
+.light .bg-white\/5, .light .bg-white\/\[0\.04\], .light .bg-white\/\[0\.06\] {
+  background-color: rgba(230, 92, 43, 0.04) !important;
+}
+
+/* Borders with brand warmth */
+.light .border-white\/5, .light .border-white\/10, .light .border-white\/15 {
+  border-color: rgba(230, 92, 43, 0.1) !important;
+}
+
+.light .border-\[#1F2937\]\/50 {
+  border-color: rgba(43, 142, 217, 0.12) !important;
+}
+
+/* Vivid gradient glows — the centrepiece of the color wash */
 .light .gradient-glow {
-  background: radial-gradient(circle at 50% 50%, rgba(43, 142, 217, 0.05) 0%, transparent 75%);
+  background: radial-gradient(circle at 50% 50%, rgba(43, 142, 217, 0.3) 0%, transparent 68%) !important;
 }
 
 .light .gradient-glow-orange {
-  background: radial-gradient(circle at 50% 50%, rgba(230, 92, 43, 0.04) 0%, transparent 75%);
+  background: radial-gradient(circle at 50% 50%, rgba(230, 92, 43, 0.26) 0%, transparent 68%) !important;
 }
 
+/* Scrollbar — brand orange tinted */
 .light ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #fff5f0;
 }
 
 .light ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: rgba(230, 92, 43, 0.35);
+  border-radius: 10px;
+}
+
+.light ::-webkit-scrollbar-thumb:hover {
+  background: rgba(230, 92, 43, 0.55);
+}
+
+/* =====================================================
+   MARQUEE TICKER BAND
+   ===================================================== */
+
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee-scroll 35s linear infinite;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none;
+  }
+}
+
+/* =====================================================
+   FORM INPUT FOCUS GLOW
+   ===================================================== */
+
+input:focus,
+select:focus,
+textarea:focus {
+  box-shadow: 0 0 0 2px rgba(230, 92, 43, 0.22), 0 0 14px rgba(230, 92, 43, 0.08) !important;
+}
+
+.light input:focus,
+.light select:focus,
+.light textarea:focus {
+  box-shadow: 0 0 0 2px rgba(230, 92, 43, 0.3), 0 0 14px rgba(230, 92, 43, 0.12) !important;
+}
+
+/* =====================================================
+   READABLE TYPE SCALE — no micro-text
+   Body sits at 16px; every tiny label is lifted to a
+   legible floor (~13–14px) while keeping heading hierarchy.
+   ===================================================== */
+
+body {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* Lift the tiniest utility sizes to a readable floor */
+.text-\[8px\],
+.text-\[9px\],
+.text-\[10px\],
+.text-\[10\.5px\],
+.text-\[11px\] {
+  font-size: 0.8125rem !important; /* 13px */
+  line-height: 1.5 !important;
+}
+
+/* Tailwind text-xs (12px) → 14px */
+.text-xs {
+  font-size: 0.875rem !important; /* 14px */
+  line-height: 1.55 !important;
+}
+
+/* Keep small body text comfortable */
+.text-sm {
+  font-size: 0.9375rem !important; /* 15px */
+  line-height: 1.6 !important;
 }
 

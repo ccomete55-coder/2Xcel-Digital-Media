@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { TrendingUp, Brain, Zap, User, Send, Clock, Settings, Globe, Sparkles, Check, Bot, MessageSquare } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { AnimatedIconWrapper, IconAnimationType } from "./ui/AnimatedIcon";
+import { Eyebrow } from "./ui/Eyebrow";
 
 export interface BlueprintsSectionProps {
   setServiceInterested: (val: string) => void;
@@ -163,9 +164,6 @@ export const BlueprintsSection: React.FC<BlueprintsSectionProps> = ({ setService
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="text-center max-w-3xl mx-auto flex flex-col gap-3"
         >
-          <span className="text-brand-orange uppercase tracking-[0.3em] font-mono text-[9px] font-bold">
-            // Scale-ready operational templates
-          </span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white">
             Prebuilt AI Workplace Agents & Operational Blueprints
           </h2>

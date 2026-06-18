@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="100%" height="100%">
+  <!-- Dark energetic music-marketplace canvas -->
+  <defs>
+    <radialGradient id="amp-bg" cx="50%" cy="42%" r="75%">
+      <stop offset="0%" stop-color="#15202B"/>
+      <stop offset="100%" stop-color="#080B10"/>
+    </radialGradient>
+    <linearGradient id="amp-accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#E55B2B"/>
+      <stop offset="100%" stop-color="#229AD6"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#amp-bg)"/>
+
+  <!-- Equalizer bars -->
+  <g transform="translate(400,300)">
+    <g fill="url(#amp-accent)" opacity="0.9">
+      <rect x="-170" y="-30" width="22" height="60" rx="6"/>
+      <rect x="-134" y="-70" width="22" height="140" rx="6"/>
+      <rect x="-98"  y="-50" width="22" height="100" rx="6"/>
+      <rect x="-62"  y="-95" width="22" height="190" rx="6"/>
+      <rect x="-26"  y="-60" width="22" height="120" rx="6"/>
+      <rect x="10"   y="-100" width="22" height="200" rx="6"/>
+      <rect x="46"   y="-55" width="22" height="110" rx="6"/>
+      <rect x="82"   y="-80" width="22" height="160" rx="6"/>
+      <rect x="118"  y="-40" width="22" height="80" rx="6"/>
+      <rect x="154"  y="-65" width="22" height="130" rx="6"/>
+    </g>
+  </g>
+
+  <!-- Brand wordmark -->
+  <text x="400" y="450"
+        font-family="'Space Grotesk', Inter, system-ui, sans-serif"
+        font-size="58" font-weight="800"
+        fill="#FFFFFF" letter-spacing="2"
+        text-anchor="middle">AMPCREW</text>
+
+  <text x="400" y="490"
+        font-family="'JetBrains Mono', monospace"
+        font-size="14" font-weight="600"
+        fill="#229AD6" letter-spacing="6"
+        text-anchor="middle">MUSIC CLIPPING · MARKETPLACE</text>
+</svg>

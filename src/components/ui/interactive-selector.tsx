@@ -56,7 +56,7 @@ const InteractiveSelector = () => {
       title: "Ampcrew",
       description: "Music clipping site & marketplace for musicians and fans to connect",
       image: "/ampcrew-placeholder.svg",
-      video: "https://assets.mixkit.co/videos/preview/mixkit-party-dj-playing-music-at-a-club-42408-large.mp4",
+      video: "/Ampcrew-Phoenix.mp4",
       icon: <span className="text-white"><FaMusic size={24} /></span>,
       url: "#"
     },

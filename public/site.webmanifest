@@ -1,0 +1,17 @@
+{
+  "name": "2XceL Digital Media",
+  "short_name": "2XceL",
+  "description": "Custom high-converting websites with 24/7 AI sales agents, marketing automation, and cinematic ad production.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0B0E14",
+  "theme_color": "#0B0E14",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
