@@ -121,9 +121,19 @@ const STYLES = `
   letter-spacing: -0.05em;
   color: transparent;
   -webkit-text-stroke: 1px color-mix(in oklch, var(--foreground) 5%, transparent);
-  background: linear-gradient(180deg, color-mix(in oklch, var(--foreground) 8%, transparent) 0%, transparent 60%);
+  background-image:
+    linear-gradient(180deg, color-mix(in oklch, var(--foreground) 8%, transparent) 0%, transparent 60%),
+    linear-gradient(100deg, transparent 35%, color-mix(in oklch, var(--foreground) 60%, transparent) 49%, color-mix(in oklch, var(--foreground) 60%, transparent) 51%, transparent 65%);
+  background-size: 100% 100%, 260% 100%;
+  background-position: 0 0, 200% 0;
   -webkit-background-clip: text;
   background-clip: text;
+  animation: footer-text-shine 7s ease-in-out infinite;
+}
+
+@keyframes footer-text-shine {
+  0%, 20% { background-position: 0 0, 200% 0; }
+  60%, 100% { background-position: 0 0, -100% 0; }
 }
 
 /* Metallic Text Glow */
@@ -162,11 +172,11 @@ const MagneticButton = React.forwardRef<HTMLElement, MagneticButtonProps>(
           const y = e.clientY - rect.top - w;
 
           gsap.to(element, {
-            x: x * 0.4,
-            y: y * 0.4,
-            rotationX: -y * 0.15,
-            rotationY: x * 0.15,
-            scale: 1.05,
+            x: x * 0.15,
+            y: y * 0.15,
+            rotationX: -y * 0.04,
+            rotationY: x * 0.04,
+            scale: 1.03,
             ease: "power2.out",
             duration: 0.4,
           });
@@ -310,12 +320,16 @@ export function CinematicFooter() {
           <div className="footer-aurora absolute left-1/2 top-1/2 h-[60vh] w-[80vw] -translate-x-1/2 -translate-y-1/2 animate-footer-breathe rounded-[50%] blur-[80px] pointer-events-none z-0" />
           <div className="footer-bg-grid absolute inset-0 z-0 pointer-events-none" />
 
-          {/* Giant background text */}
-          <div
-            ref={giantTextRef}
-            className="footer-giant-bg-text absolute -bottom-[5vh] left-1/2 -translate-x-1/2 whitespace-nowrap z-0 pointer-events-none select-none"
-          >
-            2XCEL
+          {/* Giant background text — outer div handles static centering via CSS,
+              inner div is what GSAP animates (scale/y), so GSAP's transform never
+              clobbers the -translate-x-1/2 centering offset */}
+          <div className="absolute bottom-[9vh] left-1/2 -translate-x-1/2 z-0 pointer-events-none select-none">
+            <div
+              ref={giantTextRef}
+              className="footer-giant-bg-text whitespace-nowrap"
+            >
+              2XCEL
+            </div>
           </div>
 
           {/* 1. Diagonal Sleek Marquee (Top of footer) */}
@@ -327,7 +341,7 @@ export function CinematicFooter() {
           </div>
 
           {/* 2. Main Center Content */}
-          <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 mt-32 w-full max-w-5xl mx-auto">
+          <div className="relative z-10 flex flex-1 flex-col items-center justify-start px-6 mt-40 sm:mt-44 w-full max-w-5xl mx-auto">
             <h2
               ref={headingRef}
               className="text-5xl md:text-8xl font-black footer-text-glow tracking-tighter mb-12 text-center"
@@ -349,8 +363,8 @@ export function CinematicFooter() {
                   Calculate Your ROI
                 </MagneticButton>
                 
-                <MagneticButton 
-                  onClick={() => scrollToSection("skepticism-solver")}
+                <MagneticButton
+                  onClick={() => scrollToSection("blueprints")}
                   className="footer-glass-pill px-10 py-5 rounded-full text-[#E1E0CC] font-bold text-sm md:text-base flex items-center gap-3 group"
                 >
                   <svg className="w-5 h-5 text-[#2B8ED9] group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -362,33 +376,33 @@ export function CinematicFooter() {
 
               {/* Connected Pages / Site Navigation Sections */}
               <div className="flex flex-wrap justify-center gap-3 md:gap-5 w-full mt-2">
-                <button 
-                  onClick={() => scrollToSection("web-builds")}
-                  className="footer-glass-pill px-5 py-2.5 rounded-full text-gray-400 font-medium text-xs md:text-sm hover:text-white cursor-pointer"
+                <button
+                  onClick={() => scrollToSection("custom-web-design")}
+                  className="footer-glass-pill px-6 py-3.5 rounded-full text-gray-400 font-medium text-sm md:text-base hover:text-white cursor-pointer"
                 >
                   Web Builds
                 </button>
-                <button 
-                  onClick={() => scrollToSection("ai-assistants")}
-                  className="footer-glass-pill px-5 py-2.5 rounded-full text-gray-400 font-medium text-xs md:text-sm hover:text-white cursor-pointer"
+                <button
+                  onClick={() => scrollToSection("featured-agents")}
+                  className="footer-glass-pill px-6 py-3.5 rounded-full text-gray-400 font-medium text-sm md:text-base hover:text-white cursor-pointer"
                 >
                   AI Assistants
                 </button>
-                <button 
-                  onClick={() => scrollToSection("digital-media")}
-                  className="footer-glass-pill px-5 py-2.5 rounded-full text-gray-400 font-medium text-xs md:text-sm hover:text-white cursor-pointer"
+                <button
+                  onClick={() => scrollToSection("media-section")}
+                  className="footer-glass-pill px-6 py-3.5 rounded-full text-gray-400 font-medium text-sm md:text-base hover:text-white cursor-pointer"
                 >
                   Digital Media
                 </button>
-                <button 
-                  onClick={() => scrollToSection("skepticism-solver")}
-                  className="footer-glass-pill px-5 py-2.5 rounded-full text-gray-400 font-medium text-xs md:text-sm hover:text-white cursor-pointer"
+                <button
+                  onClick={() => scrollToSection("interactive-demo")}
+                  className="footer-glass-pill px-6 py-3.5 rounded-full text-gray-400 font-medium text-sm md:text-base hover:text-white cursor-pointer"
                 >
                   Validation Sandbox
                 </button>
-                <button 
+                <button
                   onClick={() => scrollToSection("reviews")}
-                  className="footer-glass-pill px-5 py-2.5 rounded-full text-gray-400 font-medium text-xs md:text-sm hover:text-white cursor-pointer"
+                  className="footer-glass-pill px-6 py-3.5 rounded-full text-gray-400 font-medium text-sm md:text-base hover:text-white cursor-pointer"
                 >
                   Reviews
                 </button>

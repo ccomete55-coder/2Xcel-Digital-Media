@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+/* This site's theme toggle sets a .dark / .light class on <html> — without
+   this, Tailwind v4's dark: variant defaults to the OS's prefers-color-scheme
+   media query and completely ignores the toggle, causing dark: styles to
+   apply based on the visitor's system setting instead of the button they clicked. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --card: #ffffff;
   --ring: #e05d38;
@@ -200,6 +206,16 @@ h1, h2, h3, h4, h5, h6 {
   color: #cbd5e1 !important; /* Soft, premium light bluish-gray for dark mode headings */
 }
 
+/* +5px bump on h1/h2 — scoped remap of the Tailwind text-size variables these
+   headings use, so each keeps its responsive size, just 5px larger */
+h1, h2 {
+  --text-2xl: calc(1.5rem + 5px);
+  --text-3xl: calc(1.875rem + 5px);
+  --text-4xl: calc(2.25rem + 5px);
+  --text-5xl: calc(3rem + 5px);
+  --text-6xl: calc(3.75rem + 5px);
+}
+
 /* Apply beautiful soft bluish-gray to static text-white elements while preserving crisp white on solid-colored buttons, active pills, badges, or controls */
 .text-white:not(button):not(a):not([class*="bg-brand"]):not([class*="hover"]):not([class*="btn"]):not([class*="-pill"]):not(.font-mono) {
   color: #cbd5e1 !important;
@@ -207,14 +223,21 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Beautiful Responsive Uniform Body Text Sizing Rule (Perfect Size matching the Christian Cométe block) */
 p:not(.text-xs):not(.text-\[10px\]):not(.text-\[9px\]):not(.text-\[11px\]):not(.font-mono):not(.text-2xl):not(.text-3xl) {
-  font-size: clamp(0.95rem, 0.4vw + 0.85rem, 1.125rem) !important;
+  font-size: clamp(calc(0.95rem + 5px), calc(0.4vw + 0.85rem + 5px), calc(1.125rem + 5px)) !important;
   line-height: 1.75 !important;
 }
 
 /* =====================================================
    BRANDED COLOR WASH — LIGHT MODE
    Warm orange-cream → white → cool blue wash
+
+   Wrapped in @layer utilities: Tailwind's own utility classes (including
+   arbitrary-value ones like text-[#E1E0CC]/90) live in that layer, and per
+   the CSS cascade-layers spec, layered !important beats unlayered !important
+   regardless of specificity. Without this wrapper, any element with its own
+   Tailwind color utility would ignore these overrides entirely.
    ===================================================== */
+@layer utilities {
 
 html.light {
   background: linear-gradient(160deg, #fff3eb 0%, #ffffff 45%, #ebf4ff 100%) !important;
@@ -268,19 +291,24 @@ html.light #page-root .bg-\[#080B10\]\/20 {
   box-shadow: 0 4px 28px rgba(230, 92, 43, 0.13), 0 1px 4px rgba(43, 142, 217, 0.08) !important;
 }
 
-/* Headings — deep slate on light wash */
+/* Headings — brand blue on light wash */
 .light h1, .light h2, .light h3, .light h4, .light h5, .light h6,
 .light .text-white:not(button):not(a):not([class*="bg-brand"]):not([class*="hover"]):not([class*="btn"]):not([class*="-pill"]):not(.font-mono) {
-  color: #0f172a !important;
+  color: #1a5c8f !important;
 }
 
-/* Body text */
+/* Body text — blue-tinted slate, keeps orange free to read as an accent */
 .light p, .light .text-gray-400, .light .text-gray-300, .light .text-slate-300, .light .text-slate-400, .light .text-[#DEDBC8] {
-  color: #475569 !important;
+  color: #46647d !important;
 }
 
 .light .text-gray-500 {
-  color: #64748b !important;
+  color: #5c7690 !important;
+}
+
+/* Emphasized/highlighted comparison-table values (e.g. "2XceL Agent" column) */
+.light .text-gray-200, .light .text-gray-100 {
+  color: #1a5c8f !important;
 }
 
 /* Section background alternates — warm orange tint / cool blue tint */
@@ -336,6 +364,8 @@ html.light #page-root .bg-\[#080B10\]\/20 {
 .light ::-webkit-scrollbar-thumb:hover {
   background: rgba(230, 92, 43, 0.55);
 }
+
+} /* end @layer utilities */
 
 /* =====================================================
    MARQUEE TICKER BAND

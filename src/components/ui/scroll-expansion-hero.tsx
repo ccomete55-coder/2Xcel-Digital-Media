@@ -19,6 +19,7 @@ interface ScrollExpandMediaProps {
   textBlend?: boolean;
   children?: ReactNode;
   onProgressChange?: (progress: number) => void;
+  forceExpanded?: boolean;
 }
 
 const ScrollExpandMedia = ({
@@ -32,6 +33,7 @@ const ScrollExpandMedia = ({
   textBlend,
   children,
   onProgressChange,
+  forceExpanded,
 }: ScrollExpandMediaProps) => {
   const [scrollProgress, setScrollProgress] = useState<number>(0);
   const [showContent, setShowContent] = useState<boolean>(false);
@@ -53,6 +55,16 @@ const ScrollExpandMedia = ({
     setMediaFullyExpanded(false);
   }, [mediaType]);
 
+  // Lets nav links jump straight to a section: skip the scroll-jack
+  // animation instantly instead of fighting the anchor jump.
+  useEffect(() => {
+    if (forceExpanded && !mediaFullyExpanded) {
+      setScrollProgress(1);
+      setShowContent(true);
+      setMediaFullyExpanded(true);
+    }
+  }, [forceExpanded, mediaFullyExpanded]);
+
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
       if (mediaFullyExpanded && e.deltaY < 0 && window.scrollY <= 5) {
@@ -60,7 +72,11 @@ const ScrollExpandMedia = ({
         e.preventDefault();
       } else if (!mediaFullyExpanded) {
         e.preventDefault();
-        const scrollDelta = e.deltaY * 0.0009;
+        const rawDelta = e.deltaY * 0.0009;
+        // Cap the max progress change per wheel tick so a fast flick or
+        // trackpad momentum burst can't snap the media open/closed instantly —
+        // it always plays out over several ticks, same pace both directions.
+        const scrollDelta = Math.sign(rawDelta) * Math.min(Math.abs(rawDelta), 0.15);
         const newProgress = Math.min(
           Math.max(scrollProgress + scrollDelta, 0),
           1
@@ -93,7 +109,10 @@ const ScrollExpandMedia = ({
         e.preventDefault();
         // Increase sensitivity for mobile, especially when scrolling back
         const scrollFactor = deltaY < 0 ? 0.008 : 0.005; // Higher sensitivity for scrolling back
-        const scrollDelta = deltaY * scrollFactor;
+        const rawTouchDelta = deltaY * scrollFactor;
+        // Same per-tick cap as the wheel handler — prevents a fast swipe from
+        // snapping the media open/closed instantly.
+        const scrollDelta = Math.sign(rawTouchDelta) * Math.min(Math.abs(rawTouchDelta), 0.15);
         const newProgress = Math.min(
           Math.max(scrollProgress + scrollDelta, 0),
           1
@@ -194,7 +213,7 @@ const ScrollExpandMedia = ({
             <div className='absolute inset-0 bg-black/10' />
           </motion.div>
 
-          <div className='container mx-auto flex flex-col items-center justify-start relative z-10'>
+          <div className='w-full mx-auto flex flex-col items-center justify-start relative z-10'>
             <div className='flex flex-col items-center justify-center w-full h-[100dvh] relative'>
               <div
                 className='absolute z-0 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-none rounded-2xl'

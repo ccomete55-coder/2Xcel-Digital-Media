@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Sparkles, Bot, VolumeX, Volume2, ArrowRight } from "lucide-react";
+import { VolumeX, Volume2 } from "lucide-react";
 import { motion } from "motion/react";
-import { AnimatedIconWrapper } from "./ui/AnimatedIcon";
 import { CircularGallery, GalleryItem } from "./ui/circular-gallery";
 
 // --- Integrated 2XceL AI Ad Data Structure ---
@@ -274,22 +273,16 @@ export const CaseStudiesSection: React.FC<CaseStudiesSectionProps> = ({
       <div className="flex flex-col gap-10">
 
         {/* Featured Case Study: Circular 3D Gallery Interactive Viewport */}
-        <div className="relative w-full rounded-[2rem] border border-white/5 overflow-hidden bg-black/40 backdrop-blur-md shadow-2xl">
+        <div className="relative w-full max-w-6xl mx-auto overflow-hidden">
           <div className="relative w-full flex flex-col items-center justify-center overflow-hidden px-6 sm:px-12 py-12 sm:py-16">
             <div className="absolute inset-0 bg-brand-orange/5 blur-[120px] pointer-events-none" />
 
             {/* Titles and Controls Overlay */}
             <div className="text-center z-20 max-w-3xl mx-auto flex flex-col gap-3 relative">
-              <span className="text-brand-orange uppercase tracking-[0.3em] font-mono text-[10px] font-bold inline-flex items-center gap-1.5 bg-brand-orange/10 px-3.5 py-1 rounded-full w-max border border-brand-orange/20 mx-auto">
-                <AnimatedIconWrapper animation="glow" trigger="always">
-                  <Sparkles size={11} className="text-brand-orange animate-pulse" />
-                </AnimatedIconWrapper>
-                Featured Interactive Experience
-              </span>
               <h2 className="text-3xl sm:text-[2.75rem] font-black text-white leading-tight tracking-tight">
                 Curated Custom Ad Portfolio
               </h2>
-              <p className="text-xs sm:text-sm text-gray-400 font-light font-sans max-w-xl mx-auto">
+              <p className="text-sm sm:text-base text-gray-400 font-light font-sans max-w-xl mx-auto">
                 A rotating reel of real ad creatives we've produced. Hover to pause — click any spot to watch it full-size with sound.
               </p>
             </div>
@@ -297,10 +290,6 @@ export const CaseStudiesSection: React.FC<CaseStudiesSectionProps> = ({
             {/* 3D Gallery Viewport */}
             <div className="w-full h-[58vh] relative flex items-center justify-center mt-6 overflow-visible">
               <CircularGallery items={galleryData} radius={500} />
-            </div>
-
-            <div className="z-20 mt-4 flex flex-col items-center gap-1 font-mono text-[9px] sm:text-[10px] text-gray-500 uppercase tracking-widest text-center">
-              <span className="animate-pulse">↓ Scroll for more ↓</span>
             </div>
           </div>
         </div>

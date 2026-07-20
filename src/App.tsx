@@ -10,13 +10,16 @@ import { CustomCursor } from './components/CustomCursor';
 import ScrollExpandMedia from './components/ui/scroll-expansion-hero';
 import { CinematicFooter } from './components/ui/motion-footer';
 import { BlueprintsSection } from './components/BlueprintsSection';
+import { FeaturedAgentsSection } from './components/FeaturedAgentsSection';
 import { PricingSection } from './components/PricingSection';
 import { CaseStudiesSection } from './components/CaseStudiesSection';
 import { Toggle } from './components/ui/toggle';
 import InteractiveSelector from './components/ui/interactive-selector';
 import { Eyebrow } from './components/ui/Eyebrow';
 import { VoiceConcierge } from './components/VoiceConcierge';
+import ShapeGrid from './components/ShapeGrid';
 import { blogPosts } from './data/blogPosts';
+import { IconDock } from './components/ui/icon-dock';
 
 // ==========================================
 // SHARED ANIMATION COMPONENTS
@@ -219,8 +222,43 @@ export default function App() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // #page-root has overflow-hidden purely to contain decorative background
+  // elements — it must never scroll internally. But scrollIntoView() calls
+  // (used throughout the site for nav/CTA clicks) can make the browser treat
+  // it as a scrollable ancestor and nudge its internal scrollTop off 0, which
+  // desyncs the footer's clip-path reveal from the real window scroll
+  // position and clips the footer content away near the bottom of the page.
+  useEffect(() => {
+    const root = document.getElementById('page-root');
+    if (!root) return;
+    const resetInternalScroll = () => {
+      if (root.scrollTop !== 0) root.scrollTop = 0;
+      if (root.scrollLeft !== 0) root.scrollLeft = 0;
+    };
+    root.addEventListener('scroll', resetInternalScroll, { passive: true });
+    return () => root.removeEventListener('scroll', resetInternalScroll);
+  }, []);
+
   const [mediaType, setMediaType] = useState<'video' | 'image'>('video');
   const [scrollProgress, setScrollProgress] = useState<number>(0);
+  const [heroForceExpanded, setHeroForceExpanded] = useState<boolean>(false);
+
+  // Nav links must work even before the hero's scroll-jack animation has
+  // played out — force it to its expanded state first so it stops fighting
+  // the anchor jump, then scroll to the target section.
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (!href.startsWith('#')) return;
+    const id = href.slice(1);
+    const el = document.getElementById(id);
+    if (!el) return;
+    e.preventDefault();
+    setHeroForceExpanded(true);
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+  };
   const [activeVideoSrc, setActiveVideoSrc] = useState<string>("/The Enchanted Closet-Lace Cuff Jean.mp4");
   const [isMuted, setIsMuted] = useState<boolean>(true);
   
@@ -382,61 +420,61 @@ export default function App() {
     {
       id: "custom-web-design",
       title: "Custom Web Design",
-      subtitle: "Backend Marketing Logic",
+      subtitle: "Built to Sell",
       num: "01",
       icon: <CogIcon className="text-brand-orange" size={24} />,
       animation: "none",
-      description: "We build premium, custom websites engineered to establish your brand's elite market authority, deliver a flawless client experience, and run automated lead-capture systems on autopilot to maximize sales.",
+      description: "Fast, beautiful websites that turn visitors into leads and customers. Built with SEO, automation, and lead capture—so your site works 24/7 to grow your business.",
       list: [
-        "Dominant Google search positioning",
-        "Automated funnel to capture high-value clients",
-        "Instant-loading pages to prevent lost prospects",
-        "Clean, direct tracking of pipeline growth"
+        "Rank high on Google search",
+        "Capture leads automatically",
+        "Lightning-fast load speeds",
+        "Track every sale & visitor"
       ]
     },
     {
       id: "ai-sales-agents",
-      title: "24/7 Autonomous AI Sales Agents",
-      subtitle: "Configured For Sales Goals",
+      title: "AI Agents & Automations",
+      subtitle: "Voice Agents, Lead Scrapers & More",
       num: "02",
       icon: <BotIcon className="text-brand-blue" size={24} />,
       animation: "none",
-      description: "Intelligent systems customized around your precise offerings and standard replies, built to engage visitors immediately and autonomously guide them to schedule meetings to hit target KPI indicators.",
+      description: "AI agents, automations and workflows for any business need. From voice agents to lead scrapers—everything in between. Test our prebuilt agents right here on the site.",
       list: [
-        "Adaptive conversational logic",
-        "Dynamic pipeline coordination",
-        "Automated booking schedule integrations",
-        "Unbranded database synchronization"
+        "Voice agents that answer calls 24/7",
+        "Lead scrapers & prospect finders",
+        "Automated email & follow-up workflows",
+        "Custom chatbots for your business"
       ]
     },
     {
       id: "next-gen-media",
-      title: "Next-Generation Digital Media",
-      subtitle: "High-End AI Video",
+      title: "AI Video & Creative Content",
+      subtitle: "Professional Content, Fast",
       num: "03",
       icon: <WaypointsIcon className="text-white" size={24} />,
       animation: "none",
-      description: "High-production-value video assets, cinematic image models, and ultra-crisp motion animations designed to eliminate physical shoot constraints and captivate executive-level audiences.",
+      description: "High-quality video, product photos, and creative ads made with AI—no expensive shoots or long wait times. Get cinematic content ready to post in days, not weeks.",
       list: [
-        "Cinematic prompt-driven video assets",
-        "Apparel showcasing on virtual models",
-        "Zero physical stage constraints",
-        "Premium aesthetic asset library"
+        "AI-generated product videos",
+        "Professional photos & ads",
+        "Custom branded content",
+        "Social media ready assets"
       ]
     },
     {
       id: "strategic-marketing-plans",
-      title: "Strategic Marketing Plans",
-      subtitle: "Targeted Audience Campaigns",
+      title: "Done-For-You Marketing",
+      subtitle: "Strategy That Converts",
       num: "04",
       icon: <ActivityIcon className="text-[#32D74B]" size={24} />,
       animation: "none",
-      description: "Strategic acquisition and marketing blueprints aligned with your sales goals, delivering data-driven campaigns leveraging our media assets to capture high-value corporate partners.",
+      description: "We handle your marketing so you don't have to. From ad strategy to content creation to audience targeting—we build campaigns that bring in real customers, not just clicks.",
       list: [
-        "ROI-focused acquisition funnels",
-        "High-SEO content strategy mapping",
-        "Dynamic target audience segmentation",
-        "Continuous performance optimization"
+        "Custom marketing strategy",
+        "Ad campaigns that convert",
+        "Audience research & targeting",
+        "Monthly performance reports"
       ]
     }
   ];
@@ -525,9 +563,14 @@ export default function App() {
   const runningY = `calc(${startY} * ${1 - ease} + ${slotCoords.y}px * ${ease})`;
   const runningX = `calc(${startX} * ${1 - ease} + ${slotCoords.x}px * ${ease})`;
   const runningTracking = `${-0.07 * (1 - ease) + 0.2 * ease}em`;
+  // Crossfade handoff between the flying logo and the static nav-pill logo —
+  // only one is ever visible at a time, so they never overlap into a "doubled" look
+  const navHandoffStart = 0.85;
+  const navLogoOpacity = ease <= navHandoffStart ? 0 : Math.min(1, (ease - navHandoffStart) / (1 - navHandoffStart));
+  const flyingLogoOpacity = 1 - navLogoOpacity;
 
   return (
-    <div id="page-root" className="bg-[#0B0E14] min-h-screen selection:bg-brand-orange selection:text-white relative overflow-hidden" style={{ color: '#DEDBC8' }}>
+    <div id="page-root" className="bg-[#0B0E14] min-h-screen selection:bg-brand-orange selection:text-white relative overflow-clip" style={{ color: '#DEDBC8' }}>
 
       {/* Scroll Progress Bar */}
       <motion.div
@@ -553,7 +596,26 @@ export default function App() {
 
       {/* Custom Circular Magnetic Cursor Trail */}
       <CustomCursor />
-      
+
+      {/* ShapeGrid Hexagon Side Borders */}
+      <div
+        className="fixed inset-0 w-full h-screen z-0 overflow-hidden"
+        style={{
+          maskImage: 'linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%)',
+          WebkitMaskImage: 'linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%)',
+        }}
+      >
+        <ShapeGrid
+          shape="hexagon"
+          direction="up"
+          speed={0.15}
+          borderColor="#E55B2B"
+          hoverFillColor="#229AD6"
+          squareSize={50}
+          hoverTrailAmount={2}
+        />
+      </div>
+
       {/* Dynamic Background Noise & Spotlights */}
       <div className="absolute inset-0 radial-noise pointer-events-none opacity-40 z-0"></div>
       <div className="absolute top-[-5%] right-[-5%] w-[600px] h-[600px] gradient-glow pointer-events-none opacity-60 z-0"></div>
@@ -567,9 +629,10 @@ export default function App() {
           left: runningX,
           top: runningY,
           transform: `translate(calc(-50% * ${ease}), -50%)`,
+          opacity: flyingLogoOpacity,
         }}
       >
-        <div 
+        <div
           className="font-sans font-extrabold flex items-start leading-[0.85] justify-center relative"
           style={{
             fontSize: `clamp(11px, ${runningFontSize}, 22vw)`,
@@ -619,37 +682,12 @@ export default function App() {
         </div>
       </div>
 
-      {/* Hero CTA — fades out as user scrolls */}
-      <div
-        className="fixed z-[59] left-0 right-0 flex flex-col items-center gap-3 pointer-events-none"
-        style={{
-          bottom: "5vh",
-          opacity: Math.max(0, 1 - ease * 3),
-          transform: `translateY(${ease * 24}px)`,
-          pointerEvents: ease > 0.25 ? 'none' : 'auto',
-        }}
-      >
-        <a
-          href="#what-we-do"
-          className="flex items-center gap-2.5 bg-brand-orange hover:bg-brand-orange/90 text-white font-bold text-xs sm:text-sm tracking-widest uppercase px-7 py-3.5 rounded-full shadow-2xl shadow-brand-orange/30 transition-all duration-300 border border-brand-orange/40 hover:scale-105"
-          style={{ pointerEvents: ease > 0.25 ? 'none' : 'auto' }}
-        >
-          <Sparkles size={14} />
-          See What We Build
-          <ArrowRight size={14} />
-        </a>
-        <div className="flex flex-col items-center gap-1 opacity-60">
-          <div className="w-px h-6 bg-white/40"></div>
-          <div className="w-1.5 h-1.5 rounded-full bg-white/60 animate-bounce"></div>
-        </div>
-      </div>
-
       {/* Floating Pill Navbar with Interactive Media Toggle - RESPONSIVE ENHANCEMENT */}
       <header className="fixed top-4 left-0 right-0 z-50 w-full px-4 flex justify-center">
         {isMobile ? (
           <div className="w-full max-w-lg flex items-center justify-between glass rounded-full px-6 py-3.5 shadow-2xl backdrop-blur-md border border-white/10 relative">
             {/* Left side brand slot */}
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-1.5" style={{ opacity: navLogoOpacity }}>
               <div className="w-1.5 h-1.5 rounded-full bg-[#E55B2B] animate-pulse"></div>
               <span ref={mobileSlotRef} className="text-xs font-black tracking-[0.2em] uppercase text-slate-800 dark:text-white select-none">
                 <span className="text-[#E55B2B]">2</span>
@@ -701,15 +739,15 @@ export default function App() {
                 {[
                   { label: "Capabilities", href: "#what-we-do" },
                   { label: "Web Design", href: "#custom-web-design" },
-                  { label: "AI Blueprints", href: "#blueprints" },
                   { label: "Digital Media", href: "#media-section" },
+                  { label: "AI Blueprints", href: "#blueprints" },
                   { label: "Pricing", href: "#pricing" },
                   { label: "Blog", href: "#blog" },
                 ].map((item, idx) => (
                   <a
                     key={item.href}
                     href={item.href}
-                    onClick={() => setIsMenuOpen(false)}
+                    onClick={(e) => { setIsMenuOpen(false); handleNavClick(e, item.href); }}
                     className="text-slate-800 dark:text-white hover:text-brand-orange uppercase font-bold text-xs tracking-[0.15em] transition-colors py-2 border-b border-white/5 last:border-b-0"
                   >
                     {item.label}
@@ -717,7 +755,7 @@ export default function App() {
                 ))}
                 <a
                   href="#inquiries"
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={(e) => { setIsMenuOpen(false); handleNavClick(e, '#inquiries'); }}
                   className="bg-brand-orange hover:bg-brand-orange/90 text-white font-bold text-xs tracking-[0.15em] uppercase px-5 py-3 rounded-full mt-2 transition-all block duration-300 shadow-md"
                 >
                   Contact
@@ -729,26 +767,29 @@ export default function App() {
           <nav className="glass rounded-full px-6 sm:px-8 py-3 flex items-center justify-center gap-2 sm:gap-4 shadow-2xl backdrop-blur-md border border-white/10 text-xs font-semibold">
             <a
               href="#what-we-do"
+              onClick={(e) => handleNavClick(e, '#what-we-do')}
               className={`tracking-[0.12em] uppercase transition-all duration-300 cursor-pointer px-1.5 py-1 ${activeSection === 'what-we-do' ? 'text-brand-orange opacity-100' : 'text-slate-800 dark:text-white opacity-75 hover:opacity-100'}`}
             >
               Capabilities
             </a>
             <a
               href="#custom-web-design"
+              onClick={(e) => handleNavClick(e, '#custom-web-design')}
               className={`tracking-[0.12em] uppercase transition-all duration-300 cursor-pointer px-1.5 py-1 ${activeSection === 'custom-web-design' ? 'text-brand-orange opacity-100' : 'text-slate-800 dark:text-white opacity-75 hover:opacity-100'}`}
             >
               Web Design
             </a>
             <a
-              href="#blueprints"
-              className={`tracking-[0.12em] uppercase transition-all duration-300 cursor-pointer px-1.5 py-1 ${activeSection === 'blueprints' ? 'text-brand-orange opacity-100' : 'text-slate-800 dark:text-white opacity-75 hover:opacity-100'}`}
+              href="#media-section"
+              onClick={(e) => handleNavClick(e, '#media-section')}
+              className={`tracking-[0.12em] uppercase transition-all duration-300 cursor-pointer px-1.5 py-1 ${activeSection === 'media-section' ? 'text-brand-orange opacity-100' : 'text-slate-800 dark:text-white opacity-75 hover:opacity-100'}`}
             >
-              AI Blueprints
+              Digital Media
             </a>
-            
+
             <div
               className="flex items-center gap-1.5 px-1.5 transition-opacity duration-300"
-              style={{ opacity: ease < 0.05 ? 0.3 : Math.max(0.3, ease) }}
+              style={{ opacity: navLogoOpacity }}
             >
               <div className="w-1.5 h-1.5 rounded-full bg-[#E55B2B] animate-pulse"></div>
               <span ref={desktopSlotRef} className="text-[10px] sm:text-xs font-black tracking-[0.2em] uppercase text-slate-800 dark:text-white select-none">
@@ -759,19 +800,22 @@ export default function App() {
             </div>
 
             <a
-              href="#media-section"
-              className={`tracking-[0.12em] uppercase transition-all duration-300 cursor-pointer px-1.5 py-1 ${activeSection === 'media-section' ? 'text-brand-orange opacity-100' : 'text-slate-800 dark:text-white opacity-75 hover:opacity-100'}`}
+              href="#blueprints"
+              onClick={(e) => handleNavClick(e, '#blueprints')}
+              className={`tracking-[0.12em] uppercase transition-all duration-300 cursor-pointer px-1.5 py-1 ${activeSection === 'blueprints' ? 'text-brand-orange opacity-100' : 'text-slate-800 dark:text-white opacity-75 hover:opacity-100'}`}
             >
-              Digital Media
+              AI Blueprints
             </a>
             <a
               href="#pricing"
+              onClick={(e) => handleNavClick(e, '#pricing')}
               className={`tracking-[0.12em] uppercase transition-all duration-300 cursor-pointer px-1.5 py-1 ${activeSection === 'pricing' ? 'text-brand-orange opacity-100' : 'text-slate-800 dark:text-white opacity-75 hover:opacity-100'}`}
             >
               Pricing
             </a>
             <a
               href="#blog"
+              onClick={(e) => handleNavClick(e, '#blog')}
               className={`tracking-[0.12em] uppercase transition-all duration-300 cursor-pointer px-1.5 py-1 ${activeSection === 'blog' ? 'text-brand-orange opacity-100' : 'text-slate-800 dark:text-white opacity-75 hover:opacity-100'}`}
             >
               Blog
@@ -799,6 +843,7 @@ export default function App() {
 
             <a
               href="#inquiries"
+              onClick={(e) => handleNavClick(e, '#inquiries')}
               className="tracking-[0.12em] uppercase font-bold text-brand-orange hover:opacity-100 transition-opacity duration-300 cursor-pointer px-3 py-1.5 bg-brand-orange/10 hover:bg-brand-orange/20 border border-brand-orange/25 rounded-full flex items-center gap-1.5 transition-all duration-300 shadow-sm"
             >
               Contact
@@ -806,6 +851,13 @@ export default function App() {
           </nav>
         )}
       </header>
+
+      {/* Icon Dock — gig sites & socials, sits just under the pill navbar */}
+      <div className="fixed top-20 sm:top-24 left-0 right-0 z-[45] w-full flex justify-center pointer-events-none">
+        <div className="pointer-events-auto">
+          <IconDock />
+        </div>
+      </div>
 
       {/* Cinematic Responsive Scroll Expansion Gateway */}
       <ScrollExpandMedia
@@ -823,6 +875,7 @@ export default function App() {
         }
         textBlend
         onProgressChange={setScrollProgress}
+        forceExpanded={heroForceExpanded}
       >
         <div className="w-full">
           
@@ -840,7 +893,7 @@ export default function App() {
                 />
               </div>
 
-              <div className="flex flex-col gap-6 max-w-4xl mx-auto border-t border-white/5 pt-8">
+              <div className="flex flex-col gap-6 max-w-4xl mx-auto  pt-8">
                 {[
                   "Led by Executive Director Christian Cométe, 2XceL Digital Media was founded on a simple truth: media without marketing is invisible, and marketing without automation is inefficient.",
                   "We equip brands for the Agentic Web by blending engineered backend technical automation with elite creative media, giving mid-market businesses and rising entrepreneurs the modern infrastructure they need to outpace the competition."
@@ -851,7 +904,7 @@ export default function App() {
                     whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                     viewport={{ once: true, margin: "-80px" }}
                     transition={{ duration: 0.8, delay: sIdx * 0.25, ease: [0.16, 1, 0.3, 1] }}
-                    className="text-[#E1E0CC]/90 text-sm sm:text-base md:text-lg lg:text-xl font-light tracking-wide leading-relaxed"
+                    className="text-[#46647d] dark:text-[#94a3b8] text-sm sm:text-base md:text-lg lg:text-xl font-light tracking-wide leading-relaxed"
                   >
                     {sentence}
                   </motion.p>
@@ -900,10 +953,10 @@ export default function App() {
                               </AnimatedIconWrapper>
                             </div>
                             <div>
-                              <h3 className="text-lg sm:text-xl font-bold text-white group-hover:text-brand-orange transition-colors duration-300 leading-tight">
+                              <h3 className="text-xl sm:text-2xl font-bold text-white group-hover:text-brand-orange transition-colors duration-300 leading-tight">
                                 {service.title}
                               </h3>
-                              <p className="text-xs text-brand-orange/80 font-mono tracking-wider font-semibold">
+                              <p className="text-sm text-brand-orange/80 font-mono tracking-wider font-semibold">
                                 {service.subtitle}
                               </p>
                             </div>
@@ -921,9 +974,9 @@ export default function App() {
 
                         <ul className="flex flex-col gap-2 pt-2">
                           {service.list.map((item, i) => (
-                            <li key={i} className="flex items-start gap-2 text-xs sm:text-sm text-slate-400 leading-snug">
+                            <li key={i} className="flex items-start gap-2.5 text-base sm:text-lg text-slate-400 leading-snug">
                               <span className="mt-1 text-brand-orange flex-shrink-0">
-                                <Check size={11} className="text-brand-orange stroke-[3]" />
+                                <Check size={15} className="text-brand-orange stroke-[3]" />
                               </span>
                               <span>{item}</span>
                             </li>
@@ -931,7 +984,7 @@ export default function App() {
                         </ul>
                       </div>
 
-                      <div className="pt-5 border-t border-white/5 mt-6">
+                      <div className="pt-5  mt-6">
                         <a
                           href="#inquiries"
                           className="inline-flex items-center gap-2 text-xs font-bold tracking-wider uppercase text-brand-orange group-hover:text-white transition-colors duration-300"
@@ -951,7 +1004,7 @@ export default function App() {
           </section>
 
           {/* SECTION A: CUSTOM WEB DESIGN */}
-          <section id="custom-web-design" className="py-20 px-4 md:px-8 w-full relative z-10 scroll-mt-28 border-t border-white/5">
+          <section id="custom-web-design" className="py-20 px-4 md:px-8 w-full relative z-10 scroll-mt-28 ">
             <div className="max-w-7xl mx-auto flex flex-col gap-12">
               
               <motion.div 
@@ -975,7 +1028,7 @@ export default function App() {
                   <h3 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight leading-tight">
                     Custom Web Projects Portfolio
                   </h3>
-                  <p className="text-xs sm:text-sm text-gray-400 font-light leading-relaxed">
+                  <p className="text-sm sm:text-base text-gray-400 font-light leading-relaxed">
                     Explore our high-performance client deployments live. Click on any panel to smoothly expand the project view and access live interactive platforms.
                   </p>
                 </div>
@@ -995,7 +1048,7 @@ export default function App() {
           </section>
 
           {/* SECTION C: THE MEDIA SECTION */}
-          <section id="media-section" className="pt-24 pb-12 px-4 md:px-8 w-full relative z-10 border-t border-[#1F2937]/50 bg-black/40 scroll-mt-28">
+          <section id="media-section" className="pt-24 pb-12 px-4 md:px-8 w-full relative z-10 scroll-mt-28">
             <div className="max-w-7xl mx-auto flex flex-col gap-16">
               
               <CaseStudiesSection 
@@ -1009,8 +1062,15 @@ export default function App() {
             </div>
           </section>
 
+          {/* SECTION 2B-2: FEATURED AI AGENTS (Chatbot vs Agent Positioning) */}
+          <section id="featured-agents" className="pt-12 pb-12 px-4 md:px-8 w-full relative z-10 scroll-mt-28">
+            <div className="max-w-7xl mx-auto flex flex-col gap-12">
+              <FeaturedAgentsSection />
+            </div>
+          </section>
+
           {/* SECTION 2C: AI WORKSPACE BLUEPRINTS SECTION (The Lead Funnel) */}
-          <section id="blueprints" className="pt-12 pb-24 px-4 md:px-8 w-full relative z-10 bg-[#080B10]/20 border-t border-white/5 scroll-mt-28">
+          <section id="blueprints" className="pt-12 pb-24 px-4 md:px-8 w-full relative z-10 scroll-mt-28">
             <div className="max-w-7xl mx-auto flex flex-col gap-12">
               <BlueprintsSection 
                 setServiceInterested={setServiceInterested}
@@ -1022,7 +1082,7 @@ export default function App() {
           <PricingSection setServiceInterested={setServiceInterested} />
 
           {/* SECTION 4: INDUSTRY INSIGHTS (BLOG) */}
-          <section id="blog" className="py-20 px-4 md:px-8 w-full relative z-10 bg-black/40 border-t border-white/5 scroll-mt-28">
+          <section id="blog" className="py-20 px-4 md:px-8 w-full relative z-10 scroll-mt-28">
             <div className="max-w-7xl mx-auto flex flex-col gap-12">
               
               <div className="text-center max-w-4xl mx-auto flex flex-col gap-5">
@@ -1130,7 +1190,7 @@ export default function App() {
                         </p>
                       </div>
 
-                      <div className="flex items-center justify-between border-t border-white/5 pt-4">
+                      <div className="flex items-center justify-between  pt-4">
                         <span className="text-sm font-mono text-gray-500">{post.date}</span>
                         <span className="text-sm font-bold text-brand-orange inline-flex items-center gap-1.5 group-hover:translate-x-1 transition-transform duration-200">
                           Read <ArrowRight size={15} />
@@ -1156,7 +1216,7 @@ export default function App() {
           </section>
 
           {/* SECTION 4: CLIENT REVIEWS */}
-          <section id="reviews" className="py-20 px-4 md:px-8 w-full relative z-10 bg-[#080B10]/40 border-t border-[#FFFFFF]/5 scroll-mt-28">
+          <section id="reviews" className="py-20 px-4 md:px-8 w-full relative z-10 scroll-mt-28">
             <div className="max-w-7xl mx-auto flex flex-col gap-12">
               
               <motion.div 
@@ -1205,7 +1265,7 @@ export default function App() {
                       “Our old site was pretty but entirely dead—maybe one email contact form every other month. 2XceL built an elite custom layout and plugged in their AI Sales Assistant. On the first weekend, the assistant scheduled 9 high-ticket bookings automatically. Game changer.”
                     </p>
                   </div>
-                  <div className="flex items-center gap-4 border-t border-white/5 pt-5 mt-6">
+                  <div className="flex items-center gap-4  pt-5 mt-6">
                     <div className="w-11 h-11 rounded-xl flex items-center justify-center font-bold text-white font-mono text-sm shrink-0" style={{ background: 'linear-gradient(135deg, #E65C2B 0%, #ff8c5a 100%)', boxShadow: '0 4px 12px rgba(230,92,43,0.35)' }}>
                       JV
                     </div>
@@ -1244,7 +1304,7 @@ export default function App() {
                       “The speed of response is how you close deals today. 2XceL's backend architecture answers customer specs within 30 seconds. Clients are fully qualified, scheduled, and mapped before my sales executives even log on in the morning.”
                     </p>
                   </div>
-                  <div className="flex items-center gap-4 border-t border-white/5 pt-5 mt-6">
+                  <div className="flex items-center gap-4  pt-5 mt-6">
                     <div className="w-11 h-11 rounded-xl flex items-center justify-center font-bold text-white font-mono text-sm shrink-0" style={{ background: 'linear-gradient(135deg, #2B8ED9 0%, #5ab4f0 100%)', boxShadow: '0 4px 12px rgba(43,142,217,0.35)' }}>
                       SD
                     </div>
@@ -1283,7 +1343,7 @@ export default function App() {
                       “We were highly skeptical about AI chat looking robotic, but 2XceL proved us completely wrong. The custom knowledge system they configured has pristine accuracy. It has generated $240k in brand-new pipeline value in just 60 days.”
                     </p>
                   </div>
-                  <div className="flex items-center gap-4 border-t border-white/5 pt-5 mt-6">
+                  <div className="flex items-center gap-4  pt-5 mt-6">
                     <div className="w-11 h-11 rounded-xl flex items-center justify-center font-bold text-white font-mono text-sm shrink-0" style={{ background: 'linear-gradient(135deg, #32D74B 0%, #5fe874 100%)', boxShadow: '0 4px 12px rgba(50,215,75,0.3)' }}>
                       RM
                     </div>
@@ -1435,7 +1495,7 @@ export default function App() {
                           <option value="Tier 1: Complimentary Workspace Blueprints">Tier 1: Complimentary Workspace Blueprints</option>
                           <option value="Tier 2: Core Growth & Implementation">Tier 2: Core Growth & Implementation ($2,500)</option>
                           <option value="Tier 3: Full Enterprise Infrastructure">Tier 3: Full Enterprise Infrastructure (Custom)</option>
-                          {(serviceInterested.startsWith("Free Import:") || serviceInterested.startsWith("Complimentary Import:")) && (
+                          {(serviceInterested.startsWith("Free Import:") || serviceInterested.startsWith("Complimentary Import:") || serviceInterested.startsWith("Custom Quote")) && (
                             <option value={serviceInterested}>{serviceInterested}</option>
                           )}
                         </select>
@@ -1488,7 +1548,7 @@ export default function App() {
                     </div>
 
                     {/* Submission CTA block */}
-                    <div className="flex flex-col gap-3 pt-3 border-t border-white/5">
+                    <div className="flex flex-col gap-3 pt-3 ">
                       {formError && (
                         <p role="alert" aria-live="polite" className="text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-2.5 font-medium">
                           {formError}
@@ -1583,7 +1643,7 @@ Received
                     </div>
 
                     {/* Interactive Zoom Call Calendar Scheduling System with real Google Maps wrapper */}
-                    <div className="border-t border-white/5 pt-6">
+                    <div className=" pt-6">
                       <h5 className="text-sm uppercase font-mono tracking-widest text-[#E65C2B] font-bold mb-4 flex items-center gap-1.5">
                         <Calendar size={14} />
                         Choose a Zoom Strategy Call Date & Time *
@@ -1655,7 +1715,7 @@ Received
                           </div>
 
                           {/* Lead Booking Action */}
-                          <div className="pt-2 border-t border-white/5 mt-2">
+                          <div className="pt-2  mt-2">
                             {!isBooked ? (
                               <button
                                 key="book-btn"
@@ -1729,7 +1789,7 @@ Received
                     </div>
 
                     {/* Bottom confirmation details feedback */}
-                    <div className="mt-6 pt-5 border-t border-white/5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 text-xs font-mono text-gray-400">
+                    <div className="mt-6 pt-5  flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 text-xs font-mono text-gray-400">
                       <div>
                         {isBooked ? (
                           <span className="text-emerald-400 font-bold">✓ CHECK YOUR INBOX: Confirmation link dispatched to {emailInput}</span>
@@ -1810,7 +1870,7 @@ Received
                 ))}
               </div>
               
-              <div className="mt-8 pt-6 border-t border-white/5 flex flex-wrap justify-between items-center gap-4">
+              <div className="mt-8 pt-6  flex flex-wrap justify-between items-center gap-4">
                 <div className="flex items-center gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-brand-orange animate-ping"></div>
                   <span className="text-[10px] font-mono uppercase tracking-widest text-[#E65C2B] font-bold">2XceL Systems Lab</span>
