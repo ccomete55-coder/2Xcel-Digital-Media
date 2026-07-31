@@ -1,18 +1,15 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, useInView, useScroll, useTransform, MotionValue } from 'motion/react';
 import { ArrowRight, Check, Zap, TrendingUp, Bot, Brain, Globe, Quote, ShieldCheck, HelpCircle, Sparkles, Send, Mail, User, Landmark, MessageSquare, Settings, Calendar, Clock, MapPin, Phone, Briefcase, Menu, X, Volume2, VolumeX, Moon, Sun } from 'lucide-react';
-import { AnimatedIconWrapper, IconAnimationType } from './components/ui/AnimatedIcon';
-import { CogIcon } from './components/ui/CogIcon';
-import { BotIcon } from './components/ui/BotIcon';
-import { WaypointsIcon } from './components/ui/WaypointsIcon';
-import { ActivityIcon } from './components/ui/ActivityIcon';
 import { CustomCursor } from './components/CustomCursor';
 import ScrollExpandMedia from './components/ui/scroll-expansion-hero';
 import { CinematicFooter } from './components/ui/motion-footer';
 import { BlueprintsSection } from './components/BlueprintsSection';
 import { FeaturedAgentsSection } from './components/FeaturedAgentsSection';
+import { LunaVoiceAgentSection } from './components/LunaVoiceAgentSection';
 import { PricingSection } from './components/PricingSection';
 import { CaseStudiesSection } from './components/CaseStudiesSection';
+import { SocialMediaTiers } from './components/SocialMediaTiers';
 import { Toggle } from './components/ui/toggle';
 import InteractiveSelector from './components/ui/interactive-selector';
 import { Eyebrow } from './components/ui/Eyebrow';
@@ -198,6 +195,19 @@ const AnimatedStat: React.FC<AnimatedStatProps> = ({
 // CORE APPLICATION SYSTEM LAYOUT
 // ==========================================
 
+// Fixed dropdown values in the "Service Interested In" selector — anything
+// outside this set (e.g. a specific pricing tier or add-on card) gets
+// injected as its own <option> so the select actually shows what was picked.
+const KNOWN_SERVICE_OPTIONS = new Set([
+  "Custom Web Design with Marketing Backend",
+  "24/7 AI Sales Assistant Integration",
+  "Cinematic Media Production",
+  "Full-Suite Digital Brand Engine",
+  "Tier 1: Complimentary Workspace Blueprints",
+  "Tier 2: Core Growth & Implementation",
+  "Tier 3: Full Enterprise Infrastructure",
+]);
+
 export default function App() {
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
@@ -261,6 +271,7 @@ export default function App() {
   };
   const [activeVideoSrc, setActiveVideoSrc] = useState<string>("/The Enchanted Closet-Lace Cuff Jean.mp4");
   const [isMuted, setIsMuted] = useState<boolean>(true);
+  const [isHeroMuted, setIsHeroMuted] = useState<boolean>(true);
   
   const getVideoSrc = (path: string) => {
     if (path === "/The Enchanted Closet-Lace Cuff Jean.mp4") {
@@ -322,7 +333,7 @@ export default function App() {
   const [activeSection, setActiveSection] = useState<string>('');
 
   useEffect(() => {
-    const sectionIds = ['what-we-do', 'custom-web-design', 'media-section', 'blueprints', 'pricing', 'blog'];
+    const sectionIds = ['custom-web-design', 'media-section', 'blueprints', 'pricing', 'blog'];
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -392,92 +403,6 @@ export default function App() {
   const aboutParagraphText = "We recognized that most websites are just static brochures. We changed the game by blending cinematic media with AI-powered sales technology. Our mission is to provide businesses with a digital presence that doesn't just look elite but works 24/7—using backend marketing logic and smart automation to hit the sales targets that traditional agencies miss.";
   const characters = aboutParagraphText.split('');
 
-  // Feature Cards Content Architecture matching 2XceL Digital Media Strategy Tip
-  const cardEntranceVariants = {
-    hidden: { opacity: 0, scale: 0.95, y: 15 },
-    visible: (custom: number) => ({
-      opacity: 1,
-      scale: 1,
-      y: 0,
-      transition: {
-        delay: custom * 0.12,
-        duration: 0.75,
-        ease: [0.22, 1, 0.36, 1]
-      }
-    })
-  };
-
-  const servicesData: {
-    id: string;
-    title: string;
-    subtitle: string;
-    num: string;
-    icon: React.ReactNode;
-    animation: IconAnimationType;
-    description: string;
-    list: string[];
-  }[] = [
-    {
-      id: "custom-web-design",
-      title: "Custom Web Design",
-      subtitle: "Built to Sell",
-      num: "01",
-      icon: <CogIcon className="text-brand-orange" size={24} />,
-      animation: "none",
-      description: "Fast, beautiful websites that turn visitors into leads and customers. Built with SEO, automation, and lead capture—so your site works 24/7 to grow your business.",
-      list: [
-        "Rank high on Google search",
-        "Capture leads automatically",
-        "Lightning-fast load speeds",
-        "Track every sale & visitor"
-      ]
-    },
-    {
-      id: "ai-sales-agents",
-      title: "AI Agents & Automations",
-      subtitle: "Voice Agents, Lead Scrapers & More",
-      num: "02",
-      icon: <BotIcon className="text-brand-blue" size={24} />,
-      animation: "none",
-      description: "AI agents, automations and workflows for any business need. From voice agents to lead scrapers—everything in between. Test our prebuilt agents right here on the site.",
-      list: [
-        "Voice agents that answer calls 24/7",
-        "Lead scrapers & prospect finders",
-        "Automated email & follow-up workflows",
-        "Custom chatbots for your business"
-      ]
-    },
-    {
-      id: "next-gen-media",
-      title: "AI Video & Creative Content",
-      subtitle: "Professional Content, Fast",
-      num: "03",
-      icon: <WaypointsIcon className="text-white" size={24} />,
-      animation: "none",
-      description: "High-quality video, product photos, and creative ads made with AI—no expensive shoots or long wait times. Get cinematic content ready to post in days, not weeks.",
-      list: [
-        "AI-generated product videos",
-        "Professional photos & ads",
-        "Custom branded content",
-        "Social media ready assets"
-      ]
-    },
-    {
-      id: "strategic-marketing-plans",
-      title: "Done-For-You Marketing",
-      subtitle: "Strategy That Converts",
-      num: "04",
-      icon: <ActivityIcon className="text-[#32D74B]" size={24} />,
-      animation: "none",
-      description: "We handle your marketing so you don't have to. From ad strategy to content creation to audience targeting—we build campaigns that bring in real customers, not just clicks.",
-      list: [
-        "Custom marketing strategy",
-        "Ad campaigns that convert",
-        "Audience research & targeting",
-        "Monthly performance reports"
-      ]
-    }
-  ];
 
   const objections = [
     {
@@ -583,7 +508,7 @@ export default function App() {
 
       {/* Skip to main content — keyboard accessibility */}
       <a
-        href="#what-we-do"
+        href="#custom-web-design"
         className="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-[200] focus:bg-brand-orange focus:text-white focus:px-4 focus:py-2 focus:rounded-lg focus:text-sm focus:font-bold focus:shadow-lg"
       >
         Skip to main content
@@ -737,7 +662,6 @@ export default function App() {
                 className="absolute top-16 left-0 right-0 bg-[#0B0E14]/95 dark:bg-[#0B0E14]/95 backdrop-blur-xl border border-white/10 rounded-3xl p-6 shadow-3xl z-40 flex flex-col gap-4 text-center"
               >
                 {[
-                  { label: "Capabilities", href: "#what-we-do" },
                   { label: "Web Design", href: "#custom-web-design" },
                   { label: "Digital Media", href: "#media-section" },
                   { label: "AI Blueprints", href: "#blueprints" },
@@ -765,13 +689,6 @@ export default function App() {
           </div>
         ) : (
           <nav className="glass rounded-full px-6 sm:px-8 py-3 flex items-center justify-center gap-2 sm:gap-4 shadow-2xl backdrop-blur-md border border-white/10 text-xs font-semibold">
-            <a
-              href="#what-we-do"
-              onClick={(e) => handleNavClick(e, '#what-we-do')}
-              className={`tracking-[0.12em] uppercase transition-all duration-300 cursor-pointer px-1.5 py-1 ${activeSection === 'what-we-do' ? 'text-brand-orange opacity-100' : 'text-slate-800 dark:text-white opacity-75 hover:opacity-100'}`}
-            >
-              Capabilities
-            </a>
             <a
               href="#custom-web-design"
               onClick={(e) => handleNavClick(e, '#custom-web-design')}
@@ -864,18 +781,16 @@ export default function App() {
         mediaType={mediaType}
         mediaSrc={
           mediaType === 'video'
-            ? 'https://me7aitdbxq.ufs.sh/f/2wsMIGDMQRdYuZ5R8ahEEZ4aQK56LizRdfBSqeDMsmUIrJN1'
-            : 'https://images.unsplash.com/photo-1682687982501-1e58ab814714?q=80&w=1280&auto=format&fit=crop'
+            ? '/hero-video.mp4'
+            : '/hero-image.webp'
         }
-        posterSrc="https://images.unsplash.com/photo-1579546929518-9e396f3cc809?q=80&w=1280&auto=format&fit=crop"
-        bgImageSrc={
-          mediaType === 'video'
-            ? 'https://me7aitdbxq.ufs.sh/f/2wsMIGDMQRdYMNjMlBUYHaeYpxduXPVNwf8mnFA61L7rkcoS'
-            : 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1920&auto=format&fit=crop'
-        }
+        posterSrc="/hero-image.webp"
+        bgImageSrc="/hero-image.webp"
         textBlend
         onProgressChange={setScrollProgress}
         forceExpanded={heroForceExpanded}
+        isMuted={isHeroMuted}
+        onToggleMute={() => setIsHeroMuted((prev) => !prev)}
       >
         <div className="w-full">
           
@@ -913,95 +828,6 @@ export default function App() {
 
             </div>
           </section>
-          
-          {/* SECTION 2: WHAT WE DO */}
-          <section id="what-we-do" className="py-16 md:py-20 px-4 md:px-8 w-full relative z-10 scroll-mt-28">
-            <div className="max-w-7xl mx-auto flex flex-col gap-10">
-              
-              <div className="text-center max-w-4xl mx-auto flex flex-col gap-5 mt-10">
-                <motion.h2
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6 }}
-                  className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-white leading-tight"
-                >
-                  Four Systems. One Revenue Engine.
-                </motion.h2>
-                <motion.p
-                  initial={{ opacity: 0, y: 15 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.8, delay: 0.1 }}
-                  className="text-slate-400 text-sm sm:text-base md:text-lg leading-relaxed max-w-3xl mx-auto font-normal"
-                >
-                  We don't just create — we automate. Every service is engineered to generate pipeline, not just impressions.
-                </motion.p>
-              </div>
-
-              {/* Two-by-two square grid for production capabilities to prevent clipping */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto mt-12">
-                {servicesData.map((service, idx) => (
-                  <FeatureCardWrapper key={service.id} index={idx} variants={cardEntranceVariants}>
-                    <div id={`card-${service.id}`} className="w-full h-full glass rounded-3xl p-8 sm:p-10 xl:p-12 flex flex-col justify-between group transition-all duration-300 hover:bg-white/[0.06] hover:border-brand-orange/20 hover:shadow-[0_0_40px_-8px_rgba(230,92,43,0.2)] shadow-2xl border border-white/5 min-h-[440px] md:min-h-[460px] scroll-mt-28">
-                      <div className="flex flex-col gap-5">
-                        <div className="flex items-center justify-between border-b border-white/5 pb-4">
-                          <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 bg-black/60 rounded-xl border border-white/10 flex items-center justify-center shadow-lg shrink-0">
-                              <AnimatedIconWrapper animation={service.animation} trigger="hover">
-                                {service.icon}
-                              </AnimatedIconWrapper>
-                            </div>
-                            <div>
-                              <h3 className="text-xl sm:text-2xl font-bold text-white group-hover:text-brand-orange transition-colors duration-300 leading-tight">
-                                {service.title}
-                              </h3>
-                              <p className="text-sm text-brand-orange/80 font-mono tracking-wider font-semibold">
-                                {service.subtitle}
-                              </p>
-                            </div>
-                          </div>
-                          <span className="font-mono text-[11px] text-gray-500 font-bold bg-white/5 px-3 py-1 rounded-md border border-white/5 shrink-0">
-                            {service.num}
-                          </span>
-                        </div>
-                        
-                        {service.description && (
-                          <p className="text-sm sm:text-base text-slate-300/90 leading-relaxed font-normal mt-1">
-                            {service.description}
-                          </p>
-                        )}
-
-                        <ul className="flex flex-col gap-2 pt-2">
-                          {service.list.map((item, i) => (
-                            <li key={i} className="flex items-start gap-2.5 text-base sm:text-lg text-slate-400 leading-snug">
-                              <span className="mt-1 text-brand-orange flex-shrink-0">
-                                <Check size={15} className="text-brand-orange stroke-[3]" />
-                              </span>
-                              <span>{item}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      <div className="pt-5  mt-6">
-                        <a
-                          href="#inquiries"
-                          className="inline-flex items-center gap-2 text-xs font-bold tracking-wider uppercase text-brand-orange group-hover:text-white transition-colors duration-300"
-                        >
-                          Get this built
-                          <span className="w-7 h-7 rounded-full bg-black/40 flex items-center justify-center -rotate-45 group-hover:rotate-0 transition-transform duration-300 border border-white/10 group-hover:border-white/20 shadow-md">
-                            <ArrowRight size={12} />
-                          </span>
-                        </a>
-                      </div>
-                    </div>
-                  </FeatureCardWrapper>
-                ))}
-              </div>
-
-            </div>
-          </section>
 
           {/* SECTION A: CUSTOM WEB DESIGN */}
           <section id="custom-web-design" className="py-20 px-4 md:px-8 w-full relative z-10 scroll-mt-28 ">
@@ -1018,14 +844,17 @@ export default function App() {
                   Custom Web Design with Marketing Backend Architecture
                 </h2>
                 <p className="text-gray-400 text-sm sm:text-base leading-relaxed max-w-3xl mx-auto font-normal">
-                  Traditional business websites sit passively on the web like printed brochures. We engineer hand-coded, high-performance web frontends backed by real-time analytics, unbranded lead triggers, and automated database campaign conduits to convert visitors instantly.
+                  Traditional business websites sit passively on the web like printed brochures. We hand-code every frontend in raw HTML, CSS, and JavaScript — zero WordPress, zero page-builder bloat — so it loads instantly and ranks the way Google rewards. Behind it, we wire in a full proprietary CRM backend: contact tags that fire automatically on every visitor action, email and SMS follow-up sequences that run themselves, custom domain routing, and white-labeled client portals your customers log into under your own brand. It's not a brochure — it's a lead-conversion machine with a marketing department built into the code.
+                </p>
+                <p className="text-brand-orange/90 font-mono text-sm sm:text-base font-bold tracking-wide">
+                  Starts from $3,500+ base setup (one-time)
                 </p>
               </motion.div>
 
               {/* INTERACTIVE FULL-WIDTH ACCORDION */}
               <div id="interactive-demo" className="flex flex-col gap-6 items-center mt-12 w-full">
                 <div className="text-center max-w-2xl flex flex-col gap-2 mb-2">
-                  <h3 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight leading-tight">
+                  <h3 className="text-xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
                     Custom Web Projects Portfolio
                   </h3>
                   <p className="text-sm sm:text-base text-gray-400 font-light leading-relaxed">
@@ -1051,13 +880,15 @@ export default function App() {
           <section id="media-section" className="pt-24 pb-12 px-4 md:px-8 w-full relative z-10 scroll-mt-28">
             <div className="max-w-7xl mx-auto flex flex-col gap-16">
               
-              <CaseStudiesSection 
+              <CaseStudiesSection
                 activeVideoSrc={activeVideoSrc}
                 setActiveVideoSrc={setActiveVideoSrc}
                 isMuted={isMuted}
                 setIsMuted={setIsMuted}
                 getVideoSrc={getVideoSrc}
               />
+
+              <SocialMediaTiers setServiceInterested={setServiceInterested} />
 
             </div>
           </section>
@@ -1066,6 +897,7 @@ export default function App() {
           <section id="featured-agents" className="pt-12 pb-12 px-4 md:px-8 w-full relative z-10 scroll-mt-28">
             <div className="max-w-7xl mx-auto flex flex-col gap-12">
               <FeaturedAgentsSection />
+              <LunaVoiceAgentSection setServiceInterested={setServiceInterested} />
             </div>
           </section>
 
@@ -1138,7 +970,7 @@ export default function App() {
                     {/* Right content */}
                     <div className="md:col-span-3 p-8 flex flex-col justify-between gap-5">
                       <div>
-                        <h3 className="text-2xl sm:text-3xl font-extrabold text-white group-hover:text-brand-orange transition-colors duration-200 leading-tight tracking-tight mb-4 line-clamp-3">
+                        <h3 className="text-5xl sm:text-3xl font-extrabold text-white group-hover:text-brand-orange transition-colors duration-200 leading-tight tracking-tight mb-4 line-clamp-3">
                           {featuredPost.title}
                         </h3>
                         <p className="text-base text-gray-300 leading-relaxed line-clamp-4">
@@ -1495,7 +1327,7 @@ export default function App() {
                           <option value="Tier 1: Complimentary Workspace Blueprints">Tier 1: Complimentary Workspace Blueprints</option>
                           <option value="Tier 2: Core Growth & Implementation">Tier 2: Core Growth & Implementation ($2,500)</option>
                           <option value="Tier 3: Full Enterprise Infrastructure">Tier 3: Full Enterprise Infrastructure (Custom)</option>
-                          {(serviceInterested.startsWith("Free Import:") || serviceInterested.startsWith("Complimentary Import:") || serviceInterested.startsWith("Custom Quote")) && (
+                          {!KNOWN_SERVICE_OPTIONS.has(serviceInterested) && (
                             <option value={serviceInterested}>{serviceInterested}</option>
                           )}
                         </select>
@@ -1860,7 +1692,7 @@ Received
                 </span>
               </div>
               
-              <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight leading-tight mb-6 pb-4 border-b border-white/5">
+              <h3 className="text-5xl sm:text-3xl font-black text-white tracking-tight leading-tight mb-6 pb-4 border-b border-white/5">
                 {post.title}
               </h3>
               
@@ -1895,22 +1727,3 @@ Received
   );
 }
 
-// Custom wrapper element to clean up individual list visibility checks cleanly
-const FeatureCardWrapper = ({ children, index, variants }: { children: React.ReactNode; index: number; variants: any; key?: React.Key }) => {
-  const cardRef = useRef(null);
-  const isCardInView = useInView(cardRef, { once: true, margin: "-100px" });
-
-  return (
-    <motion.div
-      ref={cardRef}
-      custom={index}
-      initial="hidden"
-      animate={isCardInView ? "visible" : "hidden"}
-      whileHover={{ y: -8, transition: { duration: 0.22, ease: 'easeOut' } }}
-      variants={variants}
-      className="h-full w-full"
-    >
-      {children}
-    </motion.div>
-  );
-};

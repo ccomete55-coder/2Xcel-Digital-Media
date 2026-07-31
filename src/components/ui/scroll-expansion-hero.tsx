@@ -7,6 +7,7 @@ import {
   WheelEvent,
 } from 'react';
 import { motion } from 'motion/react';
+import { Volume2, VolumeX } from 'lucide-react';
 
 interface ScrollExpandMediaProps {
   mediaType?: 'video' | 'image';
@@ -20,6 +21,8 @@ interface ScrollExpandMediaProps {
   children?: ReactNode;
   onProgressChange?: (progress: number) => void;
   forceExpanded?: boolean;
+  isMuted?: boolean;
+  onToggleMute?: () => void;
 }
 
 const ScrollExpandMedia = ({
@@ -34,6 +37,8 @@ const ScrollExpandMedia = ({
   children,
   onProgressChange,
   forceExpanded,
+  isMuted = true,
+  onToggleMute,
 }: ScrollExpandMediaProps) => {
   const [scrollProgress, setScrollProgress] = useState<number>(0);
   const [showContent, setShowContent] = useState<boolean>(false);
@@ -42,12 +47,36 @@ const ScrollExpandMedia = ({
   const [isMobileState, setIsMobileState] = useState<boolean>(false);
 
   const sectionRef = useRef<HTMLDivElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
 
   useEffect(() => {
     if (onProgressChange) {
       onProgressChange(scrollProgress);
     }
   }, [scrollProgress, onProgressChange]);
+
+  // Pause the hero video once it scrolls out of view and resume it when it
+  // scrolls back into view (e.g. scrolling back up to the top), instead of
+  // letting it play unseen in the background for the rest of the page.
+  useEffect(() => {
+    if (mediaType !== 'video') return;
+    const videoEl = videoRef.current;
+    if (!videoEl) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          videoEl.play().catch(() => {});
+        } else {
+          videoEl.pause();
+        }
+      },
+      { threshold: 0.15 }
+    );
+
+    observer.observe(videoEl);
+    return () => observer.disconnect();
+  }, [mediaType, mediaSrc]);
 
   useEffect(() => {
     setScrollProgress(0);
@@ -260,10 +289,11 @@ const ScrollExpandMedia = ({
                   ) : (
                     <div className='relative w-full h-full pointer-events-none'>
                       <video
+                        ref={videoRef}
                         src={mediaSrc}
                         poster={posterSrc}
                         autoPlay
-                        muted
+                        muted={isMuted}
                         loop
                         playsInline
                         preload='auto'
@@ -283,6 +313,21 @@ const ScrollExpandMedia = ({
                         animate={{ opacity: 0.5 - scrollProgress * 0.3 }}
                         transition={{ duration: 0.2 }}
                       />
+
+                      {onToggleMute && (
+                        <button
+                          type='button'
+                          onClick={onToggleMute}
+                          className='absolute top-4 right-4 z-20 p-2 rounded-full bg-black/60 text-white backdrop-blur-md hover:bg-black/80 transition-colors cursor-pointer pointer-events-auto'
+                          aria-label={isMuted ? 'Unmute video' : 'Mute video'}
+                        >
+                          {isMuted ? (
+                            <VolumeX className='w-4 h-4' />
+                          ) : (
+                            <Volume2 className='w-4 h-4' />
+                          )}
+                        </button>
+                      )}
                     </div>
                   )
                 ) : (

@@ -311,6 +311,30 @@ html.light #page-root .bg-\[#080B10\]\/20 {
   color: #1a5c8f !important;
 }
 
+/* Chatbot-vs-Agent clash card — light theme */
+.light #featured-agents .text-sky-100\/80 {
+  color: #35678f !important;
+}
+.light #featured-agents .text-sky-300\/80 {
+  color: #2f7fb8 !important;
+}
+.light #featured-agents .bg-white\/10 {
+  background-color: rgba(26, 92, 143, 0.18) !important;
+}
+.light #featured-agents .hover\:bg-white\/\[0\.03\]:hover {
+  background-color: rgba(26, 92, 143, 0.05) !important;
+}
+.light #featured-agents .clash-seam {
+  background: linear-gradient(to bottom, rgba(26, 92, 143, 0.45), rgba(26, 92, 143, 0.12) 30%, rgba(26, 92, 143, 0.05)) !important;
+}
+/* The purchase toast keeps its dark chip in light mode — keep its text light */
+.light #featured-agents .clash-toast .text-white {
+  color: #ffffff !important;
+}
+.light #featured-agents .clash-toast .text-gray-500 {
+  color: #9ca8b8 !important;
+}
+
 /* Section background alternates — warm orange tint / cool blue tint */
 .light .bg-black\/40 {
   background: linear-gradient(135deg, rgba(255, 237, 225, 0.55), rgba(235, 245, 255, 0.45)) !important;
