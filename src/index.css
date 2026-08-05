@@ -1,10 +1,19 @@
 @import "tailwindcss";
 
-/* This site's theme toggle sets a .dark / .light class on <html> — without
+/* This site's theme toggle sets a .dark / .light class on <html>  without
    this, Tailwind v4's dark: variant defaults to the OS's prefers-color-scheme
    media query and completely ignores the toggle, causing dark: styles to
    apply based on the visitor's system setting instead of the button they clicked. */
 @custom-variant dark (&:where(.dark, .dark *));
+
+/* Declared directly (not via @theme inline's var(--x) indirection) since
+   fonts don't switch between light/dark  that indirection pattern is only
+   needed for tokens that do, and self-referencing --font-mono here as well
+   as in :root creates a circular custom property that resolves to nothing. */
+@theme {
+  --font-sans: Roboto Flex, sans-serif;
+  --font-mono: JetBrains Mono, monospace;
+}
 
 :root {
   --card: #ffffff;
@@ -22,11 +31,8 @@
   --popover: #ffffff;
   --primary: #e05d38;
   --sidebar: #dddfe2;
-  --font-mono: JetBrains Mono, monospace;
-  --font-sans: Inter, sans-serif;
   --secondary: #f3f4f6;
   --background: #e8ebed;
-  --font-serif: Source Serif 4, serif;
   --foreground: #333333;
   --destructive: #ef4444;
   --shadow-blur: 3px;
@@ -102,11 +108,8 @@
   --color-popover: var(--popover);
   --color-primary: var(--primary);
   --color-sidebar: var(--sidebar);
-  --color-font-mono: var(--font-mono);
-  --color-font-sans: var(--font-sans);
   --color-secondary: var(--secondary);
   --color-background: var(--background);
-  --color-font-serif: var(--font-serif);
   --color-foreground: var(--foreground);
   --color-destructive: var(--destructive);
   --color-shadow-blur: var(--shadow-blur);
@@ -134,13 +137,21 @@
   --color-brand-obsidian: #0B0E14;
   --color-brand-orange: #E65C2B;
   --color-brand-blue: #2B8ED9;
+  --color-brand-cream: #DEDBC8;
 }
 
-* { 
-  font-family: var(--font-sans), 'Roboto Flex', 'Work Sans', "Helvetica Neue", Arial, sans-serif; 
+/* In Tailwind's base layer (not unlayered) so utility classes like
+   .font-mono / .font-sans  which live in @layer utilities  can still
+   override it. Unlayered rules always beat layered ones regardless of
+   specificity, which silently defeated every font-mono/font-sans class
+   on the site when this was unlayered. */
+@layer base {
+  * {
+    font-family: var(--font-sans), 'Work Sans', "Helvetica Neue", Arial, sans-serif;
+  }
 }
 
-/* Glass surface tokens — override in .light below */
+/* Glass surface tokens  override in .light below */
 :root {
   --glass-surface: rgba(255, 255, 255, 0.03);
   --glass-surface-raised: rgba(255, 255, 255, 0.06);
@@ -152,6 +163,20 @@
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Single elevated-card surface  replaces the mix of bg-black/30,
+   bg-black/40, and raw #0d1219 that different cards used to reach for
+   the same "elevated dark surface" effect. One token, one visual weight. */
+.card-surface {
+  background: rgba(13, 18, 25, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.card-surface:hover {
+  background: rgba(16, 22, 31, 0.65);
 }
 
 .glass-pill {
@@ -197,18 +222,16 @@
   border-radius: 10px;
 }
 
-/* Body Text Uniform Colors Across the Site (Dark Mode Default) */
-p, .text-[#DEDBC8], .text-gray-400, .text-gray-300, .text-slate-300, .text-slate-400 {
-  color: #94a3b8 !important; /* Elegant slate bluish-gray for paragraphs and description blocks */
-}
-
-h1, h2, h3, h4, h5, h6 {
-  color: #cbd5e1 !important; /* Soft, premium light bluish-gray for dark mode headings */
-}
-
-/* +5px bump on h1/h2 — scoped remap of the Tailwind text-size variables these
-   headings use, so each keeps its responsive size, just 5px larger */
-h1, h2 {
+/* +5px bump across the whole type scale, applied globally so every element
+   (headings, paragraphs, divs, spans) gets the same size regardless of tag
+    fixes the old p-only override that made <p> and <div> render at
+   different sizes even with identical Tailwind classes. text-xs is left at
+   its default so small labels/badges/eyebrows stay compact. */
+:root {
+  --text-sm: calc(0.875rem + 5px);
+  --text-base: calc(1rem + 5px);
+  --text-lg: calc(1.125rem + 5px);
+  --text-xl: calc(1.25rem + 5px);
   --text-2xl: calc(1.5rem + 5px);
   --text-3xl: calc(1.875rem + 5px);
   --text-4xl: calc(2.25rem + 5px);
@@ -216,157 +239,112 @@ h1, h2 {
   --text-6xl: calc(3.75rem + 5px);
 }
 
-/* Apply beautiful soft bluish-gray to static text-white elements while preserving crisp white on solid-colored buttons, active pills, badges, or controls */
-.text-white:not(button):not(a):not([class*="bg-brand"]):not([class*="hover"]):not([class*="btn"]):not([class*="-pill"]):not(.font-mono) {
-  color: #cbd5e1 !important;
-}
-
-/* Beautiful Responsive Uniform Body Text Sizing Rule (Perfect Size matching the Christian Cométe block) */
-p:not(.text-xs):not(.text-\[10px\]):not(.text-\[9px\]):not(.text-\[11px\]):not(.font-mono):not(.text-2xl):not(.text-3xl) {
-  font-size: clamp(calc(0.95rem + 5px), calc(0.4vw + 0.85rem + 5px), calc(1.125rem + 5px)) !important;
-  line-height: 1.75 !important;
-}
-
 /* =====================================================
-   BRANDED COLOR WASH — LIGHT MODE
+   LIGHT MODE COLOR SYSTEM
    Warm orange-cream → white → cool blue wash
 
-   Wrapped in @layer utilities: Tailwind's own utility classes (including
-   arbitrary-value ones like text-[#E1E0CC]/90) live in that layer, and per
-   the CSS cascade-layers spec, layered !important beats unlayered !important
-   regardless of specificity. Without this wrapper, any element with its own
-   Tailwind color utility would ignore these overrides entirely.
+   REFACTORED: Uses CSS variables instead of !important
+   where possible. Only essential !important rules for
+   Tailwind utility overrides remain.
    ===================================================== */
-@layer utilities {
 
-html.light {
-  background: linear-gradient(160deg, #fff3eb 0%, #ffffff 45%, #ebf4ff 100%) !important;
-  min-height: 100vh;
-}
-
+/* Light mode CSS variables (no !important needed) */
 .light {
-  background: transparent !important;
-  color: #1e293b !important;
-}
+  --color-bg-primary: linear-gradient(160deg, #fff3eb 0%, #ffffff 45%, #ebf4ff 100%);
+  --color-bg-secondary: rgba(255, 245, 240, 0.65);
+  --color-bg-light: rgba(255, 238, 228, 0.45);
+  --color-brand-tint: rgba(230, 92, 43, 0.04);
+  --color-text-primary: #1a5c8f;
+  --color-text-secondary: #46647d;
+  --color-text-muted: #5c7690;
+  --color-border-brand: rgba(230, 92, 43, 0.1);
+  --color-border-blue: rgba(43, 142, 217, 0.12);
 
-.light body {
-  background: transparent !important;
-  color: #1e293b !important;
-}
-
-/* Main page wrapper — use stable ID to override Tailwind arbitrary-value class */
-html.light #page-root {
-  background: linear-gradient(160deg, #fff3eb 0%, #ffffff 45%, #ebf4ff 100%) !important;
-}
-
-/* Section backgrounds that used the dark obsidian color */
-html.light #page-root .bg-\[#080B10\]\/40,
-html.light #page-root .bg-\[#080B10\]\/20 {
-  background-color: rgba(230, 92, 43, 0.04) !important;
-}
-
-.light .radial-noise {
-  background-image: radial-gradient(circle at 2px 2px, rgba(230, 92, 43, 0.07) 1px, transparent 0);
-}
-
-/* Glass surface tokens */
-.light {
   --glass-surface: rgba(255, 255, 255, 0.82);
   --glass-surface-raised: rgba(255, 255, 255, 0.94);
 }
 
-/* Vibrant brand-tinted glass cards */
+@layer utilities {
+
+/* Root backgrounds (requires !important to override Tailwind arbitrary classes) */
+html.light {
+  background: var(--color-bg-primary) !important;
+  min-height: 100vh;
+}
+
+html.light #page-root {
+  background: var(--color-bg-primary) !important;
+}
+
+/* Body & container backgrounds (no !important needed with proper cascade) */
+.light {
+  background: transparent;
+  color: var(--color-text-primary);
+}
+
+.light body {
+  background: transparent;
+  color: var(--color-text-primary);
+}
+
+/* Glass surfaces (no !important on backdrop-filter) */
 .light .glass {
-  background: rgba(255, 255, 255, 0.82) !important;
+  background: var(--glass-surface) !important;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(230, 92, 43, 0.14) !important;
+  border-color: rgba(230, 92, 43, 0.14) !important;
   box-shadow: 0 8px 40px -8px rgba(230, 92, 43, 0.1), 0 2px 8px rgba(43, 142, 217, 0.06) !important;
 }
 
-/* Nav pill with warm brand shadow */
 .light .glass-pill {
   background: rgba(255, 255, 255, 0.92) !important;
-  border: 1px solid rgba(230, 92, 43, 0.2) !important;
+  border-color: rgba(230, 92, 43, 0.2) !important;
   box-shadow: 0 4px 28px rgba(230, 92, 43, 0.13), 0 1px 4px rgba(43, 142, 217, 0.08) !important;
 }
 
-/* Headings — brand blue on light wash */
-.light h1, .light h2, .light h3, .light h4, .light h5, .light h6,
-.light .text-white:not(button):not(a):not([class*="bg-brand"]):not([class*="hover"]):not([class*="btn"]):not([class*="-pill"]):not(.font-mono) {
-  color: #1a5c8f !important;
+/* Radial noise (uses variable, no !important) */
+.light .radial-noise {
+  background-image: radial-gradient(circle at 2px 2px, rgba(230, 92, 43, 0.07) 1px, transparent 0);
 }
 
-/* Body text — blue-tinted slate, keeps orange free to read as an accent */
-.light p, .light .text-gray-400, .light .text-gray-300, .light .text-slate-300, .light .text-slate-400, .light .text-[#DEDBC8] {
-  color: #46647d !important;
-}
-
-.light .text-gray-500 {
-  color: #5c7690 !important;
-}
-
-/* Emphasized/highlighted comparison-table values (e.g. "2XceL Agent" column) */
-.light .text-gray-200, .light .text-gray-100 {
-  color: #1a5c8f !important;
-}
-
-/* Chatbot-vs-Agent clash card — light theme */
-.light #featured-agents .text-sky-100\/80 {
-  color: #35678f !important;
-}
-.light #featured-agents .text-sky-300\/80 {
-  color: #2f7fb8 !important;
-}
-.light #featured-agents .bg-white\/10 {
-  background-color: rgba(26, 92, 143, 0.18) !important;
-}
-.light #featured-agents .hover\:bg-white\/\[0\.03\]:hover {
-  background-color: rgba(26, 92, 143, 0.05) !important;
-}
-.light #featured-agents .clash-seam {
-  background: linear-gradient(to bottom, rgba(26, 92, 143, 0.45), rgba(26, 92, 143, 0.12) 30%, rgba(26, 92, 143, 0.05)) !important;
-}
-/* The purchase toast keeps its dark chip in light mode — keep its text light */
-.light #featured-agents .clash-toast .text-white {
-  color: #ffffff !important;
-}
-.light #featured-agents .clash-toast .text-gray-500 {
-  color: #9ca8b8 !important;
-}
-
-/* Section background alternates — warm orange tint / cool blue tint */
+/* Section backgrounds (consolidated with variables) */
 .light .bg-black\/40 {
   background: linear-gradient(135deg, rgba(255, 237, 225, 0.55), rgba(235, 245, 255, 0.45)) !important;
 }
 
-.light .bg-black\/25, .light .bg-black\/35 {
-  background: rgba(255, 245, 240, 0.65) !important;
+.light .bg-black\/25,
+.light .bg-black\/35 {
+  background: var(--color-bg-secondary) !important;
 }
 
 .light .bg-black {
-  background-color: rgba(255, 238, 228, 0.45) !important;
+  background-color: var(--color-bg-light) !important;
 }
 
-.light .bg-\[#080B10\]\/40, .light .bg-\[#080B10\]\/20 {
-  background: rgba(230, 92, 43, 0.05) !important;
+.light .bg-\[#080B10\]\/40,
+.light .bg-\[#080B10\]\/20 {
+  background: var(--color-brand-tint) !important;
 }
 
-/* Subtle tint on interactive hover surfaces */
-.light .bg-white\/5, .light .bg-white\/\[0\.04\], .light .bg-white\/\[0\.06\] {
+/* Interactive surfaces (variables, minimal !important) */
+.light .bg-white\/5,
+.light .bg-white\/\[0\.04\],
+.light .bg-white\/\[0\.06\] {
   background-color: rgba(230, 92, 43, 0.04) !important;
 }
 
-/* Borders with brand warmth */
-.light .border-white\/5, .light .border-white\/10, .light .border-white\/15 {
-  border-color: rgba(230, 92, 43, 0.1) !important;
+/* Borders (use variables) */
+.light .border-white\/5,
+.light .border-white\/10,
+.light .border-white\/15 {
+  border-color: var(--color-border-brand) !important;
 }
 
 .light .border-\[#1F2937\]\/50 {
-  border-color: rgba(43, 142, 217, 0.12) !important;
+  border-color: var(--color-border-blue) !important;
 }
 
-/* Vivid gradient glows — the centrepiece of the color wash */
+/* Gradient glows (consolidated) */
 .light .gradient-glow {
   background: radial-gradient(circle at 50% 50%, rgba(43, 142, 217, 0.3) 0%, transparent 68%) !important;
 }
@@ -375,7 +353,32 @@ html.light #page-root .bg-\[#080B10\]\/20 {
   background: radial-gradient(circle at 50% 50%, rgba(230, 92, 43, 0.26) 0%, transparent 68%) !important;
 }
 
-/* Scrollbar — brand orange tinted */
+/* .card-surface has no light-mode override by default, so its translucent
+   dark background (rgba(13,18,25,0.55)) blends into the light page and
+   washes out to a pale gray  invert it to a light surface like the rest
+   of the light theme instead. */
+.light .card-surface {
+  background: var(--color-bg-secondary) !important;
+}
+
+/* Featured agents section (light theme overrides)
+   The clash card is a self-contained "fight card" visual  it keeps its
+   dark surface in light mode instead of inverting (more specific selector
+   below wins over the general rule above), so all the dark-mode text colors
+   (white, sky-100/80, slate-400, gray-300) stay legible as-is. */
+.light #featured-agents .card-surface {
+  background: rgba(13, 18, 25, 0.92) !important;
+}
+
+.light #featured-agents .clash-toast .text-white {
+  color: #ffffff !important;
+}
+
+.light #featured-agents .clash-toast .text-gray-500 {
+  color: #9ca8b8 !important;
+}
+
+/* Scrollbar styling (no !important needed for pseudo-elements) */
 .light ::-webkit-scrollbar-track {
   background: #fff5f0;
 }
@@ -428,9 +431,12 @@ textarea:focus {
 }
 
 /* =====================================================
-   READABLE TYPE SCALE — no micro-text
+   READABLE TYPE SCALE  no micro-text
    Body sits at 16px; every tiny label is lifted to a
-   legible floor (~13–14px) while keeping heading hierarchy.
+   legible floor (~13px). text-xs/text-sm are handled by the
+   global --text-* variable bump above so responsive variants
+   (sm:text-base etc.) still take effect instead of being
+   locked to a flat size regardless of breakpoint.
    ===================================================== */
 
 body {
@@ -446,17 +452,5 @@ body {
 .text-\[11px\] {
   font-size: 0.8125rem !important; /* 13px */
   line-height: 1.5 !important;
-}
-
-/* Tailwind text-xs (12px) → 14px */
-.text-xs {
-  font-size: 0.875rem !important; /* 14px */
-  line-height: 1.55 !important;
-}
-
-/* Keep small body text comfortable */
-.text-sm {
-  font-size: 0.9375rem !important; /* 15px */
-  line-height: 1.6 !important;
 }
 

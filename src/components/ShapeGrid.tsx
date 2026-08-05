@@ -9,7 +9,8 @@ const ShapeGrid = ({
   hoverFillColor = '#222',
   shape = 'square',
   hoverTrailAmount = 0,
-  className = ''
+  className = '',
+  strokeOpacity = 1
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const requestRef = useRef<number>();
@@ -102,7 +103,9 @@ const ShapeGrid = ({
 
             drawHex(cx, cy, squareSize);
             ctx.strokeStyle = borderColor;
+            ctx.globalAlpha = strokeOpacity;
             ctx.stroke();
+            ctx.globalAlpha = 1;
           }
         }
       } else if (isTri) {
@@ -133,7 +136,9 @@ const ShapeGrid = ({
 
             drawTriangle(cx, cy, squareSize, flip);
             ctx.strokeStyle = borderColor;
+            ctx.globalAlpha = strokeOpacity;
             ctx.stroke();
+            ctx.globalAlpha = 1;
           }
         }
       } else if (shape === 'circle') {
@@ -160,7 +165,9 @@ const ShapeGrid = ({
 
             drawCircle(cx, cy, squareSize);
             ctx.strokeStyle = borderColor;
+            ctx.globalAlpha = strokeOpacity;
             ctx.stroke();
+            ctx.globalAlpha = 1;
           }
         }
       } else {
@@ -185,7 +192,9 @@ const ShapeGrid = ({
             }
 
             ctx.strokeStyle = borderColor;
+            ctx.globalAlpha = strokeOpacity;
             ctx.strokeRect(sx, sy, squareSize, squareSize);
+            ctx.globalAlpha = 1;
           }
         }
       }

@@ -136,6 +136,7 @@ const InteractiveSelector = () => {
                   loop
                   muted
                   playsInline
+                  preload="metadata"
                   className="absolute inset-0 w-full h-full object-cover animate-fadeIn z-0"
                   style={{ mixBlendMode: 'normal' }}
                 >
@@ -184,7 +185,7 @@ const InteractiveSelector = () => {
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={(e) => e.stopPropagation()}
-                      className="px-4 py-2 bg-brand-orange hover:bg-brand-orange/90 text-white rounded-lg text-xs font-mono font-bold tracking-wider inline-flex items-center gap-1.5 transition-all duration-300 shadow-lg shadow-brand-orange/20 border border-brand-orange/30 active:scale-95"
+                      className="px-4 py-2 bg-brand-orange hover:bg-brand-orange/90 hover:scale-105 text-white rounded-lg text-xs font-mono font-bold tracking-wider inline-flex items-center gap-1.5 transition-all duration-300 shadow-lg shadow-brand-orange/20 border border-brand-orange/30 active:scale-95"
                     >
                       Launch Live App ↗
                     </a>

@@ -80,7 +80,7 @@ export const CustomCursor: React.FC = () => {
           setHoveredType('orange');
         } else if (interactiveEl.classList.contains('hover-blue')) {
           setHoveredType('blue');
-        } else if (interactiveEl.classList.contains('bg-[#DEDBC8]') || interactiveEl.classList.contains('text-black')) {
+        } else if (interactiveEl.classList.contains('bg-brand-cream') || interactiveEl.classList.contains('text-black')) {
           setHoveredType('white');
         } else {
           setHoveredType('default');
@@ -124,9 +124,9 @@ export const CustomCursor: React.FC = () => {
     } else if (hoveredType === 'blue') {
       cursorColorClass = 'border-brand-blue bg-brand-blue/10';
     } else if (hoveredType === 'white') {
-      cursorColorClass = 'border-white bg-[#DEDBC8]/20';
+      cursorColorClass = 'border-white bg-brand-cream/20';
     } else {
-      cursorColorClass = 'border-[#DEDBC8] bg-white/10';
+      cursorColorClass = 'border-brand-cream bg-white/10';
     }
   }
 
@@ -151,7 +151,7 @@ export const CustomCursor: React.FC = () => {
       {/* Synchronous Inner Dot for precise targeting */}
       <motion.div
         className={`fixed top-0 left-0 w-2.5 h-2.5 rounded-full pointer-events-none z-[10000] -translate-x-1/2 -translate-y-1/2 mix-blend-difference ${
-          isHovered ? 'bg-[#E65C2B]' : 'bg-[#DEDBC8]'
+          isHovered ? 'bg-brand-orange' : 'bg-brand-cream'
         }`}
         style={{
           x: cursorX,

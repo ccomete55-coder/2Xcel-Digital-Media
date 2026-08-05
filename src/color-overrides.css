@@ -1,0 +1,56 @@
+/* Text color overrides for both themes.
+   Deliberately a SEPARATE stylesheet, imported after index.css in main.tsx.
+   Tailwind v4 bundles its own utilities (.text-gray-400 etc.) inside a named
+   "utilities" cascade layer. Rules placed inside index.css  whether
+   unlayered or re-opening @layer utilities by name (which merges into
+   Tailwind's own layer)  did not reliably win against Tailwind's
+   non-important utility classes in this build, contrary to what the cascade
+   spec would suggest in isolation. A genuinely separate, later-loaded
+   stylesheet does win, verified empirically, so these rules live here. */
+
+/* Dark mode (default) */
+p, .text-\[\#DEDBC8\], .text-gray-400, .text-gray-300, .text-slate-300, .text-slate-400 {
+  color: #94a3b8 !important; /* Elegant slate bluish-gray for paragraphs and description blocks */
+}
+
+h1:not([class*="brand-orange"]):not([class*="brand-blue"]):not([class*="brand-cream"]):not([class*="hover"]),
+h2:not([class*="brand-orange"]):not([class*="brand-blue"]):not([class*="brand-cream"]):not([class*="hover"]),
+h3:not([class*="brand-orange"]):not([class*="brand-blue"]):not([class*="brand-cream"]):not([class*="hover"]),
+h4:not([class*="brand-orange"]):not([class*="brand-blue"]):not([class*="brand-cream"]):not([class*="hover"]),
+h5:not([class*="brand-orange"]):not([class*="brand-blue"]):not([class*="brand-cream"]):not([class*="hover"]),
+h6:not([class*="brand-orange"]):not([class*="brand-blue"]):not([class*="brand-cream"]):not([class*="hover"]) {
+  color: #cbd5e1 !important; /* Soft, premium light bluish-gray for dark mode headings */
+}
+
+.text-white:not(button):not(a):not([class*="bg-brand"]):not([class*="hover"]):not([class*="btn"]):not([class*="-pill"]):not(.font-mono) {
+  color: #cbd5e1 !important;
+}
+
+/* Light mode */
+.light h1:not([class*="brand-orange"]):not([class*="brand-blue"]):not([class*="brand-cream"]):not([class*="hover"]),
+.light h2:not([class*="brand-orange"]):not([class*="brand-blue"]):not([class*="brand-cream"]):not([class*="hover"]),
+.light h3:not([class*="brand-orange"]):not([class*="brand-blue"]):not([class*="brand-cream"]):not([class*="hover"]),
+.light h4:not([class*="brand-orange"]):not([class*="brand-blue"]):not([class*="brand-cream"]):not([class*="hover"]),
+.light h5:not([class*="brand-orange"]):not([class*="brand-blue"]):not([class*="brand-cream"]):not([class*="hover"]),
+.light h6:not([class*="brand-orange"]):not([class*="brand-blue"]):not([class*="brand-cream"]):not([class*="hover"]),
+.light .text-white:not(button):not(a):not([class*="bg-brand"]):not([class*="hover"]):not([class*="btn"]):not([class*="-pill"]):not(.font-mono) {
+  color: var(--color-text-primary) !important;
+}
+
+.light p,
+.light .text-gray-400,
+.light .text-gray-300,
+.light .text-slate-300,
+.light .text-slate-400,
+.light .text-\[\#DEDBC8\] {
+  color: var(--color-text-secondary) !important;
+}
+
+.light .text-gray-500 {
+  color: var(--color-text-muted) !important;
+}
+
+.light .text-gray-200,
+.light .text-gray-100 {
+  color: var(--color-text-primary) !important;
+}

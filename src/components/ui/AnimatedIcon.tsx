@@ -1,5 +1,5 @@
 import React from "react";
-import { motion, Variants } from "motion/react";
+import { motion, useReducedMotion, Variants } from "motion/react";
 
 export type IconAnimationType = "pulse" | "float" | "spin" | "wiggle" | "bounce" | "pop" | "glow" | "none";
 
@@ -21,7 +21,12 @@ export const AnimatedIconWrapper: React.FC<AnimatedIconWrapperProps> = ({
   trigger = "hover",
   className = "",
 }) => {
-  // Define variants matching parent hover propagation
+  const prefersReducedMotion = useReducedMotion();
+
+  // Define variants matching parent hover propagation. Reduced-motion visitors
+  // still get a hover/view cue (a small scale or single glow flash) so the
+  // interaction isn't silently dead  they just lose the spin/wiggle/bounce
+  // position and rotation motion and any infinitely-repeating loop.
   const iconVariants: Variants = {
     initial: {
       scale: 1,
@@ -30,40 +35,54 @@ export const AnimatedIconWrapper: React.FC<AnimatedIconWrapperProps> = ({
       filter: "drop-shadow(0px 0px 0px rgba(230, 92, 43, 0))",
     },
     // Hover states (propagates automatically from parent whileHover="hover")
-    hover: {
-      scale: animation === "pop" ? 1.18 : animation === "glow" ? 1.05 : 1,
-      rotate:
-        animation === "spin"
-          ? 360
-          : animation === "wiggle"
-          ? [0, -15, 12, -8, 4, 0]
-          : 0,
-      y: animation === "bounce" ? [0, -8, 0, -3, 0] : 0,
-      filter:
-        animation === "glow"
-          ? [
-              "drop-shadow(0 0 1px rgba(230, 92, 43, 0.1))",
-              "drop-shadow(0 0 8px rgba(230, 92, 43, 0.6))",
-              "drop-shadow(0 0 1px rgba(230, 92, 43, 0.1))",
-            ]
-          : "drop-shadow(0px 0px 0px rgba(230, 92, 43, 0))",
-      transition: {
-        rotate: animation === "spin" ? { duration: 0.8, ease: "easeInOut" } : { duration: 0.6 },
-        y: animation === "bounce" ? { duration: 0.6, ease: "easeInOut" } : {},
-        scale: { type: "spring", stiffness: 350, damping: 15 },
-        filter: { duration: 1, repeat: Infinity },
-      },
-    },
+    hover: prefersReducedMotion
+      ? {
+          scale: animation === "none" ? 1 : 1.06,
+          rotate: 0,
+          y: 0,
+          filter:
+            animation === "glow"
+              ? "drop-shadow(0 0 8px rgba(230, 92, 43, 0.6))"
+              : "drop-shadow(0px 0px 0px rgba(230, 92, 43, 0))",
+          transition: { duration: 0.2, ease: "easeOut" },
+        }
+      : {
+          scale: animation === "pop" ? 1.18 : animation === "glow" ? 1.05 : 1,
+          rotate:
+            animation === "spin"
+              ? 360
+              : animation === "wiggle"
+              ? [0, -15, 12, -8, 4, 0]
+              : 0,
+          y: animation === "bounce" ? [0, -8, 0] : 0,
+          filter:
+            animation === "glow"
+              ? [
+                  "drop-shadow(0 0 1px rgba(230, 92, 43, 0.1))",
+                  "drop-shadow(0 0 8px rgba(230, 92, 43, 0.6))",
+                  "drop-shadow(0 0 1px rgba(230, 92, 43, 0.1))",
+                ]
+              : "drop-shadow(0px 0px 0px rgba(230, 92, 43, 0))",
+          transition: {
+            rotate: animation === "spin" ? { duration: 0.8, ease: "easeInOut" } : { duration: 0.6 },
+            y: animation === "bounce" ? { duration: 0.5, ease: "easeOut" } : {},
+            scale: { type: "spring", stiffness: 350, damping: 15 },
+            filter: { duration: 1, repeat: Infinity },
+          },
+        },
     // View animations
-    view: {
-      scale: [0.8, 1.1, 1],
-      transition: { type: "spring", stiffness: 300, damping: 18 },
-    },
+    view: prefersReducedMotion
+      ? { scale: 1, transition: { duration: 0.2 } }
+      : {
+          scale: [0.8, 1.1, 1],
+          transition: { type: "spring", stiffness: 300, damping: 18 },
+        },
   };
 
-  // Infinite looping animations
+  // Infinite looping animations  skipped entirely for reduced motion, since
+  // an ambient loop that never stops is the case the media query exists for.
   const getLoopingProps = () => {
-    if (trigger !== "always") return {};
+    if (trigger !== "always" || prefersReducedMotion) return {};
 
     switch (animation) {
       case "pulse":

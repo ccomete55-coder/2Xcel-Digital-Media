@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { cn } from "@/src/lib/utils";
+import { IconDock } from "./icon-dock";
 
 // Register ScrollTrigger safely for React
 if (typeof window !== "undefined") {
@@ -15,15 +16,15 @@ if (typeof window !== "undefined") {
 // 1. THEME-ADAPTIVE INLINE STYLES FOR 2XCEL DIGITAL MEDIA
 // -------------------------------------------------------------------------
 const STYLES = `
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&display=swap');
 
 .cinematic-footer-wrapper {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Syne', sans-serif;
   -webkit-font-smoothing: antialiased;
   
   /* 2XceL Digital Media brand exact colors */
   --background: #0B0E14;
-  --foreground: #E1E0CC;
+  --foreground: #DEDBC8;
   --primary: #E65C2B;
   --secondary: #2B8ED9;
   --destructive: #ef4444;
@@ -71,12 +72,18 @@ const STYLES = `
   animation: footer-heartbeat 2s cubic-bezier(0.25, 1, 0.5, 1) infinite;
 }
 
-/* Theme-adaptive Grid Background */
+/* Organic Surface Texture - Product Structure */
 .footer-bg-grid {
-  background-size: 60px 60px;
-  background-image: 
-    linear-gradient(to right, color-mix(in oklch, var(--foreground) 3%, transparent) 1px, transparent 1px),
-    linear-gradient(to bottom, color-mix(in oklch, var(--foreground) 3%, transparent) 1px, transparent 1px);
+  background: radial-gradient(
+    ellipse at 20% 30%,
+    color-mix(in oklch, var(--foreground) 2%, transparent) 0%,
+    transparent 40%
+  ),
+  radial-gradient(
+    ellipse at 80% 70%,
+    color-mix(in oklch, var(--secondary) 2%, transparent) 0%,
+    transparent 40%
+  );
   mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
   -webkit-mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
 }
@@ -228,11 +235,11 @@ MagneticButton.displayName = "MagneticButton";
 // -------------------------------------------------------------------------
 const MarqueeItem = () => (
   <div className="flex items-center space-x-12 px-6">
-    <span>Marketing-Ready Backends</span> <span className="text-[#E65C2B]">✦</span>
-    <span>24/7 AI Sales Assistants</span> <span className="text-[#2B8ED9]">✦</span>
-    <span>Cinematic Brand Videos</span> <span className="text-[#E65C2B]">✦</span>
-    <span>Live Qualifying Dialogs</span> <span className="text-[#2B8ED9]">✦</span>
-    <span>Continuous Lead Engagement</span> <span className="text-[#E65C2B]">✦</span>
+    <span>Marketing-Ready Backends</span> <span className="text-brand-orange">✦</span>
+    <span>24/7 AI Sales Assistants</span> <span className="text-brand-blue">✦</span>
+    <span>Cinematic Brand Videos</span> <span className="text-brand-orange">✦</span>
+    <span>Live Qualifying Dialogs</span> <span className="text-brand-blue">✦</span>
+    <span>Continuous Lead Engagement</span> <span className="text-brand-orange">✦</span>
   </div>
 );
 
@@ -314,13 +321,13 @@ export function CinematicFooter() {
         style={{ clipPath: "polygon(0% 0, 100% 0%, 100% 100%, 0 100%)" }}
       >
         {/* The actual footer stays fixed to the viewport underneath everything */}
-        <footer className="fixed bottom-0 left-0 flex h-screen w-full flex-col justify-between overflow-hidden bg-[#0B0E14] text-[#E1E0CC] cinematic-footer-wrapper">
+        <footer className="fixed bottom-0 left-0 flex h-screen w-full flex-col justify-between overflow-hidden bg-brand-obsidian text-brand-cream cinematic-footer-wrapper">
           
           {/* Ambient Light & Grid Background */}
           <div className="footer-aurora absolute left-1/2 top-1/2 h-[60vh] w-[80vw] -translate-x-1/2 -translate-y-1/2 animate-footer-breathe rounded-[50%] blur-[80px] pointer-events-none z-0" />
           <div className="footer-bg-grid absolute inset-0 z-0 pointer-events-none" />
 
-          {/* Giant background text — outer div handles static centering via CSS,
+          {/* Giant background text  outer div handles static centering via CSS,
               inner div is what GSAP animates (scale/y), so GSAP's transform never
               clobbers the -translate-x-1/2 centering offset */}
           <div className="absolute bottom-[9vh] left-1/2 -translate-x-1/2 z-0 pointer-events-none select-none">
@@ -333,7 +340,7 @@ export function CinematicFooter() {
           </div>
 
           {/* 1. Diagonal Sleek Marquee (Top of footer) */}
-          <div className="absolute top-28 sm:top-32 left-0 w-full overflow-hidden border-y border-white/5 bg-[#0B0E14]/60 backdrop-blur-md py-4 z-10 -rotate-2 scale-110 shadow-2xl">
+          <div className="absolute top-28 sm:top-32 left-0 w-full overflow-hidden border-y border-white/5 bg-brand-obsidian/60 backdrop-blur-md py-4 z-10 -rotate-2 scale-110 shadow-2xl">
             <div className="flex w-max animate-footer-scroll-marquee text-xs md:text-sm font-bold tracking-[0.3em] text-[#a3a3a3] uppercase">
               <MarqueeItem />
               <MarqueeItem />
@@ -351,61 +358,60 @@ export function CinematicFooter() {
 
             {/* Interactive Magnetic Pills Layout */}
             <div ref={linksRef} className="flex flex-col items-center gap-6 w-full">
-              {/* App / Core Actions (Primary Contact CTAs) */}
-              <div className="flex flex-wrap justify-center gap-4 w-full">
-                <MagneticButton 
-                  onClick={() => scrollToSection("inquiries")}
-                  className="footer-glass-pill px-10 py-5 rounded-full text-[#E1E0CC] font-bold text-sm md:text-base flex items-center gap-3 group"
-                >
-                  <svg className="w-5 h-5 text-[#E65C2B] group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
-                  Calculate Your ROI
-                </MagneticButton>
-                
-                <MagneticButton
-                  onClick={() => scrollToSection("blueprints")}
-                  className="footer-glass-pill px-10 py-5 rounded-full text-[#E1E0CC] font-bold text-sm md:text-base flex items-center gap-3 group"
-                >
-                  <svg className="w-5 h-5 text-[#2B8ED9] group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9.663 17h4.673M12 3v1m6.364.364l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                  </svg>
-                  Test the AI Assistant
-                </MagneticButton>
-              </div>
-
-              {/* Connected Pages / Site Navigation Sections */}
+              {/* Connected Pages / Site Navigation Sections  mirrors the main nav bar */}
               <div className="flex flex-wrap justify-center gap-3 md:gap-5 w-full mt-2">
                 <button
                   onClick={() => scrollToSection("custom-web-design")}
-                  className="footer-glass-pill px-6 py-3.5 rounded-full text-gray-400 font-medium text-sm md:text-base hover:text-white cursor-pointer"
+                  className="footer-glass-pill px-6 py-3.5 rounded-full text-gray-400 font-medium text-sm md:text-base hover:text-white hover:scale-105 cursor-pointer"
                 >
-                  Web Builds
-                </button>
-                <button
-                  onClick={() => scrollToSection("featured-agents")}
-                  className="footer-glass-pill px-6 py-3.5 rounded-full text-gray-400 font-medium text-sm md:text-base hover:text-white cursor-pointer"
-                >
-                  AI Assistants
+                  Web Design
                 </button>
                 <button
                   onClick={() => scrollToSection("media-section")}
-                  className="footer-glass-pill px-6 py-3.5 rounded-full text-gray-400 font-medium text-sm md:text-base hover:text-white cursor-pointer"
+                  className="footer-glass-pill px-6 py-3.5 rounded-full text-gray-400 font-medium text-sm md:text-base hover:text-white hover:scale-105 cursor-pointer"
                 >
                   Digital Media
                 </button>
                 <button
-                  onClick={() => scrollToSection("interactive-demo")}
-                  className="footer-glass-pill px-6 py-3.5 rounded-full text-gray-400 font-medium text-sm md:text-base hover:text-white cursor-pointer"
+                  onClick={() => scrollToSection("featured-agents")}
+                  className="footer-glass-pill px-6 py-3.5 rounded-full text-gray-400 font-medium text-sm md:text-base hover:text-white hover:scale-105 cursor-pointer"
                 >
-                  Validation Sandbox
+                  AI Agents
                 </button>
                 <button
-                  onClick={() => scrollToSection("reviews")}
-                  className="footer-glass-pill px-6 py-3.5 rounded-full text-gray-400 font-medium text-sm md:text-base hover:text-white cursor-pointer"
+                  onClick={() => scrollToSection("enterprise-strategy")}
+                  className="footer-glass-pill px-6 py-3.5 rounded-full text-gray-400 font-medium text-sm md:text-base hover:text-white hover:scale-105 cursor-pointer"
                 >
-                  Reviews
+                  Strategy
                 </button>
+                <button
+                  onClick={() => scrollToSection("automations-workflows")}
+                  className="footer-glass-pill px-6 py-3.5 rounded-full text-gray-400 font-medium text-sm md:text-base hover:text-white hover:scale-105 cursor-pointer"
+                >
+                  Automations
+                </button>
+                <button
+                  onClick={() => scrollToSection("blog")}
+                  className="footer-glass-pill px-6 py-3.5 rounded-full text-gray-400 font-medium text-sm md:text-base hover:text-white hover:scale-105 cursor-pointer"
+                >
+                  Blog
+                </button>
+                <button
+                  onClick={() => scrollToSection("inquiries")}
+                  className="footer-glass-pill px-6 py-3.5 rounded-full text-brand-orange font-bold text-sm md:text-base hover:text-white hover:scale-105 cursor-pointer"
+                >
+                  Contact
+                </button>
+              </div>
+
+              {/* Full gig-site & social roster  lives here rather than the
+                  persistent top toolbar, so it doesn't compete with the hero
+                  on every scroll position. This is its one dedicated home. */}
+              <div className="flex flex-col items-center gap-3 w-full mt-6">
+                <span className="text-gray-500 text-[10px] md:text-xs font-bold uppercase tracking-widest">
+                  Find Us Everywhere
+                </span>
+                <IconDock variant="full" />
               </div>
             </div>
           </div>
@@ -415,17 +421,17 @@ export function CinematicFooter() {
             
             {/* Copyright */}
             <div className="text-gray-500 text-[10px] md:text-xs font-semibold tracking-widest uppercase order-2 md:order-1">
-              © 2026 2XCEL DIGITAL MEDIA. All rights reserved.
+              © 2026 2XCEL DIGITAL MEDIA. All rights reserved. All prices listed in USD.
             </div>
 
             {/* "Made with Love" Badge */}
             <div className="footer-glass-pill px-6 py-3 rounded-full flex items-center gap-2 order-1 md:order-2 cursor-default border-white/5">
               <span className="text-gray-400 text-[10px] md:text-xs font-bold uppercase tracking-widest">Engineered with</span>
-              <span className="animate-footer-heartbeat text-sm md:text-base text-[#E55B2B]">❤</span>
+              <span className="animate-footer-heartbeat text-sm md:text-base text-brand-orange">❤</span>
               <span className="text-gray-400 text-[10px] md:text-xs font-bold uppercase tracking-widest">by</span>
               <span className="text-white font-black text-xs md:text-sm tracking-normal ml-0.5">
-                <span className="text-[#E55B2B]">2</span>
-                <span className="text-[#229AD6]">X</span>
+                <span className="text-brand-orange">2</span>
+                <span className="text-brand-blue">X</span>
                 <span className="text-white">ceL</span>
               </span>
             </div>

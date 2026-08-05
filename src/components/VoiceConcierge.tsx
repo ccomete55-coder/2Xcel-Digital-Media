@@ -1,11 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useImperativeHandle, useRef, useState } from 'react';
 import Vapi from '@vapi-ai/web';
 import { Mic, X, PhoneOff, Loader2, AudioLines } from 'lucide-react';
 
 // ============================================================================
 // 2XceL VOICE CONCIERGE  ("Lumen")
 // White-label by design: NO vendor names appear anywhere in this UI.
-// The voice transport is configured via env vars (public key only — never a secret).
+// The voice transport is configured via env vars (public key only  never a secret).
 // ============================================================================
 
 // Client-facing assistant name. Change here to rebrand the concierge.
@@ -16,7 +16,14 @@ const ASSISTANT_ID = import.meta.env.VITE_VAPI_ASSISTANT_ID as string | undefine
 
 type CallState = 'idle' | 'connecting' | 'active' | 'error';
 
-export const VoiceConcierge: React.FC = () => {
+export interface VoiceConciergeHandle {
+  /** Opens the concierge panel and immediately starts a call  used by
+   * "Call us today" style CTAs elsewhere on the page. No-op if the
+   * concierge isn't configured (no Vapi credentials yet). */
+  startCall: () => void;
+}
+
+export const VoiceConcierge = React.forwardRef<VoiceConciergeHandle>((_props, ref) => {
   const [state, setState] = useState<CallState>('idle');
   const [open, setOpen] = useState(false);
   const [assistantSpeaking, setAssistantSpeaking] = useState(false);
@@ -56,19 +63,21 @@ export const VoiceConcierge: React.FC = () => {
     setState('idle');
   };
 
+  useImperativeHandle(ref, () => ({ startCall }), [startCall]);
+
   if (!configured) return null;
 
   return (
     <div className="fixed bottom-5 right-5 z-[120] flex flex-col items-end gap-3">
       {/* Expanded panel */}
       {open && (
-        <div className="w-[280px] rounded-2xl bg-[#0d1219] border border-white/10 shadow-2xl overflow-hidden">
-          <div className="h-1 w-full bg-gradient-to-r from-brand-orange via-brand-orange/60 to-[#2B8ED9]" />
+        <div className="w-[280px] rounded-2xl card-surface border border-white/10 shadow-2xl overflow-hidden">
+          <div className="h-1 w-full bg-gradient-to-r from-brand-orange via-brand-orange/60 to-brand-blue" />
           <div className="p-5 flex flex-col items-center gap-4 text-center">
             <button
               onClick={() => { endCall(); setOpen(false); }}
               aria-label="Close voice concierge"
-              className="self-end -mt-1 -mr-1 text-gray-500 hover:text-white transition-colors cursor-pointer"
+              className="self-end -mt-1 -mr-1 text-gray-500 hover:text-white hover:scale-110 transition-all cursor-pointer"
             >
               <X size={18} />
             </button>
@@ -99,21 +108,21 @@ export const VoiceConcierge: React.FC = () => {
                 {state === 'connecting' && 'Connecting…'}
                 {state === 'active' && (assistantSpeaking ? 'Speaking…' : 'Listening…')}
                 {state === 'idle' && 'Your 2XceL concierge'}
-                {state === 'error' && 'Connection issue — try again'}
+                {state === 'error' && 'Connection issue  try again'}
               </div>
             </div>
 
             {state === 'active' || state === 'connecting' ? (
               <button
                 onClick={endCall}
-                className="inline-flex items-center gap-2 bg-white/5 hover:bg-red-500/80 text-white border border-white/10 rounded-full px-5 py-2.5 text-sm font-bold transition-colors cursor-pointer"
+                className="inline-flex items-center gap-2 bg-white/5 hover:bg-red-500/80 hover:scale-105 text-white border border-white/10 rounded-full px-5 py-2.5 text-sm font-bold transition-all cursor-pointer"
               >
                 <PhoneOff size={16} /> End
               </button>
             ) : (
               <button
                 onClick={startCall}
-                className="inline-flex items-center gap-2 bg-brand-orange hover:bg-brand-orange/90 text-white rounded-full px-5 py-2.5 text-sm font-bold shadow-lg shadow-brand-orange/25 transition-colors cursor-pointer"
+                className="inline-flex items-center gap-2 bg-brand-orange hover:bg-brand-orange/90 hover:scale-105 text-white rounded-full px-5 py-2.5 text-sm font-bold shadow-lg shadow-brand-orange/25 transition-all cursor-pointer"
               >
                 <Mic size={16} /> Start talking
               </button>
@@ -139,4 +148,6 @@ export const VoiceConcierge: React.FC = () => {
       )}
     </div>
   );
-};
+});
+
+VoiceConcierge.displayName = 'VoiceConcierge';

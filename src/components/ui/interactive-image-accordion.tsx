@@ -112,6 +112,7 @@ export const InteractiveImageAccordion = ({
                 <img
                   src={item.image}
                   alt={item.title}
+                  loading="lazy"
                   referrerPolicy="no-referrer"
                   className={`h-full w-full object-cover transition-all duration-1000 ${
                     isActive ? 'scale-105 filter saturate-100 brightness-[0.4]' : 'scale-100 filter saturate-50 brightness-[0.2] group-hover:brightness-[0.3]'

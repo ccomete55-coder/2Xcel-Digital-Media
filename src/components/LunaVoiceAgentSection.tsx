@@ -1,26 +1,35 @@
 import React, { useState } from "react";
 import { motion } from "motion/react";
 import { Phone, PhoneOutgoing, MessageSquareText, Check, Sparkles } from "lucide-react";
+import { GlowBorderCard } from "./ui/GlowBorderCard";
+import { useServiceSelect } from "../hooks/useServiceSelect";
 
 interface VoiceAgent {
   id: string;
   name: string;
-  brandName: string;
+  brandName?: string;
   icon: React.ReactNode;
   accent: string;
   price: number;
+  monthlyPrice: number;
+  monthlyIncludes: string;
   tagline: string;
   features: string[];
 }
 
+// Hybrid pricing: setup fee covers the custom build, monthly retainer covers
+// infrastructure (LLM inference, STT/TTS, telephony), minute allocation, and
+// active monitoring/maintenance  the recurring costs a flat one-time fee
+// doesn't account for.
 const agents: VoiceAgent[] = [
   {
     id: "inbound",
     name: "Inbound Voice Agent",
-    brandName: "Luna",
     icon: <Phone size={20} className="text-brand-orange" />,
-    accent: "#E55B2B",
-    price: 2500,
+    accent: "#E65C2B",
+    price: 2000,
+    monthlyPrice: 297,
+    monthlyIncludes: "500 min/mo included, then $0.25/min · 24/7 uptime monitoring, calendar sync & SMS routing",
     tagline: "Answers every call, 24/7",
     features: [
       "24/7 phone intake, live lead qualification",
@@ -32,10 +41,11 @@ const agents: VoiceAgent[] = [
   {
     id: "outbound",
     name: "Outbound Sales Agent",
-    brandName: "Luna",
     icon: <PhoneOutgoing size={20} className="text-brand-blue" />,
-    accent: "#229AD6",
+    accent: "#2B8ED9",
     price: 2500,
+    monthlyPrice: 497,
+    monthlyIncludes: "1,000 min/mo included · multi-zone pipeline auto-refill & concurrency line upkeep",
     tagline: "Dials 10 leads at once, 24/7",
     features: [
       "10x concurrent call speed",
@@ -47,10 +57,11 @@ const agents: VoiceAgent[] = [
   {
     id: "hybrid",
     name: "Website Hybrid Voice/Chat Agent",
-    brandName: "Lumen",
     icon: <MessageSquareText size={20} className="text-[#32D74B]" />,
     accent: "#32D74B",
-    price: 2000,
+    price: 1000,
+    monthlyPrice: 197,
+    monthlyIncludes: "Widget hosting, persistent tracking & continuous LLM context optimization",
     tagline: "Text or voice, right on your site",
     features: [
       "On-screen widget: text chat or WebRTC voice call",
@@ -62,9 +73,12 @@ const agents: VoiceAgent[] = [
 ];
 
 const TOTAL_PRICE = agents.reduce((sum, a) => sum + a.price, 0);
+const TOTAL_MONTHLY = agents.reduce((sum, a) => sum + a.monthlyPrice, 0);
 const BUNDLE_DISCOUNT = 0.25;
 const BUNDLE_PRICE = Math.round(TOTAL_PRICE * (1 - BUNDLE_DISCOUNT));
+const BUNDLE_MONTHLY = Math.round(TOTAL_MONTHLY * (1 - BUNDLE_DISCOUNT));
 const BUNDLE_SAVINGS = TOTAL_PRICE - BUNDLE_PRICE;
+const BUNDLE_MONTHLY_SAVINGS = TOTAL_MONTHLY - BUNDLE_MONTHLY;
 
 interface LunaVoiceAgentSectionProps {
   setServiceInterested: (val: string) => void;
@@ -74,26 +88,48 @@ export const LunaVoiceAgentSection: React.FC<LunaVoiceAgentSectionProps> = ({ se
   const [mode, setMode] = useState<"individual" | "bundle">("individual");
   const [selectedAgent, setSelectedAgent] = useState<string>(agents[0].id);
 
+  const selectService = useServiceSelect(setServiceInterested);
+
   const handleSelectAgent = (agent: VoiceAgent) => {
     setSelectedAgent(agent.id);
-    setServiceInterested(`${agent.name} (${agent.brandName})`);
-    document.getElementById("inquiries")?.scrollIntoView({ behavior: "smooth", block: "center" });
+    selectService(agent.brandName ? `${agent.name} (${agent.brandName})` : agent.name);
   };
 
   const handleSelectBundle = () => {
-    setServiceInterested("AI Voice & Chat Agent Suite: Inbound + Outbound + Website Hybrid (bundle)");
-    document.getElementById("inquiries")?.scrollIntoView({ behavior: "smooth", block: "center" });
+    selectService("AI Voice & Chat Agent Suite: Inbound + Outbound + Website Hybrid (bundle)");
   };
 
   return (
     <div className="w-full relative z-10 flex flex-col gap-10">
-      <div className="text-center max-w-3xl mx-auto flex flex-col gap-5">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white leading-tight">
-          AI Voice & Chat Agents
-        </h2>
-        <p className="text-gray-400 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
-          Every call and every chat answered — inbound, outbound, and right on your website — all built on our
-          proprietary voice engine, telephony infrastructure, and dynamic CRM webhooks.
+      <div className="grid lg:grid-cols-3 gap-10 lg:gap-12">
+        {/* Left: Inbound */}
+        <div className="flex flex-col gap-4">
+          <h3 className="text-2xl font-bold text-white">Answers Every Call</h3>
+          <p className="text-gray-300 text-base leading-relaxed">
+            24/7 inbound voice agent that qualifies leads in real time, books calendar slots mid-call, and routes qualified prospects directly to your CRM. Never miss an opportunity.
+          </p>
+        </div>
+
+        {/* Middle: Outbound */}
+        <div className="flex flex-col gap-4">
+          <h3 className="text-2xl font-bold text-white">Dials Your Leads</h3>
+          <p className="text-gray-300 text-base leading-relaxed">
+            Concurrent outbound agent that dials 10 leads simultaneously, qualifies at scale, and keeps your pipeline moving. Works across time zones with memory of past conversations.
+          </p>
+        </div>
+
+        {/* Right: Website */}
+        <div className="flex flex-col gap-4">
+          <h3 className="text-2xl font-bold text-white">Lives on Your Site</h3>
+          <p className="text-gray-300 text-base leading-relaxed">
+            Hybrid voice/chat widget embedded directly on your website. Visitors text or call. Agent handles inquiry instantly. Full CRM integration. One click setup.
+          </p>
+        </div>
+      </div>
+
+      <div className="text-center flex flex-col gap-4">
+        <p className="text-gray-400 text-base sm:text-lg leading-relaxed max-w-3xl mx-auto text-left">
+          All powered by 2XceL's proprietary voice engine, enterprise telephony infrastructure, and seamless CRM webhooks. Setup includes complete custom build. Monthly retainer covers optimization, hosting, minute allotment, and monitoringthink of it as hiring a digital employee who never sleeps.
         </p>
 
         {/* Individual / Bundle toggle */}
@@ -150,24 +186,36 @@ export const LunaVoiceAgentSection: React.FC<LunaVoiceAgentSectionProps> = ({ se
               </div>
 
               <div>
-                <h3 className="text-white font-bold text-lg leading-tight">
-                  {agent.name} <span className="text-gray-500 font-medium">({agent.brandName})</span>
+                <h3 className="text-white font-bold text-xl leading-tight">
+                  {agent.name}{" "}
+                  {agent.brandName && (
+                    <span className="text-gray-500 font-medium">({agent.brandName})</span>
+                  )}
                 </h3>
                 <p className="text-gray-400 text-sm mt-1">{agent.tagline}</p>
               </div>
 
-              <div className="flex items-end gap-2">
-                <span className="text-5xl sm:text-3xl font-black text-white tracking-tight">
-                  ${agent.price.toLocaleString()}
-                </span>
-                <span className="text-xs text-gray-500 font-mono pb-1">one-time setup</span>
+              <div className="flex flex-col gap-1.5">
+                <div className="flex items-end gap-2">
+                  <span className="text-3xl sm:text-4xl font-black text-white tracking-tight">
+                    ${agent.price.toLocaleString()}
+                  </span>
+                  <span className="text-xs text-gray-500 font-mono pb-1">one-time setup</span>
+                </div>
+                <div className="flex items-end gap-1.5">
+                  <span className="text-lg font-bold text-brand-orange tracking-tight">
+                    +${agent.monthlyPrice}
+                  </span>
+                  <span className="text-xs text-gray-500 font-mono pb-0.5">/mo retainer</span>
+                </div>
+                <p className="text-[11px] text-gray-500 leading-snug">{agent.monthlyIncludes}</p>
               </div>
 
               <div className="h-px bg-white/10" />
 
               <ul className="flex flex-col gap-2.5 flex-1">
                 {agent.features.map((feature, i) => (
-                  <li key={i} className="flex items-start gap-2 text-xs sm:text-sm text-gray-300 leading-snug">
+                  <li key={i} className="flex items-start gap-2 text-sm sm:text-base text-gray-300 leading-snug">
                     <Check size={14} className="text-brand-orange shrink-0 mt-0.5" />
                     <span>{feature}</span>
                   </li>
@@ -181,7 +229,7 @@ export const LunaVoiceAgentSection: React.FC<LunaVoiceAgentSectionProps> = ({ se
                     e.stopPropagation();
                     handleSelectAgent(agent);
                   }}
-                  className={`w-full h-11 rounded-xl text-sm font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer ${
+                  className={`w-full h-11 rounded-xl text-sm font-bold uppercase tracking-wider transition-all duration-300 hover:scale-105 cursor-pointer ${
                     isGlowing
                       ? "bg-brand-orange hover:bg-brand-orange/90 text-white shadow-lg shadow-brand-orange/20"
                       : "bg-white/5 hover:bg-white/10 text-white border border-white/15"
@@ -193,30 +241,14 @@ export const LunaVoiceAgentSection: React.FC<LunaVoiceAgentSectionProps> = ({ se
             </div>
           );
 
-          return isGlowing ? (
-            <div
+          return (
+            <GlowBorderCard
               key={agent.id}
+              active={isGlowing}
               onClick={() => mode === "individual" && setSelectedAgent(agent.id)}
-              className="relative rounded-2xl p-[2px] overflow-hidden shadow-2xl cursor-pointer h-full"
-            >
-              <div
-                className="absolute -inset-[150%] animate-spin"
-                style={{
-                  background:
-                    "conic-gradient(from 0deg, transparent 0%, #E55B2B 18%, #229AD6 45%, transparent 65%)",
-                  animationDuration: "4s",
-                }}
-              />
-              <div className="relative rounded-2xl bg-[#0B0E14] h-full">{cardBody}</div>
-            </div>
-          ) : (
-            <div
-              key={agent.id}
-              onClick={() => mode === "individual" && setSelectedAgent(agent.id)}
-              className="glass rounded-2xl border border-white/10 hover:border-white/25 transition-all duration-300 h-full cursor-pointer"
             >
               {cardBody}
-            </div>
+            </GlowBorderCard>
           );
         })}
       </motion.div>
@@ -225,24 +257,30 @@ export const LunaVoiceAgentSection: React.FC<LunaVoiceAgentSectionProps> = ({ se
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          className="max-w-3xl mx-auto w-full glass rounded-2xl border border-brand-orange/30 bg-black/40 p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6"
+          className="max-w-3xl mx-auto w-full card-surface rounded-2xl border border-brand-orange/30 p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6"
         >
-          <div className="flex flex-col gap-1 text-center sm:text-left">
+          <div className="flex flex-col gap-1.5 text-center sm:text-left">
             <span className="text-xs uppercase tracking-widest text-gray-400 font-mono font-bold">
-              Full Suite — All Three Agents
+              Full Suite  All Three Agents
             </span>
             <div className="flex items-end gap-3">
               <span className="text-lg text-gray-500 line-through font-mono">${TOTAL_PRICE.toLocaleString()}</span>
               <span className="text-4xl font-black text-white tracking-tight">${BUNDLE_PRICE.toLocaleString()}</span>
+              <span className="text-xs text-gray-500 font-mono pb-1">setup</span>
+            </div>
+            <div className="flex items-end gap-2">
+              <span className="text-sm text-gray-500 line-through font-mono">${TOTAL_MONTHLY.toLocaleString()}/mo</span>
+              <span className="text-xl font-bold text-brand-orange tracking-tight">${BUNDLE_MONTHLY.toLocaleString()}/mo</span>
+              <span className="text-xs text-gray-500 font-mono pb-0.5">retainer</span>
             </div>
             <span className="text-sm text-gray-500">
-              One-time setup — save ${BUNDLE_SAVINGS.toLocaleString()} (25%) versus buying separately
+              Save ${BUNDLE_SAVINGS.toLocaleString()} setup + ${BUNDLE_MONTHLY_SAVINGS}/mo (25%) versus buying separately
             </span>
           </div>
           <button
             type="button"
             onClick={handleSelectBundle}
-            className="shrink-0 w-full sm:w-auto px-9 py-4 rounded-xl text-base font-bold uppercase tracking-wider bg-brand-orange hover:bg-brand-orange/90 text-white shadow-lg shadow-brand-orange/20 transition-all duration-300 cursor-pointer"
+            className="shrink-0 w-full sm:w-auto px-9 py-4 rounded-xl text-base font-bold uppercase tracking-wider bg-brand-orange hover:bg-brand-orange/90 hover:scale-105 text-white shadow-lg shadow-brand-orange/20 transition-all duration-300 cursor-pointer"
           >
             Get The Full Suite
           </button>

@@ -209,6 +209,7 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ item, isActive, onMouseEn
           loop
           muted={isMuted}
           playsInline
+          preload="metadata"
           className="absolute inset-0 w-full h-full object-cover"
         />
       ) : (
@@ -228,7 +229,7 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ item, isActive, onMouseEn
       {item.type === 'video' && isActive && (
         <button
           onClick={toggleMute}
-          className="absolute top-4 right-4 z-20 p-2 rounded-full bg-black/60 text-white backdrop-blur-md hover:bg-black/80 transition-colors cursor-pointer"
+          className="absolute top-4 right-4 z-20 p-2 rounded-full bg-black/60 text-white backdrop-blur-md hover:bg-black/80 hover:scale-110 transition-all cursor-pointer"
           aria-label={isMuted ? "Unmute video" : "Mute video"}
         >
           {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
@@ -238,7 +239,7 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ item, isActive, onMouseEn
       {/* Core Typography Captions */}
       <span
         className={`
-          absolute text-[#E1E0CC] font-sans font-medium tracking-wide whitespace-nowrap
+          absolute text-brand-cream font-sans font-medium tracking-wide whitespace-nowrap
           transition-all duration-500 ease-in-out z-10
           ${
             isActive
@@ -278,12 +279,12 @@ export const CaseStudiesSection: React.FC<CaseStudiesSectionProps> = ({
             <div className="absolute inset-0 bg-brand-orange/5 blur-[120px] pointer-events-none" />
 
             {/* Titles and Controls Overlay */}
-            <div className="text-center z-20 max-w-3xl mx-auto flex flex-col gap-3 relative">
-              <h2 className="text-3xl sm:text-[2.75rem] font-black text-white leading-tight tracking-tight">
+            <div className="text-center z-20 max-w-4xl mx-auto flex flex-col gap-4 relative">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight tracking-tight text-center">
                 Curated Custom Ad Portfolio
               </h2>
-              <p className="text-sm sm:text-base text-gray-400 font-light font-sans max-w-xl mx-auto">
-                A rotating reel of real ad creatives we've produced. Hover to pause — click any spot to watch it full-size with sound.
+              <p className="text-base sm:text-lg text-gray-400 font-light font-sans max-w-2xl mx-auto leading-relaxed">
+                Ad examples we've created for different brands using AI  each one AI-generated and optimized for conversion, fast and scalable. Click any video to expand full-screen with sound, or hover to pause.
               </p>
             </div>
 

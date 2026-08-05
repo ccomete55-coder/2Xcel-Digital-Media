@@ -97,6 +97,7 @@ export const ExpandingCards = React.forwardRef<
           <img
             src={item.imgSrc}
             alt={item.title}
+            loading="lazy"
             referrerPolicy="no-referrer"
             className="absolute inset-0 h-full w-full object-cover transition-all duration-300 ease-out group-data-[active=true]:scale-100 group-data-[active=true]:grayscale-0 scale-110 grayscale"
           />

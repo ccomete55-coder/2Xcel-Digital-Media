@@ -188,7 +188,7 @@ function DockLabel({ children, className, ...rest }: DockLabelProps) {
           exit={{ opacity: 0, y: 0 }}
           transition={{ duration: 0.2 }}
           className={cn(
-            'fixed z-[100] w-fit whitespace-pre rounded-md border border-white/10 bg-[#0B0E14]/95 dark:bg-[#0B0E14]/95 px-2 py-0.5 text-[10px] font-semibold tracking-wide text-[#E55B2B] shadow-lg pointer-events-none',
+            'fixed z-[100] w-fit whitespace-pre rounded-md border border-white/10 bg-brand-obsidian/95 dark:bg-brand-obsidian/95 px-2 py-0.5 text-[10px] font-semibold tracking-wide text-brand-orange shadow-lg pointer-events-none',
             className
           )}
           role="tooltip"

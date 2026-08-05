@@ -6,7 +6,7 @@ import {
   TouchEvent,
   WheelEvent,
 } from 'react';
-import { motion } from 'motion/react';
+import { motion, useReducedMotion } from 'motion/react';
 import { Volume2, VolumeX } from 'lucide-react';
 
 interface ScrollExpandMediaProps {
@@ -48,6 +48,7 @@ const ScrollExpandMedia = ({
 
   const sectionRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
     if (onProgressChange) {
@@ -85,17 +86,23 @@ const ScrollExpandMedia = ({
   }, [mediaType]);
 
   // Lets nav links jump straight to a section: skip the scroll-jack
-  // animation instantly instead of fighting the anchor jump.
+  // animation instantly instead of fighting the anchor jump. Reduced-motion
+  // visitors get the same instant skip, since the scroll-jack itself is the
+  // motion being requested against — they still get the full hero content,
+  // just without the wheel-driven grow/shrink.
   useEffect(() => {
-    if (forceExpanded && !mediaFullyExpanded) {
+    if ((forceExpanded || prefersReducedMotion) && !mediaFullyExpanded) {
       setScrollProgress(1);
       setShowContent(true);
       setMediaFullyExpanded(true);
     }
-  }, [forceExpanded, mediaFullyExpanded]);
+  }, [forceExpanded, prefersReducedMotion, mediaFullyExpanded]);
 
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
+      // Skip animated scroll-driven expansion for reduced-motion users
+      if (prefersReducedMotion) return;
+
       if (mediaFullyExpanded && e.deltaY < 0 && window.scrollY <= 5) {
         setMediaFullyExpanded(false);
         e.preventDefault();
@@ -103,8 +110,7 @@ const ScrollExpandMedia = ({
         e.preventDefault();
         const rawDelta = e.deltaY * 0.0009;
         // Cap the max progress change per wheel tick so a fast flick or
-        // trackpad momentum burst can't snap the media open/closed instantly —
-        // it always plays out over several ticks, same pace both directions.
+        // trackpad momentum burst can't snap the media open/closed instantly         // it always plays out over several ticks, same pace both directions.
         const scrollDelta = Math.sign(rawDelta) * Math.min(Math.abs(rawDelta), 0.15);
         const newProgress = Math.min(
           Math.max(scrollProgress + scrollDelta, 0),
@@ -126,6 +132,8 @@ const ScrollExpandMedia = ({
     };
 
     const handleTouchMove = (e: TouchEvent) => {
+      // Skip animated scroll-driven expansion for reduced-motion users
+      if (prefersReducedMotion) return;
       if (!touchStartY) return;
 
       const touchY = e.touches[0].clientY;
@@ -164,7 +172,7 @@ const ScrollExpandMedia = ({
     };
 
     const handleScroll = (): void => {
-      if (!mediaFullyExpanded) {
+      if (!mediaFullyExpanded && !prefersReducedMotion) {
         window.scrollTo(0, 0);
       }
     };
@@ -201,7 +209,7 @@ const ScrollExpandMedia = ({
       );
       window.removeEventListener('touchend', handleTouchEnd as EventListener);
     };
-  }, [scrollProgress, mediaFullyExpanded, touchStartY]);
+  }, [scrollProgress, mediaFullyExpanded, touchStartY, prefersReducedMotion]);
 
   useEffect(() => {
     const checkIfMobile = (): void => {
@@ -318,7 +326,7 @@ const ScrollExpandMedia = ({
                         <button
                           type='button'
                           onClick={onToggleMute}
-                          className='absolute top-4 right-4 z-20 p-2 rounded-full bg-black/60 text-white backdrop-blur-md hover:bg-black/80 transition-colors cursor-pointer pointer-events-auto'
+                          className='absolute top-4 right-4 z-20 p-2 rounded-full bg-black/60 text-white backdrop-blur-md hover:bg-black/80 hover:scale-110 transition-all cursor-pointer pointer-events-auto'
                           aria-label={isMuted ? 'Unmute video' : 'Mute video'}
                         >
                           {isMuted ? (

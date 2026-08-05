@@ -68,7 +68,7 @@ const comparisonRows: {
   {
     label: "Can trigger work",
     chatbot: "No",
-    agent: "Yes — runs automations and project actions",
+    agent: "Yes  runs automations and project actions",
     icon: PlayCircle,
   },
   {
@@ -240,32 +240,48 @@ export const FeaturedAgentsSection: React.FC = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          className="text-center max-w-3xl mx-auto flex flex-col gap-4"
+          className="flex flex-col gap-12"
         >
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white text-balance">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight max-w-4xl mx-auto text-center">
             Meet 2XceL's Most Powerful AI Agents
           </h2>
-          <p className="text-gray-400 text-sm sm:text-base leading-relaxed font-light text-balance max-w-2xl mx-auto">
-            Intelligent assistants that think, learn, remember context, and take autonomous action alongside your team. These featured agents represent the best of what's possible with AI augmentation — they don't just respond to commands, they understand your work, anticipate needs, and proactively help you accomplish goals. Deploy one to experience how an AI teammate can transform productivity.
-          </p>
+
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16">
+            {/* Left Column */}
+            <div className="flex flex-col gap-6">
+              <div>
+                <h3 className="text-white text-xl sm:text-2xl font-bold mb-3">What Makes an Agent Different</h3>
+                <p className="text-gray-300 text-base leading-relaxed">
+                  The difference from a chatbot is the verb. A chatbot answers. An agent reasons, decides, and acts. Where chatbots are passiveresponding only when promptedagents are proactive: they understand your workflow, anticipate obstacles, and execute actions autonomously to move your business forward.
+                </p>
+              </div>
+              <div>
+                <h3 className="text-white text-xl sm:text-2xl font-bold mb-3">Built on Frontier AI</h3>
+                <p className="text-gray-300 text-base leading-relaxed">
+                  2XceL agents run on 15+ frontier models from OpenAI, Anthropic, Google, and open-weight providers. Auto mode intelligently selects the best model for each taskbalancing speed, accuracy, and cost. This multi-model approach means you get optimal performance across research, analysis, writing, and real-time decision-making.
+                </p>
+              </div>
+            </div>
+
+            {/* Right Column */}
+            <div className="flex flex-col gap-6">
+              <div>
+                <h3 className="text-white text-xl sm:text-2xl font-bold mb-3">Autonomous Action, Real Work</h3>
+                <p className="text-gray-300 text-base leading-relaxed">
+                  Agents turn raw AI capability into measurable output. Research deep into your docs and databases. Qualify leads in real time. Draft and refine content. Update records across systems. Escalate exceptions to humans with full context. They don't just replythey deliver done work that flows directly into your operations.
+                </p>
+              </div>
+              <div>
+                <h3 className="text-white text-xl sm:text-2xl font-bold mb-3">Memory That Persists</h3>
+                <p className="text-gray-300 text-base leading-relaxed">
+                  Unlike chatbots that forget between sessions, 2XceL agents maintain persistent, per-user memory. They remember past conversations, prior decisions, and learnings about your business. This continuity means agents improve with each interaction and can handle complex, multi-step workflows that require real context.
+                </p>
+              </div>
+            </div>
+          </div>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
-          className="max-w-3xl mx-auto text-center flex flex-col gap-2"
-        >
-          <p className="text-white text-base sm:text-lg font-semibold leading-relaxed text-balance">
-            The difference from a chatbot is the verb. A chatbot answers. An agent reasons, decides, and acts.
-          </p>
-          <p className="text-gray-400 text-sm sm:text-base leading-relaxed font-light text-balance max-w-2xl mx-auto">
-            2XceL agents turn raw AI capability into something that does work — research, support, lead qualification, content drafting — instead of just replying. They run on 15+ frontier models from OpenAI, Anthropic, Google, and open-weight providers, with Auto mode picking the best one for each request.
-          </p>
-        </motion.div>
-
-        {/* Comparison Diagram — fire vs ice clash */}
+        {/* Comparison Diagram  fire vs ice clash */}
         <motion.div
           ref={cardRef}
           initial={{ opacity: 0, y: 20 }}
@@ -277,9 +293,9 @@ export const FeaturedAgentsSection: React.FC = () => {
               : { x: 0, rotate: 0 }
           }
           transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-          className="relative max-w-3xl mx-auto w-full glass rounded-3xl border border-white/10 bg-black/30 overflow-hidden p-5 sm:p-8 lg:p-9"
+          className="relative max-w-3xl mx-auto w-full card-surface rounded-2xl border border-white/10 overflow-hidden p-5 sm:p-8 lg:p-9"
         >
-          {/* Split color washes — ice left, fire right */}
+          {/* Split color washes  ice left, fire right */}
           {(phase === "impact" || settled) && (
             <>
               <motion.div
@@ -313,7 +329,7 @@ export const FeaturedAgentsSection: React.FC = () => {
             </>
           )}
 
-          {/* Header — fight card marquee */}
+          {/* Header  fight card marquee */}
           <div
             className="relative z-10 grid grid-cols-[1fr_auto_1fr] items-center mb-5 sm:mb-7 min-h-[4.5rem] sm:min-h-[5rem] [container-type:inline-size]"
             style={{ fontFamily: "'Bruno Ace SC', 'Impact', sans-serif" }}
@@ -340,7 +356,7 @@ export const FeaturedAgentsSection: React.FC = () => {
             {/* spacer reserves the VS slot so the labels hug it */}
             <div className="w-[110px] sm:w-[130px]" />
 
-            {/* VS emblem — lands on impact, click to replay */}
+            {/* VS emblem  lands on impact, click to replay */}
             {(phase === "impact" || settled) && (
               <motion.button
                 initial={{ scale: 0, rotate: -14 }}
@@ -517,7 +533,7 @@ export const FeaturedAgentsSection: React.FC = () => {
                   onMouseLeave={() => setHoveredIndex((h) => (h === i ? null : h))}
                   className="relative grid grid-cols-[1fr_auto_1fr] items-center gap-2 sm:gap-3 rounded-2xl px-2 py-2 sm:px-3 sm:py-2.5 cursor-pointer transition-colors duration-300 hover:bg-white/[0.03]"
                 >
-                  {/* Chatbot node — ice side */}
+                  {/* Chatbot node  ice side */}
                   <motion.div
                     animate={{
                       opacity: isHovered ? 1 : 0.75,
@@ -568,7 +584,7 @@ export const FeaturedAgentsSection: React.FC = () => {
                     </motion.div>
                   </div>
 
-                  {/* Agent node — fire side */}
+                  {/* Agent node  fire side */}
                   <motion.div
                     onClick={() => handleAgentClick(i)}
                     animate={{
@@ -697,7 +713,7 @@ export const FeaturedAgentsSection: React.FC = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
-          className="text-gray-400 text-sm sm:text-base leading-relaxed font-light max-w-2xl mx-auto text-center text-balance"
+          className="text-gray-400 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto text-left"
         >
           This is the same shift the rest of the industry is racing toward in 2026: agents that complete jobs, not just chat. 2XceL's advantage is that the agent lives inside your workspace, so its memory, tools, and execution are already connected on day one.
         </motion.p>

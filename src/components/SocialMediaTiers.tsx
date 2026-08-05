@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { motion } from "motion/react";
 import { Check, Sparkles } from "lucide-react";
+import { GlowBorderCard } from "./ui/GlowBorderCard";
+import { useServiceSelect } from "../hooks/useServiceSelect";
 
 interface Tier {
   id: string;
@@ -23,7 +25,7 @@ const tiers: Tier[] = [
     name: "Starter",
     subtitle: "Brand Presence Engine",
     monthly: 499,
-    tagline: "Ideal for small businesses needing a consistent, professional multi-platform presence on autopilot.",
+    tagline: "For small businesses that want to show up everywhere, consistently, without having to do it themselves.",
     contentOutput: "3 Short-Form Video Reels / week (~12–14 videos/mo)",
     distribution: "Up to 3 channels (IG Reels, TikTok, YouTube Shorts) = 36–42 posts/mo",
     productionStack: [
@@ -42,7 +44,7 @@ const tiers: Tier[] = [
     name: "Growth",
     subtitle: "Organic Lead & Authority Accelerator",
     monthly: 999,
-    tagline: "Built for scaling brands that want to dominate short-form video, drive engagement, and generate consistent inbound traffic.",
+    tagline: "For brands ready to go all-in on short-form video  more engagement, more inbound, without burning out your team.",
     contentOutput: "5 Short-Form Video Reels / week (~20–22 videos/mo)",
     distribution: "Up to 5 channels (IG, TikTok, YouTube Shorts, FB Reels, LinkedIn) = 100+ posts/mo",
     recommended: true,
@@ -63,7 +65,7 @@ const tiers: Tier[] = [
     name: "Pro / Enterprise",
     subtitle: "Automated Brand Authority & Digital Twin System",
     monthly: 1999,
-    tagline: "The ultimate full-funnel content engine featuring a custom AI Talking Head / Digital Twin avatar to build founder authority without camera time.",
+    tagline: "A full-funnel content engine built around your own AI avatar, so you build founder authority without ever stepping in front of a camera.",
     contentOutput: "7 Days/Week Heavy Distribution (30+ core video assets/mo)",
     distribution: "Ubiquitous Multi-Channel (IG, TikTok, YouTube Shorts, FB, LinkedIn, X) = 150–180+ posts/mo",
     productionStack: [
@@ -99,17 +101,15 @@ const TierCardContent: React.FC<{ tier: Tier; billing: "monthly" | "yearly"; isS
 }) => (
   <div className="h-full flex flex-col items-center gap-6 p-8 text-center">
     <div className="flex flex-col items-center gap-3">
-      {tier.recommended && (
-        <span className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-brand-orange bg-brand-orange/10 border border-brand-orange/30 rounded-full px-3 py-1 shrink-0">
-          <Sparkles size={13} />
-          Recommended
-        </span>
-      )}
-      <h3 className="text-3xl font-bold text-white">{tier.name}</h3>
-      <p className="text-sm font-semibold uppercase tracking-wider text-brand-blue">{tier.subtitle}</p>
+      <span className={`flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-brand-orange bg-brand-orange/10 border border-brand-orange/30 rounded-full px-3 py-1 shrink-0 ${tier.recommended ? "" : "invisible"}`}>
+        <Sparkles size={13} />
+        Recommended
+      </span>
+      <h3 className="text-2xl font-bold text-white">{tier.name}</h3>
+      <p className="text-sm font-semibold uppercase tracking-wider text-brand-blue min-h-[82px] flex items-center">{tier.subtitle}</p>
     </div>
 
-    <p className="text-gray-400 text-base leading-relaxed max-w-[280px] mx-auto">{tier.tagline}</p>
+    <p className="text-gray-400 text-base leading-relaxed max-w-[280px] mx-auto min-h-[171px] flex items-center">{tier.tagline}</p>
 
     <div className="flex items-end justify-center gap-2">
       <span className="text-4xl sm:text-5xl font-black text-white tracking-tight">
@@ -165,7 +165,7 @@ const TierCardContent: React.FC<{ tier: Tier; billing: "monthly" | "yearly"; isS
         e.stopPropagation();
         onSelect();
       }}
-      className={`w-full h-12 rounded-xl text-sm font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer ${
+      className={`w-full h-12 rounded-xl text-sm font-bold uppercase tracking-wider transition-all duration-300 hover:scale-105 cursor-pointer ${
         isSelected
           ? "bg-brand-orange hover:bg-brand-orange/90 text-white shadow-lg shadow-brand-orange/20"
           : "bg-white/5 hover:bg-white/10 text-white border border-white/15"
@@ -182,24 +182,40 @@ export const SocialMediaTiers: React.FC<SocialMediaTiersProps> = ({ setServiceIn
     tiers.find((t) => t.recommended)?.id ?? tiers[0].id
   );
 
+  const selectService = useServiceSelect(setServiceInterested);
   const handleSelect = (tier: Tier) => {
     setSelectedTier(tier.id);
-    setServiceInterested(
+    selectService(
       `Social Media Content & Distribution Engine: ${tier.name} (${billing === "yearly" ? "annual" : "monthly"})`
     );
-    document.getElementById("inquiries")?.scrollIntoView({ behavior: "smooth", block: "center" });
   };
 
   return (
     <div className="flex flex-col gap-10">
-      <div className="text-center max-w-3xl mx-auto flex flex-col gap-5">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white leading-tight">
-          Social Media Content & Distribution Engine
-        </h2>
-        <p className="text-gray-400 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
-          Every tier runs on our proprietary multi-channel scheduling and distribution engine, with consistent,
-          on-brand character generation for every asset — high-volume visual asset creation, automated video
-          rendering, and scheduled publishing across every account you run.
+      <div className="grid lg:grid-cols-3 gap-10 lg:gap-12 mb-12">
+        <div className="flex flex-col gap-4">
+          <h3 className="text-2xl font-bold text-white">Consistent Branding</h3>
+          <p className="text-gray-300 text-base leading-relaxed">
+            All tiers run on the same system. Your brand aestheticfonts, colors, logo, overlaysstays identical across every platform and every post.
+          </p>
+        </div>
+        <div className="flex flex-col gap-4">
+          <h3 className="text-2xl font-bold text-white">Automatic Production</h3>
+          <p className="text-gray-300 text-base leading-relaxed">
+            Videos render automatically with your custom graphics. Motion design, captions, music, hooksall generated and applied to your exact specs.
+          </p>
+        </div>
+        <div className="flex flex-col gap-4">
+          <h3 className="text-2xl font-bold text-white">Smart Scheduling</h3>
+          <p className="text-gray-300 text-base leading-relaxed">
+            Everything publishes on schedule. Pick your posting times per platform, per week. No manual uploads. No late posts. No guesswork.
+          </p>
+        </div>
+      </div>
+
+      <div className="text-center flex flex-col gap-4 mb-8">
+        <p className="text-gray-400 text-base leading-relaxed max-w-3xl mx-auto">
+          Choose your tier and get started. Monthly or yearly billing available.
         </p>
 
         {/* Monthly / Yearly toggle */}
@@ -234,32 +250,10 @@ export const SocialMediaTiers: React.FC<SocialMediaTiersProps> = ({ setServiceIn
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto w-full items-stretch">
         {tiers.map((tier) => {
           const isSelected = selectedTier === tier.id;
-          return isSelected ? (
-            <div
-              key={tier.id}
-              onClick={() => setSelectedTier(tier.id)}
-              className="relative rounded-2xl p-[2px] overflow-hidden shadow-2xl cursor-pointer"
-            >
-              <div
-                className="absolute -inset-[150%] animate-spin"
-                style={{
-                  background:
-                    "conic-gradient(from 0deg, transparent 0%, #E55B2B 18%, #229AD6 45%, transparent 65%)",
-                  animationDuration: "4s",
-                }}
-              />
-              <div className="relative rounded-2xl bg-[#0B0E14] h-full">
-                <TierCardContent tier={tier} billing={billing} isSelected={isSelected} onSelect={() => handleSelect(tier)} />
-              </div>
-            </div>
-          ) : (
-            <div
-              key={tier.id}
-              onClick={() => setSelectedTier(tier.id)}
-              className="glass rounded-2xl border border-white/10 hover:border-white/25 transition-all duration-300 h-full cursor-pointer"
-            >
+          return (
+            <GlowBorderCard key={tier.id} active={isSelected} onClick={() => setSelectedTier(tier.id)}>
               <TierCardContent tier={tier} billing={billing} isSelected={isSelected} onSelect={() => handleSelect(tier)} />
-            </div>
+            </GlowBorderCard>
           );
         })}
       </div>

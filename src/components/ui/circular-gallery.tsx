@@ -83,7 +83,7 @@ const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryProps>(
       return () => window.removeEventListener('resize', handleResize);
     }, [radius]);
 
-    // Continuous auto-rotation — pauses on hover or when a video is open.
+    // Continuous auto-rotation  pauses on hover or when a video is open.
     // Respects the user's reduced-motion preference.
     useEffect(() => {
       const prefersReduced = typeof window !== 'undefined' &&
@@ -188,6 +188,7 @@ const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryProps>(
                     <img
                       src={item.photo.url}
                       alt={item.photo.text}
+                      loading="lazy"
                       className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                       style={{ objectPosition: item.photo.pos || 'center' }}
                     />
@@ -225,19 +226,19 @@ const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryProps>(
         </div>
       </div>
 
-      {/* Lightbox player — click a video panel to watch full-size with sound */}
+      {/* Lightbox player  click a video panel to watch full-size with sound */}
       {activeItem && activeItem.video && createPortal(
         <div
           className="fixed inset-0 z-[300] flex items-center justify-center bg-black/90 backdrop-blur-md p-4 sm:p-8 animate-fadeIn"
           onClick={() => setActiveItem(null)}
           role="dialog"
           aria-modal="true"
-          aria-label={`${activeItem.common} — video player`}
+          aria-label={`${activeItem.common}  video player`}
         >
           <button
             onClick={() => setActiveItem(null)}
             aria-label="Close video"
-            className="absolute top-5 right-5 w-11 h-11 rounded-full bg-white/10 hover:bg-brand-orange border border-white/20 text-white flex items-center justify-center transition-colors cursor-pointer z-10"
+            className="absolute top-5 right-5 w-11 h-11 rounded-full bg-white/10 hover:bg-brand-orange hover:scale-110 border border-white/20 text-white flex items-center justify-center transition-all cursor-pointer z-10"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
               <path d="M18 6 6 18M6 6l12 12" />
@@ -255,6 +256,7 @@ const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryProps>(
               autoPlay
               loop
               playsInline
+              preload="metadata"
               className="w-full rounded-2xl shadow-2xl border border-white/10 bg-black max-h-[78vh]"
             />
             <div className="flex flex-col gap-0.5 px-1">
