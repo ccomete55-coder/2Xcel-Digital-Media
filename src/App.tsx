@@ -4,12 +4,13 @@ import { ArrowRight, Check, Zap, TrendingUp, Bot, Brain, Globe, Quote, ShieldChe
 import { CustomCursor } from './components/CustomCursor';
 import ScrollExpandMedia from './components/ui/scroll-expansion-hero';
 import { CinematicFooter } from './components/ui/motion-footer';
-import { BlueprintsSection } from './components/BlueprintsSection';
 import { FeaturedAgentsSection } from './components/FeaturedAgentsSection';
 import { LunaVoiceAgentSection } from './components/LunaVoiceAgentSection';
-import { PricingSection } from './components/PricingSection';
 import { CaseStudiesSection } from './components/CaseStudiesSection';
 import { SocialMediaTiers } from './components/SocialMediaTiers';
+import { AdVideoProductionSection } from './components/AdVideoProductionSection';
+import { EnterpriseStrategySection } from './components/EnterpriseStrategySection';
+import { AutomationsWorkflowsSection } from './components/AutomationsWorkflowsSection';
 import { Toggle } from './components/ui/toggle';
 import InteractiveSelector from './components/ui/interactive-selector';
 import { Eyebrow } from './components/ui/Eyebrow';
@@ -435,7 +436,7 @@ export default function App() {
     }
   ];
 
-  const handleSubmission = (e: React.FormEvent) => {
+  const handleSubmission = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Validate, show a clear message, and focus the first field that needs attention.
@@ -463,17 +464,41 @@ export default function App() {
     setFormError('');
     setIsSimulating(true);
     setSimStep(1);
-    
-    setTimeout(() => {
-      setSimStep(2);
+
+    try {
+      const formData = new FormData();
+      formData.append('first_name', firstNameInput.trim());
+      formData.append('email', emailInput.trim());
+      formData.append('phone', phoneInput.trim());
+      formData.append('industry', industryInput.trim());
+      if (serviceInterested) {
+        formData.append('service_interested', serviceInterested);
+      }
+
+      const response = await fetch('https://form.2xcel.net', {
+        method: 'POST',
+        body: formData,
+      });
+
       setTimeout(() => {
-        setSimStep(3);
+        setSimStep(2);
         setTimeout(() => {
-          setIsSimulating(false);
-          setIsSubmitted(true);
-        }, 1200);
-      }, 1000);
-    }, 900);
+          setSimStep(3);
+          setTimeout(() => {
+            setIsSimulating(false);
+            if (response.ok) {
+              setIsSubmitted(true);
+            } else {
+              setFormError('Something went wrong submitting your details. Please try again.');
+            }
+          }, 1200);
+        }, 1000);
+      }, 900);
+    } catch (err) {
+      console.error('Form submission error:', err);
+      setIsSimulating(false);
+      setFormError('Connection error. Please check your internet and try again.');
+    }
   };
 
   // Floating animated logo interpolator matching 2XceL's aesthetic
@@ -877,9 +902,9 @@ export default function App() {
           </section>
 
           {/* SECTION C: THE MEDIA SECTION */}
-          <section id="media-section" className="pt-24 pb-12 px-4 md:px-8 w-full relative z-10 scroll-mt-28">
+          <section id="media-section" className="border-t border-white/5 pt-24 pb-12 px-4 md:px-8 w-full relative z-10 scroll-mt-28">
             <div className="max-w-7xl mx-auto flex flex-col gap-16">
-              
+
               <CaseStudiesSection
                 activeVideoSrc={activeVideoSrc}
                 setActiveVideoSrc={setActiveVideoSrc}
@@ -890,28 +915,32 @@ export default function App() {
 
               <SocialMediaTiers setServiceInterested={setServiceInterested} />
 
+              <AdVideoProductionSection setServiceInterested={setServiceInterested} />
+
             </div>
           </section>
 
           {/* SECTION 2B-2: FEATURED AI AGENTS (Chatbot vs Agent Positioning) */}
-          <section id="featured-agents" className="pt-12 pb-12 px-4 md:px-8 w-full relative z-10 scroll-mt-28">
+          <section id="featured-agents" className="border-t border-white/5 pt-12 pb-12 px-4 md:px-8 w-full relative z-10 scroll-mt-28">
             <div className="max-w-7xl mx-auto flex flex-col gap-12">
               <FeaturedAgentsSection />
               <LunaVoiceAgentSection setServiceInterested={setServiceInterested} />
             </div>
           </section>
 
-          {/* SECTION 2C: AI WORKSPACE BLUEPRINTS SECTION (The Lead Funnel) */}
-          <section id="blueprints" className="pt-12 pb-24 px-4 md:px-8 w-full relative z-10 scroll-mt-28">
+          {/* SECTION 3B: ENTERPRISE MARKETING STRATEGY & OFFER ARCHITECTURE */}
+          <section id="enterprise-strategy" className="border-t border-white/5 py-12 px-4 md:px-8 w-full relative z-10 scroll-mt-28">
             <div className="max-w-7xl mx-auto flex flex-col gap-12">
-              <BlueprintsSection 
-                setServiceInterested={setServiceInterested}
-              />
+              <EnterpriseStrategySection setServiceInterested={setServiceInterested} />
             </div>
           </section>
 
-          {/* SECTION D: STRATEGIC MARKETING PLANS & PRICING */}
-          <PricingSection setServiceInterested={setServiceInterested} />
+          {/* SECTION 3C: AUTOMATIONS & WORKFLOWS */}
+          <section id="automations-workflows" className="border-t border-white/5 py-12 px-4 md:px-8 w-full relative z-10 scroll-mt-28">
+            <div className="max-w-7xl mx-auto flex flex-col gap-12">
+              <AutomationsWorkflowsSection setServiceInterested={setServiceInterested} />
+            </div>
+          </section>
 
           {/* SECTION 4: INDUSTRY INSIGHTS (BLOG) */}
           <section id="blog" className="py-20 px-4 md:px-8 w-full relative z-10 scroll-mt-28">
@@ -1470,7 +1499,7 @@ Received
                     {/* High Impact Personalized Message addressing the "partners / how can we layout without understanding" issue */}
                     <div className="bg-brand-orange/5 border border-brand-orange/20 rounded-2xl p-5 mb-6">
                       <p className="text-sm font-light text-gray-200 leading-relaxed">
-                        ✨ <strong className="text-white">Awesome, {firstNameInput}!</strong> To deliver a world-class, custom visual preview and interactive blueprint, we need to gather standard details about your lead routing and operations. <strong className="text-white">Our in-house design and engineering team builds every line of code on-site</strong> to fit your exact business goals—we do not outsource. Let's lock in a 1-Hour Zoom Strategy Session below.
+                        ✨ <strong className="text-white">Awesome, {firstNameInput}!</strong> To deliver a world-class, custom visual preview and interactive blueprint, we need to gather standard details about your lead routing and operations. <strong className="text-white">Our in-house design and engineering team builds every line of code on-site</strong> to fit your exact business goals—we do not outsource. Let's lock in a 1-Hour Google Meet Strategy Session below.
                       </p>
                     </div>
 
@@ -1478,7 +1507,7 @@ Received
                     <div className=" pt-6">
                       <h5 className="text-sm uppercase font-mono tracking-widest text-[#E65C2B] font-bold mb-4 flex items-center gap-1.5">
                         <Calendar size={14} />
-                        Choose a Zoom Strategy Call Date & Time *
+                        Choose a Google Meet Strategy Call Date & Time *
                       </h5>
 
                       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -1523,7 +1552,7 @@ Received
                           <div>
                             <span className="text-[10px] uppercase tracking-widest font-mono text-gray-500 font-bold block mb-2 flex items-center gap-1">
                               <Clock size={10} />
-                              Select Available Eastern Time Slot:
+                              Select Available Mountain Time Slot:
                             </span>
                             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                               {["09:00 AM", "11:00 AM", "01:30 PM", "03:00 PM", "04:30 PM", "06:00 PM"].map((t) => {
@@ -1552,12 +1581,50 @@ Received
                               <button
                                 key="book-btn"
                                 type="button"
-                                onClick={() => {
+                                onClick={async () => {
                                   setIsBookingLoading(true);
-                                  setTimeout(() => {
+                                  try {
+                                    const bookingRes = await fetch('https://hermes.2xcel.net/api/book-meeting', {
+                                      method: 'POST',
+                                      headers: { 'Content-Type': 'application/json' },
+                                      body: JSON.stringify({
+                                        firstName: firstNameInput.trim(),
+                                        email: emailInput.trim(),
+                                        phone: phoneInput.trim(),
+                                        industry: industryInput.trim(),
+                                        selectedDate,
+                                        selectedTime,
+                                        serviceInterested,
+                                      }),
+                                    });
+
+                                    if (!bookingRes.ok) {
+                                      throw new Error('Failed to create calendar event');
+                                    }
+
+                                    const bookingData = await bookingRes.json();
+
+                                    const formData = new FormData();
+                                    formData.append('first_name', firstNameInput.trim());
+                                    formData.append('email', emailInput.trim());
+                                    formData.append('phone', phoneInput.trim());
+                                    formData.append('industry', industryInput.trim());
+                                    formData.append('service_interested', serviceInterested);
+                                    formData.append('google_meet_link', bookingData.meetLink || '');
+                                    formData.append('meeting_time', `${selectedDate} at ${selectedTime} MST`);
+
+                                    await fetch('https://form.2xcel.net', {
+                                      method: 'POST',
+                                      body: formData,
+                                    });
+
                                     setIsBookingLoading(false);
                                     setIsBooked(true);
-                                  }, 1100);
+                                  } catch (err) {
+                                    console.error('Booking error:', err);
+                                    setIsBookingLoading(false);
+                                    setFormError('Failed to create booking. Please try again.');
+                                  }
                                 }}
                                 disabled={isBookingLoading}
                                 className="w-full bg-brand-orange hover:bg-brand-orange/90 text-white font-bold text-xs uppercase tracking-wider py-3 px-4 rounded-xl transition-all duration-300 shadow-md flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
@@ -1565,23 +1632,26 @@ Received
                                 {isBookingLoading ? (
                                   <>
                                     <Settings className="animate-spin" size={14} />
-                                    Reserving Slot on Server...
+                                    Creating Google Meet & Calendar...
                                   </>
                                 ) : (
                                   <>
                                     <Calendar size={13} />
-                                    Book Zoom Call: {selectedDate} @ {selectedTime}
+                                    Book Google Meet Call: {selectedDate} @ {selectedTime}
                                   </>
                                 )}
                               </button>
                             ) : (
-                              <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 p-3.5 rounded-xl text-center flex flex-col gap-1 shadow-inner">
+                              <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 p-3.5 rounded-xl text-center flex flex-col gap-2 shadow-inner">
                                 <span className="font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-1.5">
                                   <ShieldCheck size={14} />
                                   ✓ Booking Securely Confirmed!
                                 </span>
                                 <p className="text-[10px] text-gray-300 font-mono">
-                                  Your 1-hour session is reserved for: {selectedDate} at {selectedTime} EST.
+                                  Your 1-hour session is reserved for: {selectedDate} at {selectedTime} MST.
+                                </p>
+                                <p className="text-[9px] text-emerald-300 font-mono">
+                                  Google Meet link & calendar invite sent to {firstNameInput}
                                 </p>
                               </div>
                             )}
@@ -1593,16 +1663,16 @@ Received
                         <div className="lg:col-span-5 flex flex-col gap-3">
                           <span className="text-[10px] uppercase tracking-widest font-mono text-gray-500 font-bold flex items-center gap-1.5">
                             <MapPin size={11} className="text-[#E65C2B]" />
-                            Our Austin, Texas Flagship Studio
+                            Our Red Deer, Alberta Studio
                           </span>
-                          
+
                           {/* Real Google Maps with grayscale invert filters representing true corporate elite styling */}
                           <div className="relative rounded-2xl overflow-hidden border border-white/10 h-[155px] bg-[#080B10] shadow-md group">
-                            <iframe 
-                              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d13762.8427779373976!2d-97.74596392348505!3d30.27315100767119!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8644b506a03e1b7b%3A0xc3f8e561491ba637!2sCapitol%20Tower%2C%20206%20E%209th%20St%2C%20Austin%2C%20TX%2078701!5e0!3m2!1sen!2sus!4v1717822941014!5m2!1sen!2sus" 
-                              className="w-full h-full border-0 grayscale invert opacity-60 group-hover:opacity-85 transition-opacity" 
-                              allowFullScreen={false} 
-                              loading="lazy" 
+                            <iframe
+                              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2832.7123456789!2d-113.8112!3d52.2681!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1sRed%20Deer%2C%20Alberta!2sCanada!5e0!3m2!1sen!2sus!4v1717822941014!5m2!1sen!2sus"
+                              className="w-full h-full border-0 grayscale invert opacity-60 group-hover:opacity-85 transition-opacity"
+                              allowFullScreen={false}
+                              loading="lazy"
                               referrerPolicy="no-referrer"
                             ></iframe>
                             <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#0B0E14] to-transparent p-2.5 pt-6 pointer-events-none">
@@ -1612,8 +1682,8 @@ Received
 
                           <div className="text-[11px] text-gray-400 font-mono flex flex-col gap-1 leading-normal">
                             <p className="font-bold text-white">2XceL Studio (On-Site Team)</p>
-                            <p>Capitol Tower, 206 E 9th St,</p>
-                            <p>Austin, TX 78701</p>
+                            <p>Red Deer, Alberta</p>
+                            <p>Canada</p>
                           </div>
                         </div>
 
@@ -1624,7 +1694,7 @@ Received
                     <div className="mt-6 pt-5  flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 text-xs font-mono text-gray-400">
                       <div>
                         {isBooked ? (
-                          <span className="text-emerald-400 font-bold">✓ CHECK YOUR INBOX: Confirmation link dispatched to {emailInput}</span>
+                          <span className="text-emerald-400 font-bold">✓ CHECK YOUR INBOX: Google Meet link + calendar invite sent to {firstNameInput}</span>
                         ) : (
                           <span>* Strategy session agenda will focus on customized {serviceInterested} workflows.</span>
                         )}

@@ -9,6 +9,7 @@ import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import { handleToolCall } from './tools.js';
+import { createStrategyCallEvent } from './google-calendar.js';
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -35,6 +36,52 @@ app.use(
 // ---------------------------------------------------------------------------
 app.get('/health', (_req, res) => {
   res.json({ status: 'ok', service: 'hermes', time: new Date().toISOString() });
+});
+
+// ---------------------------------------------------------------------------
+// Strategy call booking — creates Google Calendar event + Google Meet link.
+// POST /api/book-meeting with { firstName, email, phone, industry, selectedDate, selectedTime, serviceInterested }
+// Returns { eventId, meetLink, calendarLink, startTime }
+// ---------------------------------------------------------------------------
+app.post('/api/book-meeting', async (req, res) => {
+  try {
+    const { firstName, email, phone, industry, selectedDate, selectedTime, serviceInterested } =
+      req.body;
+
+    // Validate required fields
+    if (!firstName || !email || !phone || !industry || !selectedDate || !selectedTime) {
+      return res.status(400).json({
+        error: 'Missing required fields',
+        required: ['firstName', 'email', 'phone', 'industry', 'selectedDate', 'selectedTime'],
+      });
+    }
+
+    // Create the calendar event
+    const booking = await createStrategyCallEvent({
+      firstName,
+      email,
+      phone,
+      industry,
+      selectedDate,
+      selectedTime,
+      serviceInterested,
+    });
+
+    res.json({
+      ok: true,
+      eventId: booking.eventId,
+      meetLink: booking.meetLink,
+      calendarLink: booking.calendarLink,
+      startTime: booking.startTime,
+      message: `Strategy call scheduled for ${selectedDate} at ${selectedTime} MST. Google Meet link sent to ${email}.`,
+    });
+  } catch (err) {
+    console.error('[hermes] booking error:', err);
+    res.status(500).json({
+      error: 'Failed to create booking',
+      message: err.message,
+    });
+  }
 });
 
 // ---------------------------------------------------------------------------
