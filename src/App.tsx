@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, useInView, useScroll, useTransform, MotionValue } from 'motion/react';
-import { ArrowRight, Check, Zap, TrendingUp, Bot, Brain, Globe, Quote, ShieldCheck, HelpCircle, Sparkles, Send, Mail, User, Landmark, MessageSquare, Settings, Calendar, Clock, MapPin, Phone, Briefcase, Menu, X, Volume2, VolumeX, Moon, Sun } from 'lucide-react';
+import { ArrowRight, Check, Zap, TrendingUp, Bot, Brain, Globe, Quote, ShieldCheck, HelpCircle, Sparkles, Send, Mail, User, Landmark, MessageSquare, Settings, Calendar, Clock, MapPin, Phone, Briefcase, Menu, X, Volume2, VolumeX, Moon, Sun, Target } from 'lucide-react';
 import { CustomCursor } from './components/CustomCursor';
 import ScrollExpandMedia from './components/ui/scroll-expansion-hero';
 import { CinematicFooter } from './components/ui/motion-footer';
@@ -1167,7 +1167,8 @@ export default function App() {
                       
                       {/* Service Interested In Selector */}
                       <div className="flex flex-col gap-2">
-                        <label htmlFor="form-service" className="text-xs uppercase font-mono tracking-widest text-brand-orange font-bold">
+                        <label htmlFor="form-service" className="text-xs uppercase font-mono tracking-widest text-brand-orange font-bold flex items-center gap-1.5">
+                          <Sparkles size={12} />
                           Service Interested In *
                         </label>
                         <select
@@ -1191,7 +1192,8 @@ export default function App() {
 
                       {/* Challenge custom selector */}
                       <div className="flex flex-col gap-2">
-                        <label htmlFor="form-challenge" className="text-xs uppercase font-mono tracking-widest text-brand-orange font-bold">
+                        <label htmlFor="form-challenge" className="text-xs uppercase font-mono tracking-widest text-brand-orange font-bold flex items-center gap-1.5">
+                          <Target size={12} />
                           What is your primary conversion challenge? *
                         </label>
                         <select
