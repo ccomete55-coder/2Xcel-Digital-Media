@@ -1167,8 +1167,8 @@ export default function App() {
                       
                       {/* Service Interested In Selector */}
                       <div className="flex flex-col gap-2">
-                        <label htmlFor="form-service" className="text-xs uppercase font-mono tracking-widest text-brand-orange font-bold flex items-center gap-1.5">
-                          <Sparkles size={12} />
+                        <label htmlFor="form-service" className="text-xs uppercase font-mono tracking-widest text-brand-orange font-bold flex items-center gap-1.5 min-h-[2.5em]">
+                          <Sparkles size={12} className="shrink-0" />
                           Service Interested In *
                         </label>
                         <select
@@ -1192,8 +1192,8 @@ export default function App() {
 
                       {/* Challenge custom selector */}
                       <div className="flex flex-col gap-2">
-                        <label htmlFor="form-challenge" className="text-xs uppercase font-mono tracking-widest text-brand-orange font-bold flex items-center gap-1.5">
-                          <Target size={12} />
+                        <label htmlFor="form-challenge" className="text-xs uppercase font-mono tracking-widest text-brand-orange font-bold flex items-center gap-1.5 min-h-[2.5em]">
+                          <Target size={12} className="shrink-0" />
                           What is your primary conversion challenge? *
                         </label>
                         <select
