@@ -934,6 +934,65 @@ export default function App() {
             </div>
           </section>
 
+          {/* SECTION 3B: AD MANAGEMENT & OPTIMIZATION */}
+          <section id="ad-management" className="border-t border-white/5 py-20 px-4 md:px-8 w-full relative z-10 scroll-mt-28">
+            <div className="max-w-7xl mx-auto flex flex-col gap-12">
+              <div className="text-center max-w-3xl mx-auto flex flex-col gap-6">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white leading-tight">
+                  Ad Management & Optimization
+                </h2>
+                <p className="text-gray-400 text-base sm:text-lg leading-relaxed font-light">
+                  Hand off campaign management, performance optimization, and platform scaling. We monitor spend, test creative angles, optimize bids, audit performance daily, and scale winners across Meta, Google, TikTok, and YouTube — all under a transparent, performance-aligned pricing model.
+                </p>
+              </div>
+
+              <div className="glass rounded-3xl p-8 md:p-12 lg:p-16 relative overflow-hidden backdrop-blur-md shadow-3xl bg-black/25 border border-white/5 flex flex-col gap-8 max-w-3xl mx-auto w-full">
+                <div className="flex flex-col gap-2">
+                  <h3 className="text-white font-bold text-2xl leading-tight">Ongoing Campaign Retainer</h3>
+                  <p className="text-gray-400 text-base leading-relaxed">Dedicated account management + real-time optimization</p>
+                </div>
+
+                <div className="flex items-baseline gap-2">
+                  <span className="text-4xl sm:text-5xl font-black text-white tracking-tight">$500</span>
+                  <span className="text-lg text-gray-400 font-light">/month + 12% of managed ad spend</span>
+                </div>
+
+                <div className="h-px bg-white/10" />
+
+                <ul className="flex flex-col gap-3">
+                  {[
+                    "Daily campaign monitoring & performance audits",
+                    "Real-time bid optimization & budget allocation",
+                    "A/B testing creative angles & audience segments",
+                    "Weekly performance reports & insights",
+                    "Platform scaling across Meta, Google, TikTok, YouTube",
+                    "Spend cap management & ROI tracking",
+                    "Creative recommendation & rotation strategy"
+                  ].map((feature, i) => (
+                    <li key={i} className="flex items-start gap-3 text-gray-300">
+                      <Check size={18} className="text-brand-orange shrink-0 mt-1" />
+                      <span className="text-base leading-snug">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="h-px bg-white/10" />
+
+                <button
+                  type="button"
+                  onClick={() => selectService?.('Ad Management & Optimization ($500 + 12% spend)')}
+                  className="w-full h-11 rounded-xl text-sm font-bold uppercase tracking-wider bg-brand-orange hover:bg-brand-orange/90 text-white shadow-lg shadow-brand-orange/20 transition-all duration-300 hover:scale-105 cursor-pointer"
+                >
+                  Get Started
+                </button>
+
+                <p className="text-xs text-gray-500 text-center font-mono">
+                  Minimum 3-month commitment. No setup fees. Transparent spend tracking via shared dashboard.
+                </p>
+              </div>
+            </div>
+          </section>
+
           {/* SECTION 3C: AUTOMATIONS & WORKFLOWS */}
           <section id="automations-workflows" className="border-t border-white/5 py-12 px-4 md:px-8 w-full relative z-10 scroll-mt-28">
             <div className="max-w-7xl mx-auto flex flex-col gap-12">
