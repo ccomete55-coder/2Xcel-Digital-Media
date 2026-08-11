@@ -466,7 +466,7 @@ export default function App() {
     setSimStep(1);
 
     try {
-      const response = await fetch('https://hermes.2xcel.net/api/lead', {
+      const response = await fetch('https://hermes.2xcel.net/webhook/lead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
