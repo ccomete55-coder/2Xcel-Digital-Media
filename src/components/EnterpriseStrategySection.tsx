@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Check, Compass } from "lucide-react";
 import { useServiceSelect } from "../hooks/useServiceSelect";
 
@@ -47,8 +47,10 @@ interface EnterpriseStrategySectionProps {
 }
 
 export const EnterpriseStrategySection: React.FC<EnterpriseStrategySectionProps> = ({ setServiceInterested }) => {
+  const [selected, setSelected] = useState<string | null>(null);
   const selectService = useServiceSelect(setServiceInterested);
   const handleSelect = (option: string) => {
+    setSelected(option);
     selectService(`Enterprise Marketing Strategy & Offer Architecture (${option})`);
   };
 
@@ -100,21 +102,35 @@ export const EnterpriseStrategySection: React.FC<EnterpriseStrategySectionProps>
             <button
               type="button"
               onClick={() => handleSelect("One-Time Blueprint")}
-              className="w-full h-11 rounded-xl text-sm font-bold uppercase tracking-wider transition-all duration-300 hover:scale-105 cursor-pointer bg-brand-orange hover:bg-brand-orange/90 text-white shadow-lg shadow-brand-orange/20"
+              className={`w-full h-11 rounded-xl text-sm font-bold uppercase tracking-wider transition-all duration-300 hover:scale-105 cursor-pointer ${
+                selected === "One-Time Blueprint"
+                  ? "bg-brand-orange hover:bg-brand-orange/90 text-white shadow-lg shadow-brand-orange/20"
+                  : "bg-white/5 hover:bg-white/10 text-white border border-white/15"
+              }`}
             >
               Get Started
             </button>
           </div>
 
-          <div className="flex flex-col items-center gap-3 rounded-xl border border-brand-orange/30 bg-brand-orange/[0.06] p-6 text-center">
-            <span className="text-xs uppercase tracking-widest text-brand-orange font-mono font-bold">
+          <div className={`flex flex-col items-center gap-3 rounded-xl p-6 text-center ${
+            selected === "Fractional CMO Retainer"
+              ? "border border-brand-orange/30 bg-brand-orange/[0.06]"
+              : "border border-white/10 bg-black/20"
+          }`}>
+            <span className={`text-xs uppercase tracking-widest font-mono font-bold ${
+              selected === "Fractional CMO Retainer" ? "text-brand-orange" : "text-gray-500"
+            }`}>
               Fractional CMO Retainer
             </span>
             <span className="text-3xl font-black text-white tracking-tight">$7,500<span className="text-lg text-gray-400">/mo</span></span>
             <button
               type="button"
               onClick={() => handleSelect("Fractional CMO Retainer")}
-              className="w-full h-11 rounded-xl text-sm font-bold uppercase tracking-wider transition-all duration-300 hover:scale-105 cursor-pointer bg-brand-orange hover:bg-brand-orange/90 text-white shadow-lg shadow-brand-orange/20"
+              className={`w-full h-11 rounded-xl text-sm font-bold uppercase tracking-wider transition-all duration-300 hover:scale-105 cursor-pointer ${
+                selected === "Fractional CMO Retainer"
+                  ? "bg-brand-orange hover:bg-brand-orange/90 text-white shadow-lg shadow-brand-orange/20"
+                  : "bg-white/5 hover:bg-white/10 text-white border border-white/15"
+              }`}
             >
               Get Started
             </button>
