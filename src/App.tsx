@@ -365,6 +365,15 @@ export default function App() {
       focusField('form-industry');
       return;
     }
+    if (!serviceInterested.trim()) {
+      setFormError("Please select a service you're interested in.");
+      return;
+    }
+    if (!mainChallenge.trim()) {
+      setFormError('Please let us know your primary conversion challenge.');
+      focusField('form-challenge');
+      return;
+    }
     setFormError('');
     setIsSimulating(true);
     setSimStep(1);
