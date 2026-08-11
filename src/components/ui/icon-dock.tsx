@@ -3,9 +3,9 @@ import {
   SiUpwork,
   SiYoutube,
   SiX,
-  SiInstagram,
   SiYelp,
 } from 'react-icons/si';
+import { FaLinkedin } from 'react-icons/fa';
 import { Dock, DockIcon, DockItem, DockLabel } from './dock';
 
 type DockLink = {
@@ -26,7 +26,7 @@ const BRAND_COLORS = {
   youtube: '#FF0000',
   yelp: '#AF0606',
   x: '#000000',
-  instagram: '#E4405F',
+  linkedin: '#0A66C2',
   upwork: '#14A800',
 } as const;
 
@@ -77,20 +77,20 @@ const socials: DockLink[] = [
     icon: <SiX className={`${ICON_CLASS} text-black dark:text-white`} />,
   },
   {
-    title: 'Instagram',
-    href: 'https://www.instagram.com/',
-    icon: <SiInstagram className={ICON_CLASS} style={{ color: BRAND_COLORS.instagram }} />,
+    title: 'LinkedIn',
+    href: 'https://www.linkedin.com/',
+    icon: <FaLinkedin className={ICON_CLASS} style={{ color: BRAND_COLORS.linkedin }} />,
   },
 ];
 
 const allLinks = [...gigSites, { title: 'divider', href: '', icon: null }, ...socials];
 
-// The 3 links kept in the persistent top toolbar  content showcase (IG,
+// The 3 links kept in the persistent top toolbar  content showcase (LinkedIn,
 // YouTube) plus a local-trust signal (Google Business). Everything else
 // (gig sites, Facebook, Yelp, X) lives in the footer's full dock instead,
 // so the fixed top bar doesn't compete with the hero on every scroll position.
 const primaryLinks = socials.filter((s) =>
-  ['Instagram', 'YouTube', 'Google Business Profile'].includes(s.title)
+  ['LinkedIn', 'YouTube', 'Google Business Profile'].includes(s.title)
 );
 
 function renderLinks(links: DockLink[]) {

@@ -117,18 +117,6 @@ export function checkDesignDrift({ designPath, projectRoot, threshold = 25 }) {
  * a section can be absent because it never applied, so this is reported as a
  * documentation gap for a human to judge, never as an error.
  */
-function hasCoverageValue(value) {
-  if (Array.isArray(value)) return value.some(hasCoverageValue);
-  if (value && typeof value === 'object') {
-    return Object.values(value).some(hasCoverageValue);
-  }
-  if (typeof value === 'string') {
-    const trimmed = value.trim();
-    return trimmed.length > 0 && !/^(?:\[\s*\]|\{\s*\})$/.test(trimmed);
-  }
-  return false;
-}
-
 export function checkDesignCoverage({ design, designPath, parseDesignMd }) {
   if (!design || typeof parseDesignMd !== 'function') return [];
   let model;
@@ -138,7 +126,7 @@ export function checkDesignCoverage({ design, designPath, parseDesignMd }) {
     return [];
   }
   const missing = ['colors', 'typography', 'components']
-    .filter((section) => !model[section] && !hasCoverageValue(model.frontmatter?.[section]));
+    .filter((section) => !model[section]);
   if (!missing.length) return [];
   return [finding({
     id: 'design-md-coverage',

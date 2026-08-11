@@ -94,8 +94,14 @@ export const EnterpriseStrategySection: React.FC<EnterpriseStrategySectionProps>
         <div className="h-px bg-white/10" />
 
         <div className="grid sm:grid-cols-2 gap-6">
-          <div className="flex flex-col items-center gap-3 rounded-xl border border-white/10 bg-black/20 p-6 text-center">
-            <span className="text-xs uppercase tracking-widest text-gray-500 font-mono font-bold">
+          <div className={`flex flex-col items-center gap-3 rounded-xl p-6 text-center ${
+            selected === "One-Time Blueprint"
+              ? "border border-brand-orange/30 bg-brand-orange/[0.06]"
+              : "border border-white/10 bg-black/20"
+          }`}>
+            <span className={`text-xs uppercase tracking-widest font-mono font-bold ${
+              selected === "One-Time Blueprint" ? "text-brand-orange" : "text-gray-500"
+            }`}>
               One-Time Blueprint
             </span>
             <span className="text-3xl font-black text-white tracking-tight">$7,500</span>

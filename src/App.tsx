@@ -19,102 +19,6 @@ import ShapeGrid from './components/ShapeGrid';
 import { blogPosts } from './data/blogPosts';
 import { IconDock } from './components/ui/icon-dock';
 
-// ==========================================
-// SHARED ANIMATION COMPONENTS
-// ==========================================
-
-interface WordsPullUpProps {
-  text: string;
-  className?: string;
-  showAsterisk?: boolean;
-}
-
-const WordsPullUp: React.FC<WordsPullUpProps> = ({ text, className = '', showAsterisk = false }) => {
-  const containerRef = useRef(null);
-  const isInView = useInView(containerRef, { once: true, margin: "-50px" });
-  const words = text.split(' ');
-
-  return (
-    <span ref={containerRef} className="inline-flex flex-wrap">
-      {words.map((word, idx) => {
-        const isLast = idx === words.length - 1;
-        return (
-          <span key={idx} className="relative overflow-hidden inline-block mr-[0.2em] pt-4 pb-4 -mt-4 -mb-4">
-            <motion.span
-              className={`inline-block ${className}`}
-              initial={{ y: "100%" }}
-              animate={isInView ? { y: 0 } : { y: "100%" }}
-              transition={{
-                duration: 0.8,
-                delay: idx * 0.08,
-                ease: [0.16, 1, 0.3, 1]
-              }}
-              style={{ color: '#E1E0CC' }}
-            >
-              {word}
-              {isLast && showAsterisk && (
-                <span className="absolute top-[-0.15em] -right-[0.35em] text-[0.31em] font-light text-brand-orange">
-                  *
-                </span>
-              )}
-            </motion.span>
-          </span>
-        );
-      })}
-    </span>
-  );
-};
-
-interface Segment {
-  text: string;
-  className?: string;
-}
-
-interface WordsPullUpMultiStyleProps {
-  segments: Segment[];
-  containerClassName?: string;
-}
-
-const WordsPullUpMultiStyle: React.FC<WordsPullUpMultiStyleProps> = ({ segments, containerClassName = '' }) => {
-  const containerRef = useRef(null);
-  const isInView = useInView(containerRef, { once: true, margin: "-50px" });
-
-  // Pre-split segments into complete words to retain proper staggered index timing values
-  let globalWordIndex = 0;
-
-  return (
-    <span ref={containerRef} className={`inline-flex flex-wrap justify-center ${containerClassName}`}>
-      {segments.map((segment, segIdx) => {
-        const words = segment.text.split(' ');
-        return (
-          <span key={segIdx} className="inline-flex flex-wrap">
-            {words.map((word, wordIdx) => {
-              const currentIdx = globalWordIndex;
-              globalWordIndex++;
-              return (
-                <span key={wordIdx} className="relative overflow-hidden inline-block mr-[0.25em] pt-4 pb-4 -mt-4 -mb-4">
-                  <motion.span
-                    className={`inline-block ${segment.className || ''}`}
-                    initial={{ y: "110%" }}
-                    animate={isInView ? { y: 0 } : { y: "110%" }}
-                    transition={{
-                      duration: 0.8,
-                      delay: currentIdx * 0.05,
-                      ease: [0.16, 1, 0.3, 1]
-                    }}
-                  >
-                    {word}
-                  </motion.span>
-                </span>
-              );
-            })}
-          </span>
-        );
-      })}
-    </span>
-  );
-};
-
 interface AnimatedLetterProps {
   char: string;
   index: number;
@@ -819,20 +723,16 @@ export default function App() {
           
           {/* SECTION 1: OUR STORY (MISSION STATEMENT) */}
           <section ref={aboutSectionRef} id="our-story" className="pt-24 pb-12 px-4 md:px-8 w-full flex items-center justify-center relative z-10 scroll-mt-28">
-            <div className="w-full max-w-6xl glass rounded-3xl p-8 md:p-14 lg:p-16 flex flex-col lg:flex-row gap-12 lg:gap-16 relative overflow-hidden backdrop-blur-md shadow-3xl bg-black/25 border border-white/5">
+            <div className="w-full max-w-4xl glass rounded-3xl p-8 md:p-14 lg:p-16 flex flex-col gap-8 relative overflow-hidden backdrop-blur-md shadow-3xl bg-black/25 border border-white/5 text-center">
 
-              {/* LEFT: TITLE */}
-              <div className="lg:w-2/5 flex flex-col justify-center">
-                <WordsPullUpMultiStyle
-                  segments={[
-                    { text: "The Mission Behind", className: "text-white font-extrabold tracking-tight text-3xl sm:text-4xl md:text-5xl mb-2" },
-                    { text: "2XceL Digital Media", className: "text-brand-orange font-extrabold tracking-tight text-3xl sm:text-4xl md:text-5xl" }
-                  ]}
-                />
+              {/* TITLE */}
+              <div className="flex flex-col justify-center">
+                <h2 className="text-white font-extrabold tracking-tight text-3xl sm:text-4xl md:text-5xl mb-2">The Mission Behind</h2>
+                <h2 className="text-brand-orange font-extrabold tracking-tight text-3xl sm:text-4xl md:text-5xl">2XceL Digital Media</h2>
               </div>
 
-              {/* RIGHT: CONTENT */}
-              <div className="lg:w-3/5 flex flex-col gap-6 justify-center">
+              {/* CONTENT */}
+              <div className="flex flex-col gap-6 justify-center">
                 {[
                   "2XceL Digital Media was founded on a simple truth: media without marketing is invisible, and marketing without automation is inefficient.",
                   "We equip brands for the Agentic Web by blending engineered backend technical automation with elite creative media, giving mid-market businesses and rising entrepreneurs the modern infrastructure they need to outpace the competition."
@@ -1005,13 +905,9 @@ export default function App() {
             <div className="max-w-7xl mx-auto flex flex-col gap-12">
               
               <div className="text-center max-w-4xl mx-auto flex flex-col gap-5">
-                <div className="flex justify-center text-center">
-                  <WordsPullUpMultiStyle
-                    segments={[
-                      { text: "The 2XceL", className: "text-brand-orange font-extrabold tracking-tight text-3xl sm:text-4xl lg:text-5xl" },
-                      { text: " Insights Lab", className: "text-white font-extrabold tracking-tight text-3xl sm:text-4xl lg:text-5xl" }
-                    ]}
-                  />
+                <div className="flex justify-center text-center flex-wrap gap-2">
+                  <span className="text-brand-orange font-extrabold tracking-tight text-3xl sm:text-4xl lg:text-5xl">The 2XceL</span>
+                  <span className="text-white font-extrabold tracking-tight text-3xl sm:text-4xl lg:text-5xl">Insights Lab</span>
                 </div>
                 <motion.p 
                   initial={{ opacity: 0, y: 15, filter: "blur(3px)" }}
@@ -1130,150 +1026,6 @@ export default function App() {
                   </button>
                 </div>
               )}
-
-            </div>
-          </section>
-
-          {/* SECTION 4: CLIENT REVIEWS */}
-          <section id="reviews" className="py-20 px-4 md:px-8 w-full relative z-10 scroll-mt-28">
-            <div className="max-w-7xl mx-auto flex flex-col gap-12">
-              
-              <motion.div 
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
-                className="text-center max-w-3xl mx-auto flex flex-col gap-3"
-              >
-                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white">
-                  Results Our Clients Are Building
-                </h2>
-                <p className="text-gray-400 text-sm sm:text-base leading-relaxed font-light">
-                  Real outcomes from businesses that deployed our systems — more pipeline, faster response, less manual effort.
-                </p>
-              </motion.div>
-
-              {/* Reviews GRID Card Layout */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                
-                {/* Testimonial 1 */}
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-100px" }}
-                  whileHover={{ y: -8, scale: 1.02, transition: { duration: 0.22, ease: 'easeOut' } }}
-                  transition={{ duration: 0.6, delay: 0.0, ease: "easeOut" }}
-                  className="glass rounded-3xl p-8 border border-white/5 hover:border-brand-orange/30 flex flex-col justify-between shadow-lg hover:bg-white/[0.04] hover:shadow-[0_20px_60px_-10px_rgba(230,92,43,0.18)] transition-all duration-300 relative"
-                >
-                  <div className="absolute top-4 right-6 text-white/5 group-hover:text-white/10 select-none pointer-events-none transition-all duration-300">
-                    <Quote size={80} />
-                  </div>
-                  <div className="flex flex-col gap-4">
-                    <div className="flex gap-1 text-brand-orange">
-                      {"★★★★★".split("").map((c, i) => (
-                        <motion.span
-                          key={i}
-                          initial={{ opacity: 0, scale: 0, y: 4 }}
-                          whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                          viewport={{ once: true }}
-                          transition={{ duration: 0.3, delay: 0.3 + i * 0.07, ease: 'backOut' }}
-                        >{c}</motion.span>
-                      ))}
-                    </div>
-                    <p className="text-sm text-gray-400 leading-relaxed font-normal italic relative z-10">
-                      “Our old site was pretty but entirely dead—maybe one email contact form every other month. 2XceL built an elite custom layout and plugged in their AI Sales Assistant. On the first weekend, the assistant scheduled 9 high-ticket bookings automatically. Game changer.”
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-4  pt-5 mt-6">
-                    <div className="w-11 h-11 rounded-xl flex items-center justify-center font-bold text-white font-mono text-sm shrink-0" style={{ background: 'linear-gradient(135deg, #E65C2B 0%, #ff8c5a 100%)', boxShadow: '0 4px 12px rgba(230,92,43,0.35)' }}>
-                      JV
-                    </div>
-                    <div>
-                      <div className="text-sm font-bold text-white">Jonathan Vance</div>
-                      <div className="text-[10px] text-brand-orange/80 font-mono uppercase tracking-widest">Founder · Vance Luxury Properties</div>
-                    </div>
-                  </div>
-                </motion.div>
-
-                {/* Testimonial 2 */}
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-100px" }}
-                  whileHover={{ y: -8, scale: 1.02, transition: { duration: 0.22, ease: 'easeOut' } }}
-                  transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
-                  className="glass rounded-3xl p-8 border border-white/5 hover:border-brand-blue/30 flex flex-col justify-between shadow-lg hover:bg-white/[0.04] hover:shadow-[0_20px_60px_-10px_rgba(43,142,217,0.18)] transition-all duration-300 relative"
-                >
-                  <div className="absolute top-4 right-6 text-white/5 select-none pointer-events-none transition-all duration-300">
-                    <Quote size={80} />
-                  </div>
-                  <div className="flex flex-col gap-4">
-                    <div className="flex gap-1 text-brand-orange">
-                      {"★★★★★".split("").map((c, i) => (
-                        <motion.span
-                          key={i}
-                          initial={{ opacity: 0, scale: 0, y: 4 }}
-                          whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                          viewport={{ once: true }}
-                          transition={{ duration: 0.3, delay: 0.4 + i * 0.07, ease: 'backOut' }}
-                        >{c}</motion.span>
-                      ))}
-                    </div>
-                    <p className="text-sm text-gray-400 leading-relaxed font-normal italic relative z-10">
-                      “The speed of response is how you close deals today. 2XceL's backend architecture answers customer specs within 30 seconds. Clients are fully qualified, scheduled, and mapped before my sales executives even log on in the morning.”
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-4  pt-5 mt-6">
-                    <div className="w-11 h-11 rounded-xl flex items-center justify-center font-bold text-white font-mono text-sm shrink-0" style={{ background: 'linear-gradient(135deg, #2B8ED9 0%, #5ab4f0 100%)', boxShadow: '0 4px 12px rgba(43,142,217,0.35)' }}>
-                      SD
-                    </div>
-                    <div>
-                      <div className="text-sm font-bold text-white">Sarah D'Acosta</div>
-                      <div className="text-[10px] text-brand-blue/90 font-mono uppercase tracking-widest">VP Growth · Helix Biosystems</div>
-                    </div>
-                  </div>
-                </motion.div>
-
-                {/* Testimonial 3 */}
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-100px" }}
-                  whileHover={{ y: -8, scale: 1.02, transition: { duration: 0.22, ease: 'easeOut' } }}
-                  transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-                  className="glass rounded-3xl p-8 border border-white/5 hover:border-emerald-500/30 flex flex-col justify-between shadow-lg hover:bg-white/[0.04] hover:shadow-[0_20px_60px_-10px_rgba(50,215,75,0.15)] transition-all duration-300 relative"
-                >
-                  <div className="absolute top-4 right-6 text-white/5 select-none pointer-events-none transition-all duration-300">
-                    <Quote size={80} />
-                  </div>
-                  <div className="flex flex-col gap-4">
-                    <div className="flex gap-1 text-brand-orange">
-                      {"★★★★★".split("").map((c, i) => (
-                        <motion.span
-                          key={i}
-                          initial={{ opacity: 0, scale: 0, y: 4 }}
-                          whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                          viewport={{ once: true }}
-                          transition={{ duration: 0.3, delay: 0.5 + i * 0.07, ease: 'backOut' }}
-                        >{c}</motion.span>
-                      ))}
-                    </div>
-                    <p className="text-sm text-gray-400 leading-relaxed font-normal italic relative z-10">
-                      “We were highly skeptical about AI chat looking robotic, but 2XceL proved us completely wrong. The custom knowledge system they configured has pristine accuracy. It has generated $240k in brand-new pipeline value in just 60 days.”
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-4  pt-5 mt-6">
-                    <div className="w-11 h-11 rounded-xl flex items-center justify-center font-bold text-white font-mono text-sm shrink-0" style={{ background: 'linear-gradient(135deg, #32D74B 0%, #5fe874 100%)', boxShadow: '0 4px 12px rgba(50,215,75,0.3)' }}>
-                      RM
-                    </div>
-                    <div>
-                      <div className="text-sm font-bold text-white">Ray Monaghan</div>
-                      <div className="text-[10px] text-emerald-400/90 font-mono uppercase tracking-widest">Partner · Aetheria Media Group</div>
-                    </div>
-                  </div>
-                </motion.div>
-
-              </div>
 
             </div>
           </section>
