@@ -304,7 +304,7 @@ export default function App() {
   const [activeSection, setActiveSection] = useState<string>('');
 
   useEffect(() => {
-    const sectionIds = ['custom-web-design', 'media-section', 'blueprints', 'pricing', 'blog'];
+    const sectionIds = ['custom-web-design', 'media-section', 'featured-agents', 'enterprise-strategy', 'automations-workflows', 'blog'];
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -666,8 +666,9 @@ export default function App() {
                 {[
                   { label: "Web Design", href: "#custom-web-design" },
                   { label: "Digital Media", href: "#media-section" },
-                  { label: "AI Blueprints", href: "#blueprints" },
-                  { label: "Pricing", href: "#pricing" },
+                  { label: "AI Agents", href: "#featured-agents" },
+                  { label: "Strategy", href: "#enterprise-strategy" },
+                  { label: "Automations", href: "#automations-workflows" },
                   { label: "Blog", href: "#blog" },
                 ].map((item, idx) => (
                   <a
@@ -685,6 +686,13 @@ export default function App() {
                   className="bg-brand-orange hover:bg-brand-orange/90 text-white font-bold text-xs tracking-[0.15em] uppercase px-5 py-3 rounded-full mt-2 transition-all block duration-300 shadow-md"
                 >
                   Contact
+                </a>
+                <a
+                  href="tel:+14422174290"
+                  className="flex items-center justify-center gap-2 text-slate-800 dark:text-white hover:text-brand-orange font-bold text-xs tracking-[0.15em] uppercase py-2 transition-colors"
+                >
+                  <Phone size={13} className="shrink-0" />
+                  (442) 217-4290
                 </a>
               </motion.div>
             )}
@@ -719,18 +727,25 @@ export default function App() {
             </div>
 
             <a
-              href="#blueprints"
-              onClick={(e) => handleNavClick(e, '#blueprints')}
-              className={`tracking-[0.12em] uppercase transition-all duration-300 cursor-pointer px-1.5 py-1 ${activeSection === 'blueprints' ? 'text-brand-orange opacity-100' : 'text-slate-800 dark:text-white opacity-75 hover:opacity-100'}`}
+              href="#featured-agents"
+              onClick={(e) => handleNavClick(e, '#featured-agents')}
+              className={`tracking-[0.12em] uppercase transition-all duration-300 cursor-pointer px-1.5 py-1 ${activeSection === 'featured-agents' ? 'text-brand-orange opacity-100' : 'text-slate-800 dark:text-white opacity-75 hover:opacity-100'}`}
             >
-              AI Blueprints
+              AI Agents
             </a>
             <a
-              href="#pricing"
-              onClick={(e) => handleNavClick(e, '#pricing')}
-              className={`tracking-[0.12em] uppercase transition-all duration-300 cursor-pointer px-1.5 py-1 ${activeSection === 'pricing' ? 'text-brand-orange opacity-100' : 'text-slate-800 dark:text-white opacity-75 hover:opacity-100'}`}
+              href="#enterprise-strategy"
+              onClick={(e) => handleNavClick(e, '#enterprise-strategy')}
+              className={`tracking-[0.12em] uppercase transition-all duration-300 cursor-pointer px-1.5 py-1 ${activeSection === 'enterprise-strategy' ? 'text-brand-orange opacity-100' : 'text-slate-800 dark:text-white opacity-75 hover:opacity-100'}`}
             >
-              Pricing
+              Strategy
+            </a>
+            <a
+              href="#automations-workflows"
+              onClick={(e) => handleNavClick(e, '#automations-workflows')}
+              className={`tracking-[0.12em] uppercase transition-all duration-300 cursor-pointer px-1.5 py-1 ${activeSection === 'automations-workflows' ? 'text-brand-orange opacity-100' : 'text-slate-800 dark:text-white opacity-75 hover:opacity-100'}`}
+            >
+              Automations
             </a>
             <a
               href="#blog"
@@ -771,10 +786,17 @@ export default function App() {
         )}
       </header>
 
-      {/* Icon Dock — gig sites & socials, sits just under the pill navbar */}
+      {/* Icon Dock + Call Button — sits just under the pill navbar */}
       <div className="fixed top-20 sm:top-24 left-0 right-0 z-[45] w-full flex justify-center pointer-events-none">
-        <div className="pointer-events-auto">
+        <div className="pointer-events-auto flex items-center gap-3">
           <IconDock />
+          <a
+            href="tel:+14422174290"
+            className="flex items-center gap-1.5 rounded-full bg-white/60 dark:bg-white/5 hover:bg-white/90 dark:hover:bg-white/10 border border-slate-300/30 dark:border-white/10 px-3.5 py-2 text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-white hover:text-brand-orange transition-colors duration-200 shadow-lg backdrop-blur-md whitespace-nowrap"
+          >
+            <Phone size={13} className="shrink-0" />
+            <span className="hidden sm:inline">(442) 217-4290</span>
+          </a>
         </div>
       </div>
 
