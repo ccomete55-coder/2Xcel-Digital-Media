@@ -770,8 +770,14 @@ export default function App() {
                 <p className="text-gray-400 text-sm sm:text-base leading-relaxed max-w-3xl mx-auto font-normal">
                   Traditional business websites sit passively on the web like printed brochures. We hand-code every frontend in raw HTML, CSS, and JavaScript — zero WordPress, zero page-builder bloat — so it loads instantly and ranks the way Google rewards. Behind it, we wire in a full proprietary CRM backend: contact tags that fire automatically on every visitor action, email and SMS follow-up sequences that run themselves, custom domain routing, and white-labeled client portals your customers log into under your own brand. It's not a brochure — it's a lead-conversion machine with a marketing department built into the code.
                 </p>
-                <p className="text-brand-orange/90 font-mono text-sm sm:text-base font-bold tracking-wide">
-                  Starts from $3,500+ base setup (one-time)
+                <button
+                  onClick={() => setServiceInterested("Custom Web Design with Marketing Backend")}
+                  className="inline-block px-8 py-3 bg-brand-orange hover:bg-brand-orange/90 text-white font-bold text-sm sm:text-base uppercase tracking-wide rounded-lg transition-all duration-300 hover:scale-105 cursor-pointer shadow-lg hover:shadow-brand-orange/30"
+                >
+                  Book Web Design Consultation
+                </button>
+                <p className="text-gray-400 text-xs sm:text-sm font-light">
+                  Starts from $3,500+ • Custom pricing available based on scope
                 </p>
               </motion.div>
 
@@ -856,6 +862,8 @@ export default function App() {
                   <span className="text-4xl sm:text-5xl font-black text-white tracking-tight">$500</span>
                   <span className="text-lg text-gray-400 font-light">/month + 12% of managed ad spend</span>
                 </div>
+
+                <p className="text-gray-500 text-xs sm:text-sm font-light">Minimum $2,500/month commitment • Custom pricing available based on scope</p>
 
                 <div className="h-px bg-white/10" />
 

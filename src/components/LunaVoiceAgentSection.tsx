@@ -286,6 +286,8 @@ export const LunaVoiceAgentSection: React.FC<LunaVoiceAgentSectionProps> = ({ se
           </button>
         </motion.div>
       )}
+
+      <p className="text-gray-500 text-xs sm:text-sm font-light text-center">Minimum $2,500/month commitment • Custom pricing available based on scope</p>
     </div>
   );
 };

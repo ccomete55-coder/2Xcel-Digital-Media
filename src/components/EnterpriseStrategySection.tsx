@@ -142,6 +142,8 @@ export const EnterpriseStrategySection: React.FC<EnterpriseStrategySectionProps>
             </button>
           </div>
         </div>
+
+        <p className="text-gray-500 text-xs sm:text-sm font-light text-center">Custom pricing available based on scope</p>
       </div>
     </div>
   );
