@@ -834,7 +834,7 @@ export default function App() {
               {/* RIGHT: CONTENT */}
               <div className="lg:w-3/5 flex flex-col gap-6 justify-center">
                 {[
-                  "Led by Executive Director Christian Cométe, 2XceL Digital Media was founded on a simple truth: media without marketing is invisible, and marketing without automation is inefficient.",
+                  "2XceL Digital Media was founded on a simple truth: media without marketing is invisible, and marketing without automation is inefficient.",
                   "We equip brands for the Agentic Web by blending engineered backend technical automation with elite creative media, giving mid-market businesses and rising entrepreneurs the modern infrastructure they need to outpace the competition."
                 ].map((sentence, sIdx) => (
                   <motion.p
