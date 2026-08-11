@@ -466,18 +466,16 @@ export default function App() {
     setSimStep(1);
 
     try {
-      const formData = new FormData();
-      formData.append('first_name', firstNameInput.trim());
-      formData.append('email', emailInput.trim());
-      formData.append('phone', phoneInput.trim());
-      formData.append('industry', industryInput.trim());
-      if (serviceInterested) {
-        formData.append('service_interested', serviceInterested);
-      }
-
-      const response = await fetch('https://form.2xcel.net', {
+      const response = await fetch('https://hermes.2xcel.net/api/lead', {
         method: 'POST',
-        body: formData,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          firstName: firstNameInput.trim(),
+          email: emailInput.trim(),
+          phone: phoneInput.trim(),
+          industry: industryInput.trim(),
+          serviceInterested: serviceInterested || undefined,
+        }),
       });
 
       setTimeout(() => {
@@ -821,19 +819,20 @@ export default function App() {
           
           {/* SECTION 1: OUR STORY (MISSION STATEMENT) */}
           <section ref={aboutSectionRef} id="our-story" className="pt-24 pb-12 px-4 md:px-8 w-full flex items-center justify-center relative z-10 scroll-mt-28">
-            <div className="w-full max-w-6xl glass rounded-3xl p-8 md:p-14 lg:p-16 text-center flex flex-col gap-6 relative overflow-hidden backdrop-blur-md shadow-3xl bg-black/25 border border-white/5">
-              
+            <div className="w-full max-w-6xl glass rounded-3xl p-8 md:p-14 lg:p-16 flex flex-col lg:flex-row gap-12 lg:gap-16 relative overflow-hidden backdrop-blur-md shadow-3xl bg-black/25 border border-white/5">
 
-              <div className="flex justify-center text-center">
-                <WordsPullUpMultiStyle 
+              {/* LEFT: TITLE */}
+              <div className="lg:w-2/5 flex flex-col justify-center">
+                <WordsPullUpMultiStyle
                   segments={[
-                    { text: "The Mission Behind", className: "text-white font-extrabold tracking-tight text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-2" },
-                    { text: " 2XceL Digital Media", className: "text-brand-orange font-extrabold tracking-tight text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-2" }
+                    { text: "The Mission Behind", className: "text-white font-extrabold tracking-tight text-3xl sm:text-4xl md:text-5xl mb-2" },
+                    { text: "2XceL Digital Media", className: "text-brand-orange font-extrabold tracking-tight text-3xl sm:text-4xl md:text-5xl" }
                   ]}
                 />
               </div>
 
-              <div className="flex flex-col gap-6 max-w-4xl mx-auto  pt-8">
+              {/* RIGHT: CONTENT */}
+              <div className="lg:w-3/5 flex flex-col gap-6 justify-center">
                 {[
                   "Led by Executive Director Christian Cométe, 2XceL Digital Media was founded on a simple truth: media without marketing is invisible, and marketing without automation is inefficient.",
                   "We equip brands for the Agentic Web by blending engineered backend technical automation with elite creative media, giving mid-market businesses and rising entrepreneurs the modern infrastructure they need to outpace the competition."
@@ -844,7 +843,7 @@ export default function App() {
                     whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                     viewport={{ once: true, margin: "-80px" }}
                     transition={{ duration: 0.8, delay: sIdx * 0.25, ease: [0.16, 1, 0.3, 1] }}
-                    className="text-[#46647d] dark:text-[#94a3b8] text-sm sm:text-base md:text-lg lg:text-xl font-light tracking-wide leading-relaxed"
+                    className="text-[#46647d] dark:text-[#94a3b8] text-sm sm:text-base md:text-lg font-light tracking-wide leading-relaxed"
                   >
                     {sentence}
                   </motion.p>
@@ -1604,18 +1603,18 @@ Received
 
                                     const bookingData = await bookingRes.json();
 
-                                    const formData = new FormData();
-                                    formData.append('first_name', firstNameInput.trim());
-                                    formData.append('email', emailInput.trim());
-                                    formData.append('phone', phoneInput.trim());
-                                    formData.append('industry', industryInput.trim());
-                                    formData.append('service_interested', serviceInterested);
-                                    formData.append('google_meet_link', bookingData.meetLink || '');
-                                    formData.append('meeting_time', `${selectedDate} at ${selectedTime} MST`);
-
-                                    await fetch('https://form.2xcel.net', {
+                                    await fetch('https://hermes.2xcel.net/api/lead', {
                                       method: 'POST',
-                                      body: formData,
+                                      headers: { 'Content-Type': 'application/json' },
+                                      body: JSON.stringify({
+                                        firstName: firstNameInput.trim(),
+                                        email: emailInput.trim(),
+                                        phone: phoneInput.trim(),
+                                        industry: industryInput.trim(),
+                                        serviceInterested,
+                                        googleMeetLink: bookingData.meetLink || '',
+                                        meetingTime: `${selectedDate} at ${selectedTime} MST`,
+                                      }),
                                     });
 
                                     setIsBookingLoading(false);

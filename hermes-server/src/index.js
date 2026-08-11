@@ -10,6 +10,7 @@ import express from 'express';
 import cors from 'cors';
 import { handleToolCall } from './tools.js';
 import { createStrategyCallEvent } from './google-calendar.js';
+import { upsertContact, tagContact } from './systeme.js';
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -79,6 +80,46 @@ app.post('/api/book-meeting', async (req, res) => {
     console.error('[hermes] booking error:', err);
     res.status(500).json({
       error: 'Failed to create booking',
+      message: err.message,
+    });
+  }
+});
+
+// ---------------------------------------------------------------------------
+// Lead capture — records the contact in systeme.io and (if SYSTEMEIO_TAG_ID
+// is set) tags it so a systeme.io automation rule can start the email
+// sequence. Used by both the site's lead form and the booking flow.
+// POST /api/lead with { firstName, email, phone, industry, serviceInterested, googleMeetLink?, meetingTime? }
+// ---------------------------------------------------------------------------
+app.post('/api/lead', async (req, res) => {
+  try {
+    const { firstName, email, phone, industry, serviceInterested, googleMeetLink, meetingTime } =
+      req.body;
+
+    if (!firstName || !email) {
+      return res.status(400).json({
+        error: 'Missing required fields',
+        required: ['firstName', 'email'],
+      });
+    }
+
+    const contact = await upsertContact({
+      email,
+      firstName,
+      phone,
+      industry,
+      serviceInterested,
+      googleMeetLink,
+      meetingTime,
+    });
+
+    await tagContact(contact?.id);
+
+    res.json({ ok: true, contactId: contact?.id });
+  } catch (err) {
+    console.error('[hermes] lead error:', err);
+    res.status(500).json({
+      error: 'Failed to record lead',
       message: err.message,
     });
   }
