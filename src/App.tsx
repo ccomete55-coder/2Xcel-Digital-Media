@@ -772,7 +772,7 @@ export default function App() {
                 </p>
                 <button
                   onClick={() => setServiceInterested("Custom Web Design with Marketing Backend")}
-                  className="w-fit px-5 py-2 bg-brand-orange hover:bg-brand-orange/90 text-white font-bold text-xs sm:text-sm uppercase tracking-wide rounded-lg transition-all duration-300 hover:scale-105 cursor-pointer shadow-lg hover:shadow-brand-orange/30"
+                  className="w-fit mx-auto px-5 py-2 bg-brand-orange hover:bg-brand-orange/90 text-white font-bold text-xs sm:text-sm uppercase tracking-wide rounded-lg transition-all duration-300 hover:scale-105 cursor-pointer shadow-lg hover:shadow-brand-orange/30"
                 >
                   Book Web Design Consultation
                 </button>
