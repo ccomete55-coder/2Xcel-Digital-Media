@@ -100,7 +100,7 @@ export const EnterpriseStrategySection: React.FC<EnterpriseStrategySectionProps>
             <button
               type="button"
               onClick={() => handleSelect("One-Time Blueprint")}
-              className="w-full h-11 rounded-xl text-sm font-bold uppercase tracking-wider transition-all duration-300 hover:scale-105 cursor-pointer bg-white/5 hover:bg-white/10 text-white border border-white/15"
+              className="w-full h-11 rounded-xl text-sm font-bold uppercase tracking-wider transition-all duration-300 hover:scale-105 cursor-pointer bg-brand-orange hover:bg-brand-orange/90 text-white shadow-lg shadow-brand-orange/20"
             >
               Get Started
             </button>
