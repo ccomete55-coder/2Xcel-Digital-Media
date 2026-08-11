@@ -93,12 +93,22 @@ interface SocialMediaTiersProps {
   setServiceInterested: (val: string) => void;
 }
 
+const FEATURES_PREVIEW_COUNT = 2;
+
 const TierCardContent: React.FC<{ tier: Tier; billing: "monthly" | "yearly"; isSelected: boolean; onSelect: () => void }> = ({
   tier,
   billing,
   isSelected,
   onSelect,
-}) => (
+}) => {
+  const [showAllFeatures, setShowAllFeatures] = useState(false);
+  const visibleProductionStack = showAllFeatures ? tier.productionStack : tier.productionStack.slice(0, FEATURES_PREVIEW_COUNT);
+  const visibleSystemManagement = showAllFeatures ? tier.systemManagement : tier.systemManagement.slice(0, FEATURES_PREVIEW_COUNT);
+  const hiddenCount =
+    (tier.productionStack.length - visibleProductionStack.length) +
+    (tier.systemManagement.length - visibleSystemManagement.length);
+
+  return (
   <div className="h-full flex flex-col items-center gap-6 p-8 text-center">
     <div className="flex flex-col items-center gap-3">
       <span className={`flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-brand-orange bg-brand-orange/10 border border-brand-orange/30 rounded-full px-3 py-1 shrink-0 ${tier.recommended ? "" : "invisible"}`}>
@@ -137,7 +147,7 @@ const TierCardContent: React.FC<{ tier: Tier; billing: "monthly" | "yearly"; isS
       <div className="flex flex-col gap-2.5 w-full max-w-[280px] mx-auto">
         <p className="text-xs font-bold uppercase tracking-wider text-gray-500 text-center">Production & Creative Stack</p>
         <ul className="flex flex-col gap-2.5">
-          {tier.productionStack.map((feature, i) => (
+          {visibleProductionStack.map((feature, i) => (
             <li key={i} className="flex items-start gap-2.5 text-base text-gray-300 leading-snug text-left">
               <Check size={17} className="text-brand-blue shrink-0 mt-0.5" />
               <span>{feature}</span>
@@ -149,7 +159,7 @@ const TierCardContent: React.FC<{ tier: Tier; billing: "monthly" | "yearly"; isS
       <div className="flex flex-col gap-2.5 w-full max-w-[280px] mx-auto">
         <p className="text-xs font-bold uppercase tracking-wider text-gray-500 text-center">System & Management</p>
         <ul className="flex flex-col gap-2.5">
-          {tier.systemManagement.map((feature, i) => (
+          {visibleSystemManagement.map((feature, i) => (
             <li key={i} className="flex items-start gap-2.5 text-base text-gray-300 leading-snug text-left">
               <Check size={17} className="text-brand-blue shrink-0 mt-0.5" />
               <span>{feature}</span>
@@ -157,6 +167,31 @@ const TierCardContent: React.FC<{ tier: Tier; billing: "monthly" | "yearly"; isS
           ))}
         </ul>
       </div>
+
+      {hiddenCount > 0 && (
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            setShowAllFeatures(true);
+          }}
+          className="text-xs font-bold uppercase tracking-wider text-brand-orange hover:text-white transition-colors cursor-pointer"
+        >
+          +{hiddenCount} more features
+        </button>
+      )}
+      {showAllFeatures && (tier.productionStack.length + tier.systemManagement.length) > FEATURES_PREVIEW_COUNT * 2 && (
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            setShowAllFeatures(false);
+          }}
+          className="text-xs font-bold uppercase tracking-wider text-gray-500 hover:text-white transition-colors cursor-pointer"
+        >
+          Show less
+        </button>
+      )}
     </div>
 
     <button
@@ -174,7 +209,8 @@ const TierCardContent: React.FC<{ tier: Tier; billing: "monthly" | "yearly"; isS
       Get Started
     </button>
   </div>
-);
+  );
+};
 
 export const SocialMediaTiers: React.FC<SocialMediaTiersProps> = ({ setServiceInterested }) => {
   const [billing, setBilling] = useState<"monthly" | "yearly">("monthly");

@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, useInView, useScroll, useTransform, MotionValue } from 'motion/react';
-import { ArrowRight, Check, Zap, TrendingUp, Bot, Brain, Globe, Quote, ShieldCheck, HelpCircle, Sparkles, Send, Mail, User, Landmark, MessageSquare, Settings, Calendar, Clock, MapPin, Phone, Briefcase, Menu, X, Volume2, VolumeX, Moon, Sun, Target } from 'lucide-react';
+import { ArrowRight, Check, Zap, TrendingUp, Bot, Brain, Globe, Quote, ShieldCheck, HelpCircle, Sparkles, Send, Mail, User, Landmark, MessageSquare, Settings, Calendar, Clock, MapPin, Phone, Briefcase, Menu, X, Volume2, VolumeX, Moon, Sun, Target, ChevronDown } from 'lucide-react';
 import { CustomCursor } from './components/CustomCursor';
 import ScrollExpandMedia from './components/ui/scroll-expansion-hero';
 import { CinematicFooter } from './components/ui/motion-footer';
@@ -224,21 +224,24 @@ export default function App() {
   const [scrollProgress, setScrollProgress] = useState<number>(0);
   const [heroForceExpanded, setHeroForceExpanded] = useState<boolean>(false);
 
-  // Nav links must work even before the hero's scroll-jack animation has
-  // played out — force it to its expanded state first so it stops fighting
-  // the anchor jump, then scroll to the target section.
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    if (!href.startsWith('#')) return;
-    const id = href.slice(1);
+  // Nav links (and the hero's "Skip Intro" button) must work even before the
+  // scroll-jack animation has played out — force it to its expanded state
+  // first so it stops fighting the anchor jump, then scroll to the target.
+  const jumpToSection = (id: string) => {
     const el = document.getElementById(id);
     if (!el) return;
-    e.preventDefault();
     setHeroForceExpanded(true);
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         el.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
     });
+  };
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (!href.startsWith('#')) return;
+    e.preventDefault();
+    jumpToSection(href.slice(1));
   };
   const [activeVideoSrc, setActiveVideoSrc] = useState<string>("/The Enchanted Closet-Lace Cuff Jean.mp4");
   const [isMuted, setIsMuted] = useState<boolean>(true);
@@ -800,6 +803,20 @@ export default function App() {
         </div>
       </div>
 
+      {/* Skip Intro — lets repeat visitors and mobile users past the
+          scroll-jacked cinematic hero without wheeling/swiping through it.
+          Uses the same forceExpanded jump the nav links already rely on. */}
+      {scrollProgress < 0.98 && (
+        <button
+          type="button"
+          onClick={() => jumpToSection('our-story')}
+          className="fixed bottom-16 left-1/2 -translate-x-1/2 z-[45] flex items-center gap-1.5 rounded-full bg-black/50 hover:bg-black/70 border border-white/15 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white backdrop-blur-md shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer"
+        >
+          Skip Intro
+          <ChevronDown size={14} className="shrink-0" />
+        </button>
+      )}
+
       {/* Cinematic Responsive Scroll Expansion Gateway */}
       <ScrollExpandMedia
         mediaType={mediaType}
@@ -819,7 +836,7 @@ export default function App() {
         <div className="w-full">
           
           {/* SECTION 1: OUR STORY (MISSION STATEMENT) */}
-          <section ref={aboutSectionRef} id="our-story" className="pt-24 pb-12 px-4 md:px-8 w-full flex items-center justify-center relative z-10 scroll-mt-28">
+          <section ref={aboutSectionRef} id="our-story" className="pt-24 pb-12 px-4 md:px-8 w-full flex items-center justify-center relative z-10 scroll-mt-48">
             <div className="w-full max-w-4xl glass rounded-3xl p-8 md:p-14 lg:p-16 flex flex-col gap-8 relative overflow-hidden backdrop-blur-md shadow-3xl bg-black/25 border border-white/5 text-center">
 
               {/* TITLE */}
@@ -851,7 +868,7 @@ export default function App() {
           </section>
 
           {/* SECTION A: CUSTOM WEB DESIGN */}
-          <section id="custom-web-design" className="py-20 px-4 md:px-8 w-full relative z-10 scroll-mt-28 ">
+          <section id="custom-web-design" className="py-20 px-4 md:px-8 w-full relative z-10 scroll-mt-48 ">
             <div className="max-w-7xl mx-auto flex flex-col gap-12">
               
               <motion.div 
@@ -904,7 +921,7 @@ export default function App() {
           </section>
 
           {/* SECTION C: THE MEDIA SECTION */}
-          <section id="media-section" className="border-t border-white/5 pt-24 pb-12 px-4 md:px-8 w-full relative z-10 scroll-mt-28">
+          <section id="media-section" className="border-t border-white/5 pt-24 pb-12 px-4 md:px-8 w-full relative z-10 scroll-mt-48">
             <div className="max-w-7xl mx-auto flex flex-col gap-16">
 
               <CaseStudiesSection
@@ -923,7 +940,7 @@ export default function App() {
           </section>
 
           {/* SECTION 2B-2: FEATURED AI AGENTS (Chatbot vs Agent Positioning) */}
-          <section id="featured-agents" className="border-t border-white/5 pt-12 pb-12 px-4 md:px-8 w-full relative z-10 scroll-mt-28">
+          <section id="featured-agents" className="border-t border-white/5 pt-12 pb-12 px-4 md:px-8 w-full relative z-10 scroll-mt-48">
             <div className="max-w-7xl mx-auto flex flex-col gap-12">
               <FeaturedAgentsSection />
               <LunaVoiceAgentSection setServiceInterested={setServiceInterested} />
@@ -931,14 +948,14 @@ export default function App() {
           </section>
 
           {/* SECTION 3B: ENTERPRISE MARKETING STRATEGY & OFFER ARCHITECTURE */}
-          <section id="enterprise-strategy" className="border-t border-white/5 py-12 px-4 md:px-8 w-full relative z-10 scroll-mt-28">
+          <section id="enterprise-strategy" className="border-t border-white/5 py-12 px-4 md:px-8 w-full relative z-10 scroll-mt-48">
             <div className="max-w-7xl mx-auto flex flex-col gap-12">
               <EnterpriseStrategySection setServiceInterested={setServiceInterested} />
             </div>
           </section>
 
           {/* SECTION 3B: AD MANAGEMENT & OPTIMIZATION */}
-          <section id="ad-management" className="border-t border-white/5 py-20 px-4 md:px-8 w-full relative z-10 scroll-mt-28">
+          <section id="ad-management" className="border-t border-white/5 py-20 px-4 md:px-8 w-full relative z-10 scroll-mt-48">
             <div className="max-w-7xl mx-auto flex flex-col gap-12">
               <div className="text-center max-w-3xl mx-auto flex flex-col gap-6">
                 <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white leading-tight">
@@ -999,14 +1016,14 @@ export default function App() {
           </section>
 
           {/* SECTION 3C: AUTOMATIONS & WORKFLOWS */}
-          <section id="automations-workflows" className="border-t border-white/5 py-12 px-4 md:px-8 w-full relative z-10 scroll-mt-28">
+          <section id="automations-workflows" className="border-t border-white/5 py-12 px-4 md:px-8 w-full relative z-10 scroll-mt-48">
             <div className="max-w-7xl mx-auto flex flex-col gap-12">
               <AutomationsWorkflowsSection setServiceInterested={setServiceInterested} />
             </div>
           </section>
 
           {/* SECTION 4: INDUSTRY INSIGHTS (BLOG) */}
-          <section id="blog" className="py-20 px-4 md:px-8 w-full relative z-10 scroll-mt-28">
+          <section id="blog" className="py-20 px-4 md:px-8 w-full relative z-10 scroll-mt-48">
             <div className="max-w-7xl mx-auto flex flex-col gap-12">
               
               <div className="text-center max-w-4xl mx-auto flex flex-col gap-5">
@@ -1136,7 +1153,7 @@ export default function App() {
           </section>
 
           {/* SECTION 5: LET'S WORK TOGETHER (The Closing CTA & Interactive Calculation form) */}
-          <section id="inquiries" className="py-20 px-4 md:px-8 w-full relative z-10 scroll-mt-28">
+          <section id="inquiries" className="py-20 px-4 md:px-8 w-full relative z-10 scroll-mt-48">
             <motion.div 
               initial={{ opacity: 0, y: 50, scale: 0.98 }}
               whileInView={{ opacity: 1, y: 0, scale: 1 }}
