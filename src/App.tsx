@@ -100,18 +100,84 @@ const AnimatedStat: React.FC<AnimatedStatProps> = ({
 // CORE APPLICATION SYSTEM LAYOUT
 // ==========================================
 
-// Fixed dropdown values in the "Service Interested In" selector — anything
-// outside this set (e.g. a specific pricing tier or add-on card) gets
-// injected as its own <option> so the select actually shows what was picked.
-const KNOWN_SERVICE_OPTIONS = new Set([
-  "Custom Web Design with Marketing Backend",
-  "24/7 AI Sales Assistant Integration",
-  "Cinematic Media Production",
-  "Full-Suite Digital Brand Engine",
-  "Tier 1: Complimentary Workspace Blueprints",
-  "Tier 2: Core Growth & Implementation",
-  "Tier 3: Full Enterprise Infrastructure",
-]);
+// Every service offered, shown in the "Service Interested In" selector.
+// Anything outside this set (e.g. a specific pricing tier or add-on card
+// selected from elsewhere on the page) gets injected as its own <option>
+// so the select actually shows what was picked.
+const SERVICES: { value: string; label: string }[] = [
+  { value: "Custom Web Design with Marketing Backend", label: "Custom Web Design & Marketing Backend" },
+  { value: "AI Voice & Chat Agents", label: "AI Voice & Chat Agents (24/7 Sales & Support)" },
+  { value: "Social Media Content & Distribution Engine", label: "Social Media Content & Distribution Engine" },
+  { value: "Ad Video Production", label: "Ad Video Production" },
+  { value: "Ad Management & Optimization", label: "Ad Management & Optimization" },
+  { value: "Enterprise Marketing Strategy & Offer Architecture", label: "Enterprise Marketing Strategy & Offer Architecture" },
+  { value: "Automations & Workflows", label: "Automations & Workflows" },
+  { value: "Full-Suite Digital Brand Engine", label: "Full-Suite Digital Brand Engine (All Services)" },
+];
+
+const KNOWN_SERVICE_OPTIONS = new Set(SERVICES.map((s) => s.value));
+
+// Four conversion-challenge pain points per service, shown in the
+// "Primary Conversion Challenge" selector once a service is picked.
+// Falls back to DEFAULT_CHALLENGES for custom values injected from
+// elsewhere on the page (specific pricing tiers, add-on cards, etc.).
+const DEFAULT_CHALLENGES: { value: string; label: string }[] = [
+  { value: "Static website generates zero interest or traffic action", label: "Static website generates zero interest or traffic action" },
+  { value: "Our team receives too many manual spam queries", label: "Our team receives too many manual / unqualified spam inquiries" },
+  { value: "Response times are too high and leads drop off", label: "Response times are too high and hot leads drop off overnight" },
+  { value: "Need full-funnel automation to scale faster", label: "Need full-funnel sales automation & high-impact branding to scale" },
+];
+
+const SERVICE_CHALLENGES: Record<string, { value: string; label: string }[]> = {
+  "Custom Web Design with Marketing Backend": [
+    { value: "Static website generates zero interest or traffic action", label: "Static website generates zero interest or traffic action" },
+    { value: "Site looks outdated and doesn't reflect our brand", label: "Site looks outdated and doesn't reflect our brand" },
+    { value: "No CRM or lead-tracking wired into our current site", label: "No CRM or lead-tracking wired into our current site" },
+    { value: "Site is slow, not mobile-optimized, or hurts our SEO", label: "Site is slow, not mobile-optimized, or hurts our SEO" },
+  ],
+  "AI Voice & Chat Agents": [
+    { value: "Missed calls and voicemails are costing us leads", label: "Missed calls and voicemails are costing us leads" },
+    { value: "Team can't keep up with inbound call or chat volume", label: "Team can't keep up with inbound call or chat volume" },
+    { value: "Response times are too high and leads drop off", label: "Response times are too high and hot leads drop off overnight" },
+    { value: "No one is available to answer after hours or weekends", label: "No one is available to answer after hours or on weekends" },
+  ],
+  "Social Media Content & Distribution Engine": [
+    { value: "Inconsistent posting is hurting our brand presence", label: "Inconsistent posting is hurting our brand presence" },
+    { value: "Content production takes too much internal time", label: "Content production takes too much internal time or resources" },
+    { value: "Engagement and reach have plateaued across channels", label: "Engagement and reach have plateaued across our channels" },
+    { value: "No system for consistent scheduling and distribution", label: "No system for consistent scheduling and distribution" },
+  ],
+  "Ad Video Production": [
+    { value: "Our ad creative feels stale and underperforms", label: "Our ad creative feels stale and underperforms" },
+    { value: "We don't have in-house video production capability", label: "We don't have in-house video production capability" },
+    { value: "Ad fatigue is tanking our campaign performance", label: "Ad fatigue is tanking our campaign performance" },
+    { value: "Need scroll-stopping video to boost conversion rates", label: "Need scroll-stopping video to boost conversion rates" },
+  ],
+  "Ad Management & Optimization": [
+    { value: "Ad spend is inefficient with unclear ROI", label: "Ad spend is inefficient with unclear ROI" },
+    { value: "No one is actively monitoring or optimizing campaigns", label: "No one is actively monitoring or optimizing our campaigns" },
+    { value: "Scaling winning campaigns across platforms is a struggle", label: "Scaling winning campaigns across platforms is a struggle" },
+    { value: "Need daily performance audits and bid optimization", label: "Need daily performance audits and bid optimization" },
+  ],
+  "Enterprise Marketing Strategy & Offer Architecture": [
+    { value: "Our offer or pricing structure isn't converting well", label: "Our offer or pricing structure isn't converting well" },
+    { value: "Market positioning is unclear against competitors", label: "Market positioning is unclear against competitors" },
+    { value: "No tracking or attribution to know what's working", label: "No tracking or attribution to know what's actually working" },
+    { value: "Need a full GTM roadmap and execution plan", label: "Need a full go-to-market roadmap and execution plan" },
+  ],
+  "Automations & Workflows": [
+    { value: "Manual processes are eating up team bandwidth", label: "Manual processes are eating up team bandwidth" },
+    { value: "Leads fall through the cracks without follow-up", label: "Leads fall through the cracks without follow-up automation" },
+    { value: "Our systems don't talk to each other", label: "Systems don't talk to each other (no CRM integration)" },
+    { value: "Need end-to-end workflow automation to scale", label: "Need end-to-end workflow automation to scale operations" },
+  ],
+  "Full-Suite Digital Brand Engine": [
+    { value: "Need full-funnel automation to scale faster", label: "Need full-funnel sales automation & high-impact branding to scale" },
+    { value: "Juggling multiple vendors with inconsistent results", label: "Juggling multiple vendors/agencies with inconsistent results" },
+    { value: "Want one team handling web, media, agents, and ads", label: "Want one team handling web, media, agents, and ads together" },
+    { value: "Ready to scale but lack the infrastructure to support it", label: "Ready to scale but lack the infrastructure to support growth" },
+  ],
+};
 
 export default function App() {
   const [isMobile, setIsMobile] = useState<boolean>(false);
@@ -259,7 +325,7 @@ export default function App() {
   
   // Custom interactive CTA state variables (required form fields)
   const [targetLeads, setTargetLeads] = useState<number>(80);
-  const [mainChallenge, setMainChallenge] = useState<string>("Static website generates zero interest");
+  const [mainChallenge, setMainChallenge] = useState<string>("Static website generates zero interest or traffic action");
   const [firstNameInput, setFirstNameInput] = useState<string>("");
   const [emailInput, setEmailInput] = useState<string>("");
   const [phoneInput, setPhoneInput] = useState<string>("");
@@ -1174,16 +1240,19 @@ export default function App() {
                         <select
                           id="form-service"
                           value={serviceInterested}
-                          onChange={(e) => setServiceInterested(e.target.value)}
+                          onChange={(e) => {
+                            const nextService = e.target.value;
+                            setServiceInterested(nextService);
+                            const nextChallenges = SERVICE_CHALLENGES[nextService] || DEFAULT_CHALLENGES;
+                            if (!nextChallenges.some((c) => c.value === mainChallenge)) {
+                              setMainChallenge(nextChallenges[0].value);
+                            }
+                          }}
                           className="w-full bg-[#080B10] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-orange/50 transition-colors cursor-pointer font-medium"
                         >
-                          <option value="Custom Web Design with Marketing Backend">Custom Web Design & Marketing Backend</option>
-                          <option value="24/7 AI Sales Assistant Integration">24/7 AI Sales Assistant Integration</option>
-                          <option value="Cinematic Media Production">Cinematic Media Production</option>
-                          <option value="Full-Suite Digital Brand Engine">Full-Suite Digital Brand Engine (All Services)</option>
-                          <option value="Tier 1: Complimentary Workspace Blueprints">Tier 1: Complimentary Workspace Blueprints</option>
-                          <option value="Tier 2: Core Growth & Implementation">Tier 2: Core Growth & Implementation ($2,500)</option>
-                          <option value="Tier 3: Full Enterprise Infrastructure">Tier 3: Full Enterprise Infrastructure (Custom)</option>
+                          {SERVICES.map((service) => (
+                            <option key={service.value} value={service.value}>{service.label}</option>
+                          ))}
                           {!KNOWN_SERVICE_OPTIONS.has(serviceInterested) && (
                             <option value={serviceInterested}>{serviceInterested}</option>
                           )}
@@ -1202,10 +1271,9 @@ export default function App() {
                           onChange={(e) => setMainChallenge(e.target.value)}
                           className="w-full bg-[#080B10] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-orange/50 transition-colors cursor-pointer font-medium"
                         >
-                          <option value="Static Website generates no interest">Static website generates zero interest or traffic action</option>
-                          <option value="Our team receives too many manual spam queries">Our team receives too many manual / unqualified spam inquiries</option>
-                          <option value="Response times are too high and leads drop off">Response times are too high and hot leads drop off overnight</option>
-                          <option value="Need full-funnel automation to scale faster">Need full-funnel sales automation & high-impact branding to scale</option>
+                          {(SERVICE_CHALLENGES[serviceInterested] || DEFAULT_CHALLENGES).map((challenge) => (
+                            <option key={challenge.value} value={challenge.value}>{challenge.label}</option>
+                          ))}
                         </select>
                       </div>
 
