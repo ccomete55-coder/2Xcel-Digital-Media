@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: siteone-audit-service
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: starter
+    healthCheckPath: /health
+    envVars:
+      - key: AUDIT_SERVICE_API_KEY
+        sync: false
+      - key: JOB_TIMEOUT_MS
+        value: "480000"
+      - key: DEFAULT_MAX_PAGES
+        value: "150"
